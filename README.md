@@ -29,31 +29,33 @@ All packages and dependencies are managed using conda.
 See [conda installation](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) options before proceeding with this workflow.
 The following packages will be managed by conda and do not need to be pre-installed.
 
-  1. samtools [version='>=1.10']
-  2. bedtools
-  3. r [version='>=4.0.3']
-  4. gatk4
-  5. bowtie2
-  6. bwa
-  7. mosaik
-  8. maven
-  9. bcftools
-  10. bwameth
-  11. methyldackel
-  12. bioconductor-methylkit
-  13. bioconductor-edger
-  14. bioconductor-annotationdbi
-  15. bioconductor-org.hs.eg.db
-  16. bioconductor-rnbeads
-  17. git
-  18. pip
+    1. samtools [version='>=1.10']
+    2. bedtools
+    3. r [version='>=4.0.3']
+    4. gatk4
+    5. bowtie2
+    6. bwa
+    7. mosaik
+    8. maven
+    9. bcftools
+    10. bwameth
+    11. methyldackel
+    12. bioconductor-methylkit
+    13. bioconductor-edger
+    14. bioconductor-annotationdbi
+    15. bioconductor-org.hs.eg.db
+    16. bioconductor-rnbeads
+    17. git
+    18. pip
 
 ### Installation
 In your desired conda environment (e.g.: base) git and pip can be installed by:
-  $ conda install -c anaconda git
-  $ conda install -c anaconda pip
+
+    $ conda install -c anaconda git
+    $ conda install -c anaconda pip
 In your desired RRBS workflow directory, RRBS_PIPELINE can be installed by:
-  $ pip install git+git://github.com/tniranjan1/RRBS_PIPELINE.git
+
+    $ pip install git+git://github.com/tniranjan1/RRBS_PIPELINE.git
 
 ### Workflow Configuration
 Modify as appropriate configuration parameters and sample sheet files as described in the [config](https://github.com/tniranjan1/RRBS_PIPELINE/blob/master/config/config.yaml) file.
