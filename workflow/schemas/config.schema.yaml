@@ -140,7 +140,7 @@ properties:
     type: object
     properties:
       FDR:
-        type: float
+        type: number
       check_CpGs:
         type: boolean
       check_promoters:

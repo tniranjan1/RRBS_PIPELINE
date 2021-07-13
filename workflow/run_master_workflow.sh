@@ -40,4 +40,4 @@ fi
 echo "Activating RRBS conda environment." >> $std_log 2>> $err_log
 
 echo "Starting Snakemake workflow. See ./stderr.log and ./stdout.log for logs."
-snakemake --profile profile/ >> $std_log 2>> $err_log
+snakemake --profile profile/ >> $std_log 2>> $err_log &
