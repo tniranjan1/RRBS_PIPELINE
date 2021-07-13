@@ -4,7 +4,7 @@ import re
 import sys
 import pandas as pd
 import snakemake
-import git# import Repo
+import git
 
 # Check correct snakemake version is being used.
 try: snakemake.utils.min_version("6.5.3")
@@ -25,6 +25,12 @@ snakemake.utils.validate(config, schema="schemas/config.schema.yaml")
 # Load RRBS sample sheet
 rrbs_samples = pd.read_table(config["RRBS_samples"])
 snakemake.utils.validate(rrbs_samples, schema="schemas/samples.schema.yaml")
+
+# Install DMRFinder from github if not done already
+DMRFinder_repo_path = "../resources/DMRFinder"
+if not os.path.isdir(DMRFinder_repo_path):
+    git.Repo.clone_from(config["DMRfinder"]["DMRFinder_git_URL"], DMRFinder_repo_path)
+DMRFinder_repo = git.Repo(DMRFinder_repo_path)
 
 # Load rules
 #include: "rules/common.smk"
