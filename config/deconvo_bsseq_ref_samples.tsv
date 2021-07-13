@@ -1,4 +1,4 @@
-#SampleID	SampleGroup	CaseControl	Tissue	Path	Remove	Remove_Reason	Variable_GSM_name
+SampleID	SampleGroup	CaseControl	Tissue	Path	Remove	Remove_Reason	Variable_GSM_name
 5248	Reference	NA	FCX-(BA9)+NeuN-neg	SRR5343782	FALSE	NA	GSM2536543
 5248	Reference	NA	FCX-(BA9)+NeuN-pos	SRR5343783	FALSE	NA	GSM2536544
 5284	Reference	NA	FCX-(BA9)+NeuN-neg	SRR5343789	FALSE	NA	GSM2536550
