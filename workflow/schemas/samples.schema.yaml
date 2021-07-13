@@ -1,0 +1,36 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: an entry in the sample sheet
+
+properties:
+  SampleID:
+    type: string
+    description: patient source identifier
+  SampleGroup:
+    type: string
+    description: disease group that patient source belongs to
+  CaseControl:
+    type: string
+    description: if patient source is a case or a control
+  Tissue:
+    type: string
+    description: tissue source
+  Path:
+    type: string
+    description: path to raw RRBS reads; can be BAM, fastq, or SRR number; multiple files are comma-separated
+  Remove:
+    type: boolean
+    description: indicate of sample should be removed from analysis
+    default: False
+  Remove_Reason:
+    type: string
+    description: reason the sample is being removed
+
+required:
+  - SampleID
+  - SampleGroup
+  - CaseControl
+  - Tissue
+  - Path
+  - Remove
+  - Remove_Reason

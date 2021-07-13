@@ -34,7 +34,8 @@ ref:
   # Ensembl release (make sure to take one where snpeff data is available, check 'snpEff databases' output)
   release: 100
   # Genome build
-  build: GRCh38
+  GRCh_build: GRCh38
+  hg_build: hg38
   # full local reference fasta path
   path: "/home/tejasvi/references/human/hg38/hg38.fa"
   # full local reference repeat masker path
@@ -65,25 +66,29 @@ illumina450k:
   # Infinium release
   release: v1.2
   # Genome build
-  build: GRCh37
+  GRCh_build: GRCh37
+  hg_build: hg19
   # full local 450k Manifest file path
   path: "/home/tejasvi/Infinium/HumanMethylation450_15017482_v1-2.csv"
   # Infinium 450k CSV Manifest File downloaded from:
   #  ftp://webdata2:webdata2@ussd-ftp.illumina.com/downloads/ProductFiles/HumanMethylation450/HumanMethylation450_15017482_v1-2.csv
 
 # parameters for quality control and general analysis
-min_cov: 5
-# Minimum coverage for Cytosine site inclusion
-min_call_rate: 0.95
-# Fraction of samples in cohort (RRBS_samples) that must have min_cov coverage at Cytosine site for inclusion.
-# 0.95 means that 95% of samples in cohort must have the minimum coverage at the site for inclusion.
+qc_params:
+  # Minimum coverage for Cytosine site inclusion
+  min_cov: 5
+  # Fraction of samples in cohort (RRBS_samples) that must have min_cov coverage at Cytosine site for inclusion.
+  # 0.95 means that 95% of samples in cohort must have the minimum coverage at the site for inclusion.
+  min_call_rate: 0.95
 
-# Analyze CpG sites
-CpG: True
-# Analyze CHG sites
-CHG: False
-# Analyze CHH sites
-CHH: False
+# Which cytosine contexts to analyze
+cytosine_sites:
+  # Analyze CpG sites
+  CpG: True
+  # Analyze CHG sites
+  CHG: False
+  # Analyze CHH sites
+  CHH: False
 
 # parameters for sample removal (quality control)
 remove_samples:
@@ -100,12 +105,15 @@ remove_samples:
     vcf: "/home/tejasvi/rrbs_cristina_scratch/genotypes/wgs-genotypes-mayo-genomes.vcf.gz"
     # If override_tissue is True, genotypic concordance results in sample re-inclusion,
     #   if the sample had previously been removed due to tisue discordance
+    activate: True
     override_tissue: True
 
 # parameters for finding differentially methylated regions (DMRs)
 DMRfinder:
   # Run DMRFinder
   activate: True
+  # git URL to download DMRFinder. Must provide even if activate is False.
+  DMRFinder_git_URL: "https://github.com/jsh58/DMRfinder.git"
 MethylKit:
   # Run MethylKit; identify DMRs with set window_size stepped every step_size
   activate: True

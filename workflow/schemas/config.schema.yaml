@@ -1,0 +1,172 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: snakemake configuration file
+
+type: object
+
+properties:
+  RRBS_samples:
+    type: string
+
+  deconvo_bsseq_ref:
+    type: string
+
+  ref:
+    type: object
+    properties:
+      species:
+        type: string
+      release:
+        type: integer
+      GRCh_build:
+        type: string
+      hg_build:
+        type: string
+      path:
+        type: string
+      repeats_path:
+        type: string
+    required:
+      - GRCh_build
+      - hg_build
+      - path
+      - repeats_path
+
+  illumina450k:
+    type: object
+    properties:
+      species:
+        type: string
+      release:
+        type: string
+      GRCh_build:
+        type: string
+      hg_build:
+        type: string
+      path:
+        type: string
+    required:
+      - release
+      - GRCh_build
+      - hg_build
+      - path
+
+  qc_params:
+    type: object
+    properties:
+      min_cov:
+        type: integer
+      min_call_rate:
+        type: float
+    required:
+      - min_cov
+      - min_call_rate
+
+  cytosine_sites:
+    type: object
+    properties:
+      CpG:
+        type: boolean
+      CHG:
+        type: boolean
+      CHH:
+        type: boolean
+    required:
+      - CpG
+      - CHG
+      - CHH
+
+  remove_samples:
+    type: object
+    properties:
+      pca:
+        type: object
+        properties:
+          activate:
+            type: boolean
+        required:
+          - activate
+      tissue_discordant:
+        type: object
+        properties:
+          activate:
+            type: boolean
+        required:
+          - activate
+      genotype_discordant:
+        type: object
+        properties:
+          vcf:
+            type: string
+          activate:
+            type: boolean
+          override_tissue:
+            type: boolean
+        required:
+          - vcf
+          - activate
+          - override_tissue
+    required:
+      - pca
+      - tissue_discordant
+      - genotype_discordant
+
+  DMRfinder:
+    type: object
+    properties:
+      activate:
+        type: boolean
+      DMRFinder_git_URL:
+        type: string
+    required:
+      - activate
+      - DMRFinder_git_URL
+
+  MethylKit:
+    type: object
+    properties:
+      activate:
+        type: boolean
+      window_size:
+        type: integer
+      step_size:
+        type: integer
+    required:
+      - activate
+      - window_size
+      - step_size
+
+  edgeR:
+    type: object
+    properties:
+      FDR:
+        type: float
+      check_CpGs:
+        type: boolean
+      check_promoters:
+        type: boolean
+      check_DMRFinder:
+        type: boolean
+      check_MethylKit:
+        type: boolean
+      with_deconvolution:
+        type: boolean
+    required:
+      - FDR
+      - check_CpGs
+      - check_promoters
+      - check_DMRFinder
+      - check_MethylKit
+      - with_deconvolution
+
+required:
+  - RRBS_samples
+  - deconvo_bsseq_ref
+  - ref
+  - illumina450k
+  - qc_params
+  - cytosine_sites
+  - remove_samples
+  - DMRfinder
+  - MethylKit
+  - edgeR

@@ -5,15 +5,21 @@
 ## This script will check conda installations
 ## and then start the snakemake workflow.
 
-echo "Starting RRBS workflow."
+std_log="./stdout.log"
+err_log="./stderr.log"
+
+echo "Main workflow run standard output." > $std_log
+echo "Main workflow run standard error." > $err_log
+
+echo "Starting RRBS workflow." >> $std_log 2>> $err_log
 ## Is conda installed?
 if ! type conda > /dev/null
 then
-  echo "Conda not installed or not aliased. Exiting."
+  echo "Conda not installed or not aliased. Exiting." >> $std_log 2>> $err_log
   exit -1
 else
   condaver=$(conda --version)
-  echo "$condaver installed." | sed 's/conda/Conda/'
+  echo "$condaver installed." | sed 's/conda/Conda/' >> $std_log 2>> $err_log
   CONDA_BASE="$(conda info --base)/etc/profile.d/conda.sh"
   source $CONDA_BASE
 fi
@@ -24,14 +30,14 @@ if [ "$RRBS_made" -eq "0" ]
 then
   ## yes, activate RRBS env
   conda create -n RRBS python=3.8 snakemake
-  echo "Creating RRBS conda environment."
+  echo "Creating RRBS conda environment." >> $std_log 2>> $err_log
   conda activate RRBS
 else
   ## no, install and activate RRBS env
   conda activate RRBS
-  echo "RRBS conda environment already created."
+  echo "RRBS conda environment already created." >> $std_log 2>> $err_log
 fi
-echo "Activating RRBS conda environment."
+echo "Activating RRBS conda environment." >> $std_log 2>> $err_log
 
 echo "Starting Snakemake workflow. See ./stderr.log and ./stdout.log for logs."
-snakemake --profile ./profile/config.yaml
+snakemake --profile ./profile/config.yaml >> $std_log 2>> $err_log

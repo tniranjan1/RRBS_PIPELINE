@@ -1,4 +1,29 @@
 import os
 import glob
 import re
+import sys
 import pandas as pd
+import snakemake
+import git# import Repo
+
+# Check correct snakemake version is being used.
+try: snakemake.utils.min_version("6.5.3")
+except snakemake.exceptions.WorkflowError as e: print(e, "Workflow aborted.")
+
+# Setup config file
+configfile: "config/config.yaml"
+if not os.path.isfile("config/config.yaml"):
+    print("Configuration file (config/config.yaml) not found. Workflow aborted.")
+    sys.exit()
+# Setup report destination
+report: "report/workflow.rst"
+
+
+
+# Load rules
+#include: "rules/common.smk"
+#include: "rules/ref.smk"
+#include: "rules/trim.smk"
+#include: "rules/qc.smk"
+#include: "rules/align.smk"
+#include: "rules/diffexp.smk"
