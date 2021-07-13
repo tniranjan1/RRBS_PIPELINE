@@ -31,6 +31,10 @@ DMRFinder_repo_path = "../resources/DMRFinder"
 if not os.path.isdir(DMRFinder_repo_path):
     git.Repo.clone_from(config["DMRfinder"]["DMRFinder_git_URL"], DMRFinder_repo_path)
 DMRFinder_repo = git.Repo(DMRFinder_repo_path)
+# check that the repository loaded correctly
+if DMRFinder_repo.bare:
+    print('Could not load repository at {}. Recommend checking DMRFinder git url in ../config/config.yaml. Workflow aborted.'.format(DMRFinder_repo_path))
+
 
 # Load rules
 #include: "rules/common.smk"

@@ -29,7 +29,7 @@ RRBS_made=$(conda env list | cut -f1 -d " " | grep 'RRBS' | wc -l)
 if [ "$RRBS_made" -eq "0" ]
 then
   ## yes, activate RRBS env
-  conda create -n RRBS python=3.8 snakemake
+  conda create -n RRBS python=3.8 snakemake mamba
   echo "Creating RRBS conda environment." >> $std_log 2>> $err_log
   conda activate RRBS
 else
