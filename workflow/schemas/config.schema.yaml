@@ -57,7 +57,7 @@ properties:
       min_cov:
         type: integer
       min_call_rate:
-        type: float
+        type: number
     required:
       - min_cov
       - min_call_rate
