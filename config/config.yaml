@@ -1,0 +1,115 @@
+# path to sample sheet for study RRBS samples
+RRBS_samples: config/RRBS_samples.tsv
+# TSV column format: Sample Name, FTLD group, CaseOrControl, Age at Death, Gender,
+#                    Tissue, read file path (comma separated for muliple files; BAM or fastq)
+
+# path to sample sheet for reference bisulfite seq for deconvolution
+deconvo_bsseq_ref: config/deconvo_bsseq_ref_samples.tsv
+# TSV column format: GSM ID, sample name, SRR number.
+# Provided reference file is for samples sequenced in
+#   Rizzardi LF, Hickey PF, DiBlasi VR, Tryggvadóttir R, Callahan CM, Idrizi A,
+#   Hansen KD, & Feinberg AP. Neuronal brain-region-specific DNA methylation
+#   and chromatin accessibility are associated with neuropsychiatric trait
+#   heritability. Nat Neurosci. 2019 Feb;22(2):307-316.
+#     doi: 10.1038/s41593-018-0297-8.
+#     Epub 2019 Jan 14.
+#     PMID: 30643296.
+#     PMCID: PMC6348048.
+
+# parameters for reference genome
+ref:
+  # Ensembl species name
+  species: homo_sapiens
+  # Ensembl release (make sure to take one where snpeff data is available, check 'snpEff databases' output)
+  release: 100
+  # Genome build
+  build: GRCh38
+  # full local reference fasta path
+  path: "/home/tejasvi/references/human/hg38/hg38.fa"
+  # full local reference repeat masker path
+  repeats_path: "/home/tejasvi/repbase/hg38.repeatmask.bed"
+  # For publication analysis, repeat masked bed file was generated from
+  # UCSC table browser (http://genome.ucsc.edu/cgi-bin/hgTables):
+  #  date generated: February 1, 2021
+  #  clade: Mammal
+  #  genome: Human
+  #  assembly: Dec. 2013 (GRCh38/hg38)
+  #  group: Repeats
+  #  track: RepeatMasker
+  #  table: rmsk
+  #  region: genome
+  #  identifiers (names/accessions): none uploaded
+  #  filter: none created
+  #  intersection: none created
+  #  output format: BED - browser extensible data
+  #  output filename: hg38.repeatmask.bed
+  #  file type returned: plain text
+  #  include custom track header: unchecked
+  #  create one BED record per: whole gene
+
+# parameters for Illumina 450k Chip reference
+illumina450k:
+  # Ensembl species name
+  species: homo_sapiens
+  # Infinium release
+  release: v1.2
+  # Genome build
+  build: GRCh37
+  # full local 450k Manifest file path
+  path: "/home/tejasvi/Infinium/HumanMethylation450_15017482_v1-2.csv"
+  # Infinium 450k CSV Manifest File downloaded from:
+  #  ftp://webdata2:webdata2@ussd-ftp.illumina.com/downloads/ProductFiles/HumanMethylation450/HumanMethylation450_15017482_v1-2.csv
+
+# parameters for quality control and general analysis
+min_cov: 5
+# Minimum coverage for Cytosine site inclusion
+min_call_rate: 0.95
+# Fraction of samples in cohort (RRBS_samples) that must have min_cov coverage at Cytosine site for inclusion.
+# 0.95 means that 95% of samples in cohort must have the minimum coverage at the site for inclusion.
+
+# Analyze CpG sites
+CpG: True
+# Analyze CHG sites
+CHG: False
+# Analyze CHH sites
+CHH: False
+
+# parameters for sample removal (quality control)
+remove_samples:
+  # remove PCA outliers
+  pca:
+    activate: True
+  # remove tissue discordant samples
+  tissue_discordant:
+    activate: True
+  # remove genoype discordant samples
+  genotype_discordant:
+    # VCF of genotypes for samples (VCF sample name must match Sample Name column in RRBS_samples sample sheet).
+    # If no path given, set vcf variable to False
+    vcf: "/home/tejasvi/rrbs_cristina_scratch/genotypes/wgs-genotypes-mayo-genomes.vcf.gz"
+    # If override_tissue is True, genotypic concordance results in sample re-inclusion,
+    #   if the sample had previously been removed due to tisue discordance
+    override_tissue: True
+
+# parameters for finding differentially methylated regions (DMRs)
+DMRfinder:
+  # Run DMRFinder
+  activate: True
+MethylKit:
+  # Run MethylKit; identify DMRs with set window_size stepped every step_size
+  activate: True
+  window_size: 500
+  step_size: 250
+
+# set edgeR values for differential methylation analysis
+edgeR:
+  # set maximal false discovery rate per comparison (numeric value 0 to 1)
+  FDR: 0.05
+  # Differential methylation should be run on CpGs, promoters, DMRs (DMRFinder, MethylKit).
+  # Note: if DMRFinder or MethylKit are activated above, True value defaults to False.
+  check_CpGs: True
+  check_promoters: True
+  check_DMRFinder: True
+  check_MethylKit: True
+  # If deconvolution completes, run with deconvolution as covariate
+  with_deconvolution: True
