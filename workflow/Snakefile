@@ -24,7 +24,7 @@ snakemake.utils.validate(config, schema="schemas/config.schema.yaml")
 
 # Load RRBS sample sheet
 rrbs_samples = pd.read_table(config["RRBS_samples"])
-snakemake.utils.validate(rrbs_samples, schema="schema/samples.schema.yaml")
+snakemake.utils.validate(rrbs_samples, schema="schemas/samples.schema.yaml")
 
 # Load rules
 #include: "rules/common.smk"
