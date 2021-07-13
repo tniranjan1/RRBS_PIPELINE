@@ -58,10 +58,12 @@ In your desired RRBS workflow directory, RRBS_PIPELINE can be installed by:
     $ pip install git+git://github.com/tniranjan1/RRBS_PIPELINE.git
 
 ### Workflow Configuration
+Modify as appropriate snakemake arguements as described in the [profile](https://github.com/tniranjan1/RRBS_PIPELINE/blob/master/workflow/profile/config.yaml) file.
+
 Modify as appropriate configuration parameters and sample sheet files as described in the [config](https://github.com/tniranjan1/RRBS_PIPELINE/blob/master/config/config.yaml) file.
 
 ### Citation
 Please cite this GitHub link until such time as publication of our results. Then please cite the publication (DOI to be provided here).
 
 ### Contact
-For advise, bug reports, or other help please post to [RRBS_PIPELINE Issues](https://github.com/tniranjan1/RRBS_PIPELINE/issues).
+For advise, bug reports, or assistance please post to [RRBS_PIPELINE Issues](https://github.com/tniranjan1/RRBS_PIPELINE/issues).

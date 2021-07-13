@@ -1,11 +1,22 @@
 # path to sample sheet for study RRBS samples
 RRBS_samples: config/RRBS_samples.tsv
-# TSV column format: Sample Name, FTLD group, CaseOrControl, Age at Death, Gender,
-#                    Tissue, read file path (comma separated for muliple files; BAM or fastq)
+# TSV column format:
+#   SampleID [string] [required] = patient source identifier; can be reused for samples from the same patient but different tissues
+#   SampleGroup [string] [required] = disease group that patient source belongs to; for control samples, recommend using "Ctrl"
+#   CaseControl [string] [required] = if patient source is a case or a control; acceptable values are "Case", "Control", "Unknown", "NA"
+#   Tissue [string] [required] = tissue source
+#   Path [string] [required] = path to raw RRBS reads; can be BAM, fastq, or SRR number; multiple files are comma-separated
+#   Remove [boolean] [required] = indicate of sample should be removed from analysis; this field is modified by sample removal parameters below
+#   Remove_Reason [string] [required] = reason the sample is being removed; NA if not removed
+#   Covariate_Age [numeric] [optional] = optional column for age covariate (for FTLD publication, this is age at death)
+#   Covariate_Gender [string] [optional] = optional column for ascertained gender covariate (included for FTLD publication)
+#   Covariate_* [any] [optional] = additional columns as needed for covariates
+#   Covariate_Deconvolution [any] [optional] = if deconvolution is performed (parameters below), an additional covariate column will be added
+#   Variable_* [any] [optional] = additional optional columns that are informative for the end user
 
 # path to sample sheet for reference bisulfite seq for deconvolution
 deconvo_bsseq_ref: config/deconvo_bsseq_ref_samples.tsv
-# TSV column format: GSM ID, sample name, SRR number.
+# TSV column format: See RRBS_Samples TSV format above.
 # Provided reference file is for samples sequenced in
 #   Rizzardi LF, Hickey PF, DiBlasi VR, Tryggvadóttir R, Callahan CM, Idrizi A,
 #   Hansen KD, & Feinberg AP. Neuronal brain-region-specific DNA methylation

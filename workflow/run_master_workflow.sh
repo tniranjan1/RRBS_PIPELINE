@@ -32,3 +32,6 @@ else
   echo "RRBS conda environment already created."
 fi
 echo "Activating RRBS conda environment."
+
+echo "Starting Snakemake workflow. See ./stderr.log and ./stdout.log for logs."
+snakemake --profile ./profile/config.yaml

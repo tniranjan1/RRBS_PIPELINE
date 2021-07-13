@@ -1,0 +1,21 @@
+# This is a configuration file (profile) to provide snakemake parameters
+# (in lieu of specifying each parameter at command-line level).
+# To add or modify addtional snakemake parameters, see:
+#   $ snakemake --help
+
+restart-times: 0
+max-jobs-per-second: 1
+max-status-checks-per-second: 10
+cores: 24 # max cores used for all concurrent/parallel jobs
+local-cores: 1
+rerun-incomplete: true  # recomended for cluster submissions
+keep-going: false
+
+# We ran our snakemake flow on a local server without cluster control.
+# If you wish to use cluster control in Snakemake, the following cluster profile parameters
+#  can be set. For more information, see https://github.com/Snakemake-Profiles/generic. For
+#  SGE based job submissions, see https://github.com/Snakemake-Profiles/sge.
+
+#cluster-config: "./profile/cluster_config.yaml" #for cluster-based job submissions
+#cluster: "./profile/scheduler.py" #scheduler script for cluster-based job submissions
+#cluster-status: "./profile/cluster_status.py" #returning the job status when using cluster-based submissions
