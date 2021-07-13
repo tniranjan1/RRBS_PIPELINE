@@ -20,11 +20,11 @@ if not os.path.isfile("../config/config.yaml"):
 # Setup report destination
 report: "report/workflow.rst"
 
-validate(config, schema="schemas/config.schema.yaml")
+snakemake.utils.validate(config, schema="schemas/config.schema.yaml")
 
 # Load RRBS sample sheet
 rrbs_samples = pd.read_table(config["RRBS_samples"])
-validate(rrbs_samples, schema="schema/samples.schema.yaml")
+snakemake.utils.validate(rrbs_samples, schema="schema/samples.schema.yaml")
 
 # Load rules
 #include: "rules/common.smk"
