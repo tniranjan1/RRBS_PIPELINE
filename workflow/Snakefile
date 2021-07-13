@@ -13,7 +13,7 @@ except snakemake.exceptions.WorkflowError as e:
     sys.exit()
 
 # Setup config file
-configfile: "config/config.yaml"
+configfile: "../config/config.yaml"
 if not os.path.isfile("../config/config.yaml"):
     print("Configuration file (config/config.yaml) not found. Workflow aborted.")
     sys.exit()
