@@ -8,17 +8,23 @@ import git# import Repo
 
 # Check correct snakemake version is being used.
 try: snakemake.utils.min_version("6.5.3")
-except snakemake.exceptions.WorkflowError as e: print(e, "Workflow aborted.")
+except snakemake.exceptions.WorkflowError as e:
+    print(e, "Workflow aborted.")
+    sys.exit()
 
 # Setup config file
 configfile: "config/config.yaml"
-if not os.path.isfile("config/config.yaml"):
+if not os.path.isfile("../config/config.yaml"):
     print("Configuration file (config/config.yaml) not found. Workflow aborted.")
     sys.exit()
 # Setup report destination
 report: "report/workflow.rst"
 
+validate(config, schema="schemas/config.schema.yaml")
 
+# Load RRBS sample sheet
+rrbs_samples = pd.read_table(config["RRBS_samples"])
+validate(rrbs_samples, schema="schema/samples.schema.yaml")
 
 # Load rules
 #include: "rules/common.smk"

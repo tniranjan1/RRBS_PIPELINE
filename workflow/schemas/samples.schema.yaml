@@ -21,10 +21,11 @@ properties:
   Remove:
     type: boolean
     description: indicate of sample should be removed from analysis
-    default: False
+    default: FALSE
   Remove_Reason:
     type: string
     description: reason the sample is being removed
+    default: "NA"
 
 required:
   - SampleID
