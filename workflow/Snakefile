@@ -5,6 +5,8 @@ import sys
 import pandas as pd
 import snakemake
 import git
+sys.path.insert(0, os.path.abspath(os.getcwd()) + "/scripts")
+import importSampleSheet
 
 # Check correct snakemake version is being used.
 try: snakemake.utils.min_version("6.5.3")
@@ -12,7 +14,7 @@ except snakemake.exceptions.WorkflowError as e:
     print(e, "Workflow aborted.")
     sys.exit()
 
-# Setup config file
+# Setup and validate config file
 configfile: "../config/config.yaml"
 if not os.path.isfile("../config/config.yaml"):
     print("Configuration file (../config/config.yaml) not found. Workflow aborted.")
@@ -23,6 +25,8 @@ snakemake.utils.validate(config, schema="schemas/config.schema.yaml")
 report: "report/workflow.rst"
 
 # Load RRBS sample sheet and validate structure
+rrbs_samples = importSampleSheet(config["RRBS_samples"], "schemas/samples.schema.yaml")
+
 rrbs_samples = pd.read_table(config["RRBS_samples"])
 try: snakemake.utils.validate(rrbs_samples, schema="schemas/samples.schema.yaml")
 except snakemake.exceptions.WorkflowError as e:
