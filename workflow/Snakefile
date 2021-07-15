@@ -6,7 +6,7 @@ import pandas as pd
 import snakemake
 import git
 sys.path.insert(0, os.path.abspath(os.getcwd()) + "/scripts")
-import importSampleSheet
+from importSampleSheet import *
 
 # Check correct snakemake version is being used.
 try: snakemake.utils.min_version("6.5.3")
