@@ -15,16 +15,41 @@ except snakemake.exceptions.WorkflowError as e:
 # Setup config file
 configfile: "../config/config.yaml"
 if not os.path.isfile("../config/config.yaml"):
-    print("Configuration file (config/config.yaml) not found. Workflow aborted.")
+    print("Configuration file (../config/config.yaml) not found. Workflow aborted.")
     sys.exit()
+snakemake.utils.validate(config, schema="schemas/config.schema.yaml")
+
 # Setup report destination
 report: "report/workflow.rst"
 
-snakemake.utils.validate(config, schema="schemas/config.schema.yaml")
-
-# Load RRBS sample sheet
+# Load RRBS sample sheet and validate structure
 rrbs_samples = pd.read_table(config["RRBS_samples"])
-snakemake.utils.validate(rrbs_samples, schema="schemas/samples.schema.yaml")
+try: snakemake.utils.validate(rrbs_samples, schema="schemas/samples.schema.yaml")
+except snakemake.exceptions.WorkflowError as e:
+    print(e)
+    print("Validation failed on ", config["RRBS_samples"], ". Workflow aborted.", sep="")
+    sys.exit()
+# Name each sample with the format: SampleID.SampleGroup.Tissue
+# Set sample name as index (row names) for rrbs_samples dataframe
+rrbs_sample_names = []
+for i in range(0, len(rrbs_samples)):
+    rrbs_sample_names.append(rrbs_samples[['SampleID', 'SampleGroup', 'Tissue']].iloc[0].str.cat(sep="."))
+rrbs_samples.index = rrbs_sample_names
+
+# Load reference deconvolution bsseq sample sheet and validate structure
+deconvo_ref_samples = pd.read_table(config["deconvo_bsseq_ref"])
+try: snakemake.utils.validate(deconvo_ref_samples, schema="schemas/samples.schema.yaml")
+except snakemake.exceptions.WorkflowError as e:
+    print(e)
+    print("Validation failed on ", config["deconvo_bsseq_ref"], ". Workflow aborted.", sep="")
+    sys.exit()
+# Name each sample with the format: SampleID.SampleGroup.Tissue
+# Set sample name as index (row names) for deconvo_ref_samples dataframe
+deconvo_ref_sample_names = []
+for i in range(0, len(deconvo_ref_samples)):
+    deconvo_ref_sample_names.append(deconvo_ref_samples[['SampleID', 'SampleGroup', 'Tissue']].iloc[0].str.cat(sep="."))
+deconvo_ref_samples.index = deconvo_ref_sample_names
+
 
 # Install DMRFinder from github if not done already
 DMRFinder_repo_path = "../resources/DMRFinder"
