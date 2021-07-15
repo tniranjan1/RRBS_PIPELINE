@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 import snakemake
 import git
-sys.path.insert(0, abspath(os.getcwd()) + '/scripts/hkp')
+sys.path.insert(0, os.path.abspath(os.getcwd()) + '/scripts/hkp')
 from RRBS_housekeeping import *
 
 # Check correct snakemake version is being used.
@@ -51,6 +51,8 @@ include: 'rules/align.smk'
 # Target rule
 rule all:
     input:
-        get_initial_output(rrbs_samples),
-        get_initial_output(deconvo_ref_samples),
+        get_source_type(rrbs_samples, "rrbs_samples"),
+        get_source_type(deconvo_ref_samples, "deconvo_ref_samples"),
+        get_initial_output(rrbs_samples, "rrbs_samples"),
+        get_initial_output(deconvo_ref_samples, "deconvo_ref_samples"),
         get_final_output(rrbs_samples)

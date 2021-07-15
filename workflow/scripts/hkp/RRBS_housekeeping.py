@@ -42,10 +42,44 @@ def importSampleSheet(sample_path, schema_path):
     sample_sheet.index = sample_names
     return sample_sheet
 
+# Specify if read source is from SRA, fastq, or BAM
+def get_source_type(sample_sheet, sample_destination):
+    prefix = "../resources/" + sample_destination + "/source/"
+
+    patterns = {
+        "fq1$" : "fq",
+        "fq2$" : "fq",
+        "fq1.gz$" : "fq",
+        "fq2.gz$" : "fq",
+        "bam$" : "bam",
+        "^SRR" : "SRR"
+    }
+    input_files = []
+    for i in range(0, len(sample_sheet)):
+        # get and match path to type
+        path = sample_sheet['Path'].iloc[i]
+        value = []
+        for key in patterns:
+            if re.search(key, path):
+                value.append(patterns[key])
+        if len(value) == 1:
+            source_name = prefix + "".join(value) + '.' + sample_sheet.index[i]
+            source_name = os.path.abspath(source_name)
+            input_files.append(source_name)
+        else:
+            if len(value) == 0:
+                print("A usable path type was not found for SampleID.SampleGroup.Tissue = {}.".format(sample_sheet.index[i]))
+                print("Ensure path to sample reads is SRR***, ***.bam, or ***.fq1(.gz),***.fq2(.gz).")
+            else:
+                print("Too many usable path types were found for SampleID.SampleGroup.Tissue = {}.".format(sample_sheet.index[i]))
+            print("Workflow aborted.")
+            sys.exit(-1)
+    return input_files
+
 # Subroutine to obtain the names of all inital output files (alignments) for a given sample sheet
-def get_initial_output(sample_sheet):
+def get_initial_output(sample_sheet, sample_destination):
     output_files = []
-    prefix = "../resources/rrbs_samples/alignments/"
+    prefix = "../resources/" + sample_destination + "/alignments/"
     suffix = ".POSsort.bam"
     for i in range(0, len(sample_sheet)):
         output_files.append(os.path.abspath(prefix + sample_sheet.index[i] + suffix))
