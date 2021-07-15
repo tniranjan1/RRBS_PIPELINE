@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 import snakemake
 import git
-sys.path.insert(0, os.path.abspath(os.getcwd()) + '/scripts/hkp')
+sys.path.insert(0, abspath(os.getcwd()) + '/scripts/hkp')
 from RRBS_housekeeping import *
 
 # Check correct snakemake version is being used.
@@ -15,7 +15,7 @@ except snakemake.exceptions.WorkflowError as e:
     sys.exit()
 
 # Setup and validate config file
-config_path = os.path.abspath('../config/config.yaml')
+config_path = abspath('../config/config.yaml')
 configfile: config_path
 if not os.path.isfile(config_path):
     print('Configuration file ({}}) not found. Workflow aborted.'.format(config_path))
@@ -26,16 +26,16 @@ snakemake.utils.validate(config, schema='schemas/config.schema.yaml')
 report: 'report/workflow.rst'
 
 # Load RRBS sample sheet and validate structure
-rrbs_sample_sheet_path = os.path.abspath(config['RRBS_samples'])
-schema_path = os.path.abspath('schemas/samples.schema.yaml')
+rrbs_sample_sheet_path = abspath(config['RRBS_samples'])
+schema_path = abspath('schemas/samples.schema.yaml')
 rrbs_samples = importSampleSheet(sample_path=rrbs_sample_sheet_path, schema_path=schema_path)
 
 # Load reference deconvolution bsseq sample sheet and validate structure
-deconvo_ref_sheet_path = os.path.abspath(config['deconvo_bsseq_ref'])
+deconvo_ref_sheet_path = abspath(config['deconvo_bsseq_ref'])
 deconvo_ref_samples = importSampleSheet(sample_path=deconvo_ref_sheet_path, schema_path=schema_path)
 
 # Install DMRFinder from github if not done already
-DMRFinder_repo_path = os.path.abspath('../resources/DMRFinder')
+DMRFinder_repo_path = abspath('../resources/DMRFinder')
 if not os.path.isdir(DMRFinder_repo_path):
     git.Repo.clone_from(config['DMRfinder']['DMRFinder_git_URL'], DMRFinder_repo_path)
 DMRFinder_repo = git.Repo(DMRFinder_repo_path)
@@ -43,7 +43,7 @@ DMRFinder_repo = git.Repo(DMRFinder_repo_path)
 if DMRFinder_repo.bare:
     print('Could not load repository at {}. Recommend checking DMRFinder git url in ../config/config.yaml. Workflow aborted.'.format(DMRFinder_repo_path))
 
-reference_genome_path = os.path.abspath(config['ref']['path'])
+reference_genome_path = abspath(config['ref']['path'])
 
 # Load rules
 include: 'rules/align.smk'

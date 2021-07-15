@@ -1,7 +1,12 @@
 import pandas as pd
 import snakemake
+import os
 import re
 import sys
+
+# Short write for absolute path
+def abspath(path):
+    return os.path.abspath(path)
 
 # Subroutine to correctly import and validate a sample sheet for analysis.
 def importSampleSheet(sample_path, schema_path):
