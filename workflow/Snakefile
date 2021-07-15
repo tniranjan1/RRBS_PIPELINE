@@ -5,70 +5,49 @@ import sys
 import pandas as pd
 import snakemake
 import git
-sys.path.insert(0, os.path.abspath(os.getcwd()) + "/scripts")
+sys.path.insert(0, os.path.abspath(os.getcwd()) + '/scripts')
 from importSampleSheet import *
 
 # Check correct snakemake version is being used.
-try: snakemake.utils.min_version("6.5.3")
+try: snakemake.utils.min_version('6.5.3')
 except snakemake.exceptions.WorkflowError as e:
-    print(e, "Workflow aborted.")
+    print(e, 'Workflow aborted.')
     sys.exit()
 
 # Setup and validate config file
-configfile: "../config/config.yaml"
-if not os.path.isfile("../config/config.yaml"):
-    print("Configuration file (../config/config.yaml) not found. Workflow aborted.")
+config_path = os.path.abspath('../config/config.yaml')
+configfile: config_path
+if not os.path.isfile(config_path):
+    print('Configuration file ({}}) not found. Workflow aborted.'.format(config_path))
     sys.exit()
-snakemake.utils.validate(config, schema="schemas/config.schema.yaml")
+snakemake.utils.validate(config, schema='schemas/config.schema.yaml')
 
 # Setup report destination
-report: "report/workflow.rst"
+report: 'report/workflow.rst'
 
 # Load RRBS sample sheet and validate structure
-rrbs_samples = importSampleSheet(config["RRBS_samples"], "schemas/samples.schema.yaml")
-
-rrbs_samples = pd.read_table(config["RRBS_samples"])
-try: snakemake.utils.validate(rrbs_samples, schema="schemas/samples.schema.yaml")
-except snakemake.exceptions.WorkflowError as e:
-    print(e)
-    print("Validation failed on ", config["RRBS_samples"], ". Workflow aborted.", sep="")
-    sys.exit()
-# Name each sample with the format: SampleID.SampleGroup.Tissue
-# Set sample name as index (row names) for rrbs_samples dataframe
-rrbs_sample_names = []
-for i in range(0, len(rrbs_samples)):
-    rrbs_sample_names.append(rrbs_samples[['SampleID', 'SampleGroup', 'Tissue']].iloc[0].str.cat(sep="."))
-rrbs_samples.index = rrbs_sample_names
+rrbs_sample_sheet_path = os.path.abspath(config['RRBS_samples'])
+schema_path = os.path.abspath('schemas/samples.schema.yaml')
+rrbs_samples = importSampleSheet(sample_path=rrbs_sample_sheet_path, schema_path=schema_path)
 
 # Load reference deconvolution bsseq sample sheet and validate structure
-deconvo_ref_samples = pd.read_table(config["deconvo_bsseq_ref"])
-try: snakemake.utils.validate(deconvo_ref_samples, schema="schemas/samples.schema.yaml")
-except snakemake.exceptions.WorkflowError as e:
-    print(e)
-    print("Validation failed on ", config["deconvo_bsseq_ref"], ". Workflow aborted.", sep="")
-    sys.exit()
-# Name each sample with the format: SampleID.SampleGroup.Tissue
-# Set sample name as index (row names) for deconvo_ref_samples dataframe
-deconvo_ref_sample_names = []
-for i in range(0, len(deconvo_ref_samples)):
-    deconvo_ref_sample_names.append(deconvo_ref_samples[['SampleID', 'SampleGroup', 'Tissue']].iloc[0].str.cat(sep="."))
-deconvo_ref_samples.index = deconvo_ref_sample_names
-
+deconvo_ref_sheet_path = os.path.abspath(config['deconvo_bsseq_ref'])
+deconvo_ref_samples = importSampleSheet(sample_path=deconvo_ref_sheet_path, schema_path=schema_path)
 
 # Install DMRFinder from github if not done already
-DMRFinder_repo_path = "../resources/DMRFinder"
+DMRFinder_repo_path = os.path.abspath('../resources/DMRFinder')
 if not os.path.isdir(DMRFinder_repo_path):
-    git.Repo.clone_from(config["DMRfinder"]["DMRFinder_git_URL"], DMRFinder_repo_path)
+    git.Repo.clone_from(config['DMRfinder']['DMRFinder_git_URL'], DMRFinder_repo_path)
 DMRFinder_repo = git.Repo(DMRFinder_repo_path)
 # check that the repository loaded correctly
 if DMRFinder_repo.bare:
     print('Could not load repository at {}. Recommend checking DMRFinder git url in ../config/config.yaml. Workflow aborted.'.format(DMRFinder_repo_path))
 
-
+reference_genome_path = config['']['']
 # Load rules
-#include: "rules/common.smk"
-#include: "rules/ref.smk"
-#include: "rules/trim.smk"
-#include: "rules/qc.smk"
-#include: "rules/align.smk"
-#include: "rules/diffexp.smk"
+#include: rules/common.smk'
+#include: 'rules/ref.smk'
+#include: 'rules/trim.smk'
+#include: 'rules/qc.smk'
+#include: 'rules/align.smk'
+#include: 'rules/diffexp.smk'
