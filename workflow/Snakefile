@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 import snakemake
 import git
-sys.path.insert(0, os.path.abspath(os.getcwd()) + '/scripts')
+sys.path.insert(0, os.path.abspath(os.getcwd()) + '/scripts/hkp')
 from RRBS_housekeeping import *
 
 # Check correct snakemake version is being used.
@@ -46,12 +46,7 @@ if DMRFinder_repo.bare:
 reference_genome_path = os.path.abspath(config['ref']['path'])
 
 # Load rules
-#include: rules/common.smk'
-#include: 'rules/ref.smk'
-#include: 'rules/trim.smk'
-#include: 'rules/qc.smk'
-#include: 'rules/align.smk'
-#include: 'rules/diffexp.smk'
+include: 'rules/align.smk'
 
 # Target rule
 rule all:

@@ -39,7 +39,12 @@ def importSampleSheet(sample_path, schema_path):
 
 # Subroutine to obtain the names of all inital output files (alignments) for a given sample sheet
 def get_initial_output(sample_sheet):
-    return ""
+    output_files = []
+    prefix = "../resources/rrbs_samples/alignments/"
+    suffix = ".POSsort.bam"
+    for i in range(0, len(sample_sheet)):
+        output_files.append(os.path.abspath(prefix + sample_sheet.index[i] + suffix))
+    return output_files
 
 # Subroutine to obtain the names of all final output files for a given sample sheet
 def get_final_output(sample_sheet):
