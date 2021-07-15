@@ -6,7 +6,7 @@ import pandas as pd
 import snakemake
 import git
 sys.path.insert(0, os.path.abspath(os.getcwd()) + '/scripts')
-from importSampleSheet import *
+from RRBS_housekeeping import *
 
 # Check correct snakemake version is being used.
 try: snakemake.utils.min_version('6.5.3')
@@ -43,7 +43,8 @@ DMRFinder_repo = git.Repo(DMRFinder_repo_path)
 if DMRFinder_repo.bare:
     print('Could not load repository at {}. Recommend checking DMRFinder git url in ../config/config.yaml. Workflow aborted.'.format(DMRFinder_repo_path))
 
-reference_genome_path = config['']['']
+reference_genome_path = os.path.abspath(config['ref']['path'])
+
 # Load rules
 #include: rules/common.smk'
 #include: 'rules/ref.smk'
@@ -51,3 +52,10 @@ reference_genome_path = config['']['']
 #include: 'rules/qc.smk'
 #include: 'rules/align.smk'
 #include: 'rules/diffexp.smk'
+
+# Target rule
+rule all:
+    input:
+        get_initial_output(rrbs_samples),
+        get_initial_output(deconvo_ref_samples),
+        get_final_output(rrbs_samples)

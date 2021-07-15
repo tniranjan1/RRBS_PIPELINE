@@ -3,7 +3,7 @@ import snakemake
 import re
 import sys
 
-# Definition to correctly import and validate a sample sheet for analysis.
+# Subroutine to correctly import and validate a sample sheet for analysis.
 def importSampleSheet(sample_path, schema_path):
     # Import sample sheet as pandas dataframe
     sample_sheet = pd.read_table(sample_path)
@@ -22,7 +22,7 @@ def importSampleSheet(sample_path, schema_path):
     # Name each sample with the format: SampleID.SampleGroup.Tissue
     sample_names = []
     for i in range(0, len(sample_sheet)):
-        new_name = sample_sheet[['SampleID', 'SampleGroup', 'Tissue']].iloc[0].str.cat(sep=".")
+        new_name = sample_sheet[['SampleID', 'SampleGroup', 'Tissue']].iloc[i].str.cat(sep=".")
         # Ensure new sample name can be used as filename (no invalid characters)
         slugify = re.sub(r'(?u)[^-\w.]', '', new_name)
         sample_names.append(new_name)
@@ -36,3 +36,11 @@ def importSampleSheet(sample_path, schema_path):
     # Set sample name as index (row names) for rrbs_samples dataframe
     sample_sheet.index = sample_names
     return sample_sheet
+
+# Subroutine to obtain the names of all inital output files (alignments) for a given sample sheet
+def get_initial_output(sample_sheet):
+    return ""
+
+# Subroutine to obtain the names of all final output files for a given sample sheet
+def get_final_output(sample_sheet):
+    return ""
