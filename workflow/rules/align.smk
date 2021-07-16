@@ -6,7 +6,7 @@ rule prep_fastq_from_source:
     output:
         fq1=temp("{path}/raw/{sample}.fq1.gz"),
         fq2=temp("{path}/raw/{sample}.fq2.gz")
-    run:
+    shell:""
         # python code if input.type = 'SRR'
         # python code if input.type = 'bam'
         # python code if input.type = 'fq'
@@ -18,8 +18,8 @@ rule bwa_meth_align:
     output:
         bam=temp("{path}/alignments/{sample}.bam")
     threads: 8
-    conda:
-        "envs/align.yaml"
+#    conda:
+#        "envs/align.yaml"
     shell:
         """
 
