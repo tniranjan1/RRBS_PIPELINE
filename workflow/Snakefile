@@ -34,6 +34,9 @@ rrbs_samples = importSampleSheet(sample_path=rrbs_sample_sheet_path, schema_path
 deconvo_ref_sheet_path = abspath(config['deconvo_bsseq_ref'])
 deconvo_ref_samples = importSampleSheet(sample_path=deconvo_ref_sheet_path, schema_path=schema_path)
 
+# Merge sample sheets for easy access to input files in the rules
+merged_sample_sheet = mergeSampleSheet(sheetA=rrbs_samples, sheetB=deconvo_ref_samples)
+
 # Install DMRFinder from github if not done already
 DMRFinder_repo_path = abspath('../resources/DMRFinder')
 if not os.path.isdir(DMRFinder_repo_path):
@@ -51,8 +54,6 @@ include: 'rules/align.smk'
 # Target rule
 rule all:
     input:
-        get_source_type(rrbs_samples, "rrbs_samples"),
-        get_source_type(deconvo_ref_samples, "deconvo_ref_samples"),
         get_initial_output(rrbs_samples, "rrbs_samples"),
-        get_initial_output(deconvo_ref_samples, "deconvo_ref_samples"),
-        get_final_output(rrbs_samples)
+        get_initial_output(deconvo_ref_samples, "deconvo_ref_samples")#,
+#        get_final_output(rrbs_samples)

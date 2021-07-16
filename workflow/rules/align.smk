@@ -1,44 +1,15 @@
-# Generate empty source file indicating if source is SRA, BAM, or fastq
-rule prep_source_type:
-    output: "{path}/source/{type}.{sample}"
-    shell: "touch {output}"
-
-# Description (link to new bam and make fastq)
-rule prep_from_bam:
+# Generate raw fastq source
+rule prep_fastq_from_source:
     input:
-        type="{path}/source/{type}.sample",
-        bam_path=get_source
+        type=lambda wildcards: merged_sample_sheet['type'].loc[wildcards.sample],
+        path=lambda wildcards: merged_sample_sheet['Path'].loc[wildcards.sample]
     output:
         fq1=temp("{path}/raw/{sample}.fq1.gz"),
         fq2=temp("{path}/raw/{sample}.fq2.gz")
-    shell:
-        """
-
-        """
-
-rule prep_from_fastq:
-    input:
-        type="{path}/source/{type}.sample",
-        fq_path=get_source
-    output:
-        fq1=temp("{path}/raw/{sample}.fq1.gz"),
-        fq2=temp("{path}/raw/{sample}.fq2.gz")
-    shell:
-        """
-
-        """
-
-rule prep_from_SRA:
-    input:
-        type="{path}/source/{type}.sample",
-        SRR=get_source
-    output:
-        fq1=temp("{path}/raw/{sample}.fq1.gz"),
-        fq2=temp("{path}/raw/{sample}.fq2.gz")
-    shell:
-        """
-
-        """
+    run:
+        # python code if input.type = 'SRR'
+        # python code if input.type = 'bam'
+        # python code if input.type = 'fq'
 
 rule bwa_meth_align:
     input:
