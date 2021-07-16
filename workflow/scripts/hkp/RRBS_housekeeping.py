@@ -90,7 +90,7 @@ def mergeSampleSheet(sheetA, sheetB):
 def get_initial_output(sample_sheet, sample_destination):
     output_files = []
     prefix = "../resources/" + sample_destination + "/alignments/"
-    suffix = ".POSsort.bam"
+    suffix = ".bam"
     for i in range(0, len(sample_sheet)):
         output_files.append(os.path.abspath(prefix + sample_sheet.index[i] + suffix))
     return output_files
