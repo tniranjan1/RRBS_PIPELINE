@@ -24,3 +24,8 @@ rule bwa_meth_align:
         """
 
         """
+
+rule bam_sort:
+    input: "{sample}.bam"
+    output: "{sample}.POSsort.bam"
+    shell: ""
