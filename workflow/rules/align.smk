@@ -1,11 +1,11 @@
 # Generate raw fastq source
 rule prep_fastq_from_source:
-    input: lambda wildcards: merged_sample_sheet['Path'].loc[wildcards.sample]
-#        type=lambda wildcards: merged_sample_sheet['type'].loc[wildcards.sample],
-#        path=lambda wildcards: merged_sample_sheet['Path'].loc[wildcards.sample]
     output:
         fq1=temp("{path}/raw/{sample}.fq1.gz"),
         fq2=temp("{path}/raw/{sample}.fq2.gz")
+    params:
+        type=lambda wildcards: merged_sample_sheet['type'].loc[wildcards.sample],
+        path=lambda wildcards: merged_sample_sheet['Path'].loc[wildcards.sample]
     shell:""
         # python code if input.type = 'SRR'
         # python code if input.type = 'bam'
