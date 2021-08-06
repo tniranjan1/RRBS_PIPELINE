@@ -7,17 +7,17 @@ output = snakemake.output
 params = snakemake.params
 wildcards = snakemake.wildcards
 threads = snakemake.threads
+log = snakemake.log[0]
 
-print("output.fq1 = " + output.fq1)
-print("output.fq2 = " + output.fq2)
-print("params.type = " + params.type)
-print("params.path = " + params.path)
+f = open(log, "w")
+sys.stderr = sys.stdout = f
 
 if params.type == 'SRR':
     # Get path to local SRR download repository
     sra_repository_command = "vdb-config -o n -p | grep /repository/user/main/public/root | cut -d= -f2 | sed 's/ //g'"
     sra_download_repository = os.popen(sra_repository_command).read()
     sra_download_repository = sra_download_repository.replace('"', '').replace("'", "").strip("\n") + "/sra"
+    print(sra_download_repository)
     # Download SRR from SRA repository
     shell("prefetch --max-size 100000000 {params.path}")
     # multi-thread fastq dump from local SRR
@@ -27,7 +27,7 @@ if params.type == 'SRR':
     shell("mv ../resources/sra_temp/{params.path}/{params.path}_1.fastq.gz {output.fq1}")
     shell("mv ../resources/sra_temp/{params.path}/{params.path}_2.fastq.gz {output.fq2}")
     # delete local SRR download
-    shell("rm {sra_download_repository}/{params.path}.sra")
+    #shell("rm {sra_download_repository}/{params.path}.sra")
 elif params.type == 'bam':
     # Read sort bam file
     shell("mkdir -p ../resources/bam_temp")
@@ -52,3 +52,5 @@ elif params.type == 'fq':
 else:
     print('Error: When generating fastq source, param type ({}) is unknown. Workflow aborted.'.format(params.type))
     sys.exit()
+
+f.close()

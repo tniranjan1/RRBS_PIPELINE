@@ -6,16 +6,17 @@ rule prep_fastq_from_source:
     params:
         type=lambda wildcards: merged_sample_sheet['type'].loc[wildcards.sample],
         path=lambda wildcards: merged_sample_sheet['Path'].loc[wildcards.sample]
-    conda: "../envs/align.yaml"
+    conda: f"{workflow_dir}/envs/align.yaml"
     resources: disk_gb=lambda wildcards: get_disk_gb(merged_sample_sheet['type'].loc[wildcards.sample])
     threads: 8
+    log: "{path}/raw/{sample}.fq.log"
     script:
-        "../scripts/hkp/sourcing_fastq.py"
+        f"{workflow_dir}/scripts/hkp/sourcing_fastq.py"
 
 rule fastq_gzip:
     input: "{sample}"
     output: temp("{sample}.gz")
-    conda: "../envs/align.yaml"
+    conda: f"{workflow_dir}/envs/align.yaml"
     threads: 4
     shell: "bgzip -@ {threads} -c {input} > {output}"
 
@@ -26,7 +27,7 @@ rule bwa_meth_align:
     output:
         bam=temp("{path}/alignments/{sample}.bam")
     threads: 8
-#    conda: "../envs/align.yaml"
+#    conda: f"{workflow_dir}/envs/align.yaml"
     shell:
         """
 
