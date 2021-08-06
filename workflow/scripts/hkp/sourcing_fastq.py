@@ -5,7 +5,13 @@ import sys
 
 output = snakemake.output
 params = snakemake.params
+wildcards = snakemake.wildcards
 threads = snakemake.threads
+
+print("output.fq1 = " + output.fq1)
+print("output.fq2 = " + output.fq2)
+print("params.type = " + params.type)
+print("params.path = " + params.path)
 
 if params.type == 'SRR':
     # Get path to local SRR download repository
