@@ -6,10 +6,19 @@ rule prep_fastq_from_source:
     params:
         type=lambda wildcards: merged_sample_sheet['type'].loc[wildcards.sample],
         path=lambda wildcards: merged_sample_sheet['Path'].loc[wildcards.sample]
-    shell:""
-        # python code if input.type = 'SRR'
-        # python code if input.type = 'bam'
-        # python code if input.type = 'fq'
+    run:
+        # python code if params.type = 'SRR'
+        if params.type == 'SRR':
+            print()
+        # python code if params.type = 'bam'
+        elif params.type == 'bam':
+            print()
+        # python code if params.type = 'fq'
+        elif params.type == 'fq':
+            print()
+        # else throw error
+        else:
+            print()
 
 rule bwa_meth_align:
     input:

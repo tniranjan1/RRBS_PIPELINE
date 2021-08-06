@@ -8,12 +8,12 @@ max-jobs-per-second: 1
 max-status-checks-per-second: 10
 cores: 24 # max cores used for all concurrent/parallel jobs
 local-cores: 1
-rerun-incomplete: true  # recomended for cluster submissions
+rerun-incomplete: true # recomended for cluster submissions
 keep-going: false
 #use-conda: true
 #cache: true
 dry-run: true
-debug-dag: true
+#debug-dag: true
 verbose: true
 
 # We ran our snakemake flow on a local server without cluster control.
