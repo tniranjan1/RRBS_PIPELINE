@@ -46,8 +46,5 @@ elif params.type == 'fq':
     shell("ln {fq1_input_path} {fq1_output_path}")
     shell("ln {fq2_input_path} {fq2_output_path}")
 else:
-    print('Error: When generating fastq source, param type ({}) is unknown. Workflow aborted.'.format(param.type))
+    print('Error: When generating fastq source, param type ({}) is unknown. Workflow aborted.'.format(params.type))
     sys.exit()
-
-
-#--------------------------------------------------#
