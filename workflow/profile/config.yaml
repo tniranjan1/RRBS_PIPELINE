@@ -6,13 +6,13 @@
 restart-times: 0
 max-jobs-per-second: 1
 max-status-checks-per-second: 10
-cores: 24 # max cores used for all concurrent/parallel jobs
+cores: 32 # max cores used for all concurrent/parallel jobs
 local-cores: 1
 rerun-incomplete: true # recomended for cluster submissions
 keep-going: false
 use-conda: true
 #cache: true
-dry-run: true
+#dry-run: true
 #debug-dag: true
 verbose: true
 
