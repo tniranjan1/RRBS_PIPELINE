@@ -3,10 +3,8 @@ import os
 import re
 import sys
 
-output.fq1 = snakemake.output.fq1
-output.fq2 = snakemake.output.fq2
-params.type = snakemake.params.type
-params.path = snakemake.params.path
+output = snakemake.output
+params = snakemake.params
 threads = snakemake.threads
 
 if params.type == 'SRR':
