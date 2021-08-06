@@ -48,6 +48,8 @@ if DMRFinder_repo.bare:
 
 reference_genome_path = abspath(config['ref']['path'])
 
+workflow_dir = os.path.abspath(os.getcwd())
+
 # Load rules
 include: 'rules/align.smk'
 
