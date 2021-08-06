@@ -56,6 +56,6 @@ include: 'rules/align.smk'
 # Target rule
 rule all:
     input:
-        get_initial_output(rrbs_samples, "rrbs_samples")[0:2],
-        get_initial_output(deconvo_ref_samples, "deconvo_ref_samples")[0:2]#,
+        get_initial_output(rrbs_samples, "rrbs_samples")[0:4],
+        get_initial_output(deconvo_ref_samples, "deconvo_ref_samples")[0:4]#,
 #        get_final_output(rrbs_samples)

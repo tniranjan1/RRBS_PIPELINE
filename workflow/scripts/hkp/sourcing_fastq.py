@@ -16,18 +16,19 @@ if params.type == 'SRR':
     # Get path to local SRR download repository
     sra_repository_command = "vdb-config -o n -p | grep /repository/user/main/public/root | cut -d= -f2 | sed 's/ //g'"
     sra_download_repository = os.popen(sra_repository_command).read()
-    sra_download_repository = sra_download_repository.replace('"', '').replace("'", "").strip("\n") + "/sra"
-    print(sra_download_repository)
+    sra_download_repository = sra_download_repository.replace('"', '').replace("'", "").strip("\n")
+    if len(sra_download_repository) == 0:
+        sra_download_repository = "."
     # Download SRR from SRA repository
     shell("prefetch --max-size 100000000 {params.path}")
     # multi-thread fastq dump from local SRR
     shell("mkdir -p ../resources/sra_temp")
-    shell("parallel-fastq-dump --sra-id {params.path} --threads {threads} --outdir ../resources/sra_temp/{params.path} --split-files --gzip")
+    shell("parallel-fastq-dump --sra-id {params.path} --threads {threads} --outdir {sra_download_repository}/{params.path} --split-files --gzip")
     # move fastq dump files to desired output paths
-    shell("mv ../resources/sra_temp/{params.path}/{params.path}_1.fastq.gz {output.fq1}")
-    shell("mv ../resources/sra_temp/{params.path}/{params.path}_2.fastq.gz {output.fq2}")
+    shell("mv {sra_download_repository}/{params.path}/{params.path}_1.fastq.gz {output.fq1}")
+    shell("mv {sra_download_repository}/{params.path}/{params.path}_2.fastq.gz {output.fq2}")
     # delete local SRR download
-    #shell("rm {sra_download_repository}/{params.path}.sra")
+    shell("rm -r {sra_download_repository}/{params.path}")
 elif params.type == 'bam':
     # Read sort bam file
     shell("mkdir -p ../resources/bam_temp")
