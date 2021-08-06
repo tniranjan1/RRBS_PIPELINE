@@ -106,8 +106,7 @@ def get_final_output(sample_sheet):
 #---------------------------------------------------#
 
 # Subroutine to get max allowed disk usage
-def get_disk_gb(wildcards):
-    source_type = merged_sample_sheet['type'].loc[wildcards.sample]
+def get_disk_gb(source_type):
     if source_type == 'SRR':
         return 50
     elif source_type == 'bam':

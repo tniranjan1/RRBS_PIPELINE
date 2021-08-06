@@ -7,7 +7,7 @@ rule prep_fastq_from_source:
         type=lambda wildcards: merged_sample_sheet['type'].loc[wildcards.sample],
         path=lambda wildcards: merged_sample_sheet['Path'].loc[wildcards.sample]
     conda: "../envs/align.yaml"
-    resources: disk_gb=get_disk_gb
+    resources: disk_gb=lambda wildcards: get_disk_gb(merged_sample_sheet['type'].loc[wildcards.sample])
     threads: 8
     script:
         "scripts/hkp/sourcing_fastq.py"
