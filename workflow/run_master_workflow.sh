@@ -8,8 +8,8 @@
 std_log="./stdout.log"
 err_log="./stderr.log"
 
-echo "Here you will find the standard output of the main workflow." > $std_log
-echo "Here you will find the standard error of the main workflow." > $err_log
+echo "Here you will find the standard output of the main workflow.\n\n---\n\n" > $std_log
+echo "Here you will find the standard error of the main workflow.\n\n---\n\n" > $err_log
 
 echo "Starting RRBS workflow." >> $std_log 2>> $err_log
 ## Is conda installed?

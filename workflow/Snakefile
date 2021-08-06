@@ -18,7 +18,7 @@ except snakemake.exceptions.WorkflowError as e:
 config_path = abspath('../config/config.yaml')
 configfile: config_path
 if not os.path.isfile(config_path):
-    print('Configuration file ({}}) not found. Workflow aborted.'.format(config_path))
+    print('Configuration file ({}) not found. Workflow aborted.'.format(config_path))
     sys.exit()
 snakemake.utils.validate(config, schema='schemas/config.schema.yaml')
 

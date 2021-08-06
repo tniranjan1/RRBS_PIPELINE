@@ -1,0 +1,10 @@
+channel:
+  - bioconda
+  - conda-forge
+dependencies:
+  - snakemake
+  - mamba
+  - python=3.8
+  - sra-tools
+  - parallel-fastq-dump
+  - samtools=1.13

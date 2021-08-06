@@ -57,6 +57,8 @@ def mergeSampleSheet(sheetA, sheetB):
         "fq2$" : "fq",
         "fq1.gz$" : "fq",
         "fq2.gz$" : "fq",
+        "fastq" : "fq",
+        "fastq.gz" : "fq",
         "bam$" : "bam",
         "^SRR" : "SRR"
     }
@@ -100,3 +102,16 @@ def get_initial_output(sample_sheet, sample_destination):
 # Subroutine to obtain the names of all final output files for a given sample sheet
 def get_final_output(sample_sheet):
     return ""
+
+#---------------------------------------------------#
+
+# Subroutine to get max allowed disk usage
+def get_disk_gb(wildcards):
+    source_type = merged_sample_sheet['type'].loc[wildcards.sample]
+    if source_type == 'SRR':
+        return 50
+    elif source_type == 'bam':
+        return 10
+    elif source_type == 'fq':
+        return 1
+    return 1

@@ -5,7 +5,7 @@ RRBS_samples: ../config/RRBS_samples.tsv
 #   SampleGroup [string] [required] = disease group that patient source belongs to; for control samples, recommend using "Ctrl"
 #   CaseControl [string] [required] = if patient source is a case or a control; acceptable values are "Case", "Control", "Unknown", "NA"
 #   Tissue [string] [required] = tissue source
-#   Path [string] [required] = path to raw RRBS reads; can be BAM, fastq, or SRR number; multiple files are comma-separated
+#   Path [string] [required] = path to raw RRBS reads; can be BAM, fastq, or SRR number; multiple files are comma-separated (e.g.: sample.fq1,sample.fq2)
 #   Remove [boolean] [required] = indicate of sample should be removed from analysis; this field is modified by sample removal parameters below
 #   Remove_Reason [string] [required] = reason the sample is being removed; NA if not removed
 #   Covariate_Age [numeric] [optional] = optional column for age covariate (for FTLD publication, this is age at death)
