@@ -21,7 +21,7 @@ Access to reference and publicly available datasets are described in the [config
 ---
 ### System Requirements
 Worklfow and all analyses were run and tested on local server running [CentOS Linux release 7.9.2009](https://www.centos.org/).
-Minimum CPUs used for most analyses if 4. Max memory usage is 12 GB, but may be higher for more CPU availability.
+Minimum CPUs used for most analyses is 4. Max memory usage is 12 GB, but may be higher for more CPU availability.
 
 ---
 ### Dependencies
