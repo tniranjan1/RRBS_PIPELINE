@@ -23,17 +23,19 @@ rule fastq_gzip:
 rule bwa_meth_align:
     input:
         fq1="{path}/raw/{sample}.fq1.gz",
-        fq2="{path}/raw/{sample}.fq2.gz"
+        fq2="{path}/raw/{sample}.fq2.gz",
+        ref=reference_genome_path,
+        bwamethidx=reference_genome_path + ".bwameth.c2t"
     output:
         bam=temp("{path}/alignments/{sample}.bam")
-    threads: 8
-#    conda: f"{workflow_dir}/envs/align.yaml"
+    threads: 4
+    conda: f"{workflow_dir}/envs/align.yaml"
     shell:
-        """
-
-        """
+        "bwameth.py --reference {input.ref} -t {threads} {input.fq1} {input.fq2} | samtools view -bh -o {output}"
 
 rule bam_sort:
     input: "{sample}.bam"
     output: "{sample}.POSsort.bam"
-    shell: ""
+    threads: 4
+    conda:
+    shell: "samtools sort -@ {threads} -O BAM -o {output} {input}"

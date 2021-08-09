@@ -8,3 +8,5 @@ dependencies:
   - sra-tools
   - parallel-fastq-dump
   - samtools=1.13
+  - bwameth
+  - bwa-mem2
