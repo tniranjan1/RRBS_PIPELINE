@@ -4,13 +4,13 @@ import os
 import re
 import sys
 
-#--------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------#
 
 # Short write for absolute path
 def abspath(path):
     return os.path.abspath(path)
 
-#--------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------#
 
 # Subroutine to correctly import and validate a sample sheet for analysis.
 def importSampleSheet(sample_path, schema_path):
@@ -18,7 +18,7 @@ def importSampleSheet(sample_path, schema_path):
     sample_sheet = pd.read_table(sample_path)
 
     # Convert appropriate columns to string, if not already in string format
-    stringed_columns = [ 'SampleID', 'SampleGroup', 'CaseControl', 'Tissue', 'Path', 'Remove_Reason' ]
+    stringed_columns = ['SampleID','SampleGroup','CaseControl','Tissue','Path','Remove_Reason']
     for c in stringed_columns:
         sample_sheet[c] = sample_sheet[c].astype('str')
 
@@ -46,7 +46,7 @@ def importSampleSheet(sample_path, schema_path):
     sample_sheet.index = sample_names
     return sample_sheet
 
-#--------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------#
 
 def mergeSampleSheet(sheetA, sheetB):
     mergedSheet = sheetA[['SampleID', 'Path']].append(sheetB[['SampleID', 'Path']])
@@ -74,10 +74,10 @@ def mergeSampleSheet(sheetA, sheetB):
             type_list.append(value)
         else: # Abort with error specifying invalid or too many path types.
             if len(value) == 0:
-                print("A usable path type was not found for SampleID.SampleGroup.Tissue = {}.".format(mergedSheet.index[i]))
+                print("Usable path type  not found for SampleID.SampleGroup.Tissue = {}.".format(mergedSheet.index[i]))
                 print("Ensure path to sample reads is SRR***, ***.bam, or ***.fq1(.gz),***.fq2(.gz).")
             else:
-                print("Too many usable path types were found for SampleID.SampleGroup.Tissue = {}.".format(mergedSheet.index[i]))
+                print("Too many  path types found for SampleID.SampleGroup.Tissue = {}.".format(mergedSheet.index[i]))
                 print("Currently, the workflow can only accept one path type (SRR, BAM, fastq) per sample.")
             print("Workflow aborted.")
             sys.exit(-1)
@@ -86,7 +86,7 @@ def mergeSampleSheet(sheetA, sheetB):
     # Return dataframe for each sample with path and path type.
     return mergedSheet
 
-#--------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------#
 
 # Subroutine to obtain the names of all inital output files (alignments) for a given sample sheet
 # output name = "../resources/{sample_destinition from function input}/alignments/{sample name from sample sheet}.bam"
@@ -98,13 +98,13 @@ def get_initial_output(sample_sheet, sample_destination):
         output_files.append(os.path.abspath(prefix + sample_sheet.index[i] + suffix))
     return output_files
 
-#--------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------#
 
 # Subroutine to obtain the names of all final output files for a given sample sheet
 def get_final_output(sample_sheet):
     return ""
 
-#---------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------#
 
 # Subroutine to get max allowed disk usage
 def get_disk_gb(source_type):

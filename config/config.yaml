@@ -1,27 +1,32 @@
 # relative path to sample sheet for study RRBS samples
 RRBS_samples: ../config/RRBS_samples.tsv
 # TSV column format:
-#   SampleID [string] [required] = patient source identifier; can be reused for samples from the same patient but different tissues
-#   SampleGroup [string] [required] = disease group that patient source belongs to; for control samples, recommend using "Ctrl"
-#   CaseControl [string] [required] = if patient source is a case or a control; acceptable values are "Case", "Control", "Unknown", "NA"
+#   SampleID [string] [required] = patient source identifier; can be reused for samples from the same patient but
+#     different tissues
+#   SampleGroup [string] [required] = disease group that patient source belongs to; for control samples, recommend
+#     using "Ctrl"
+#   CaseControl [string] [required] = if patient source is a case or a control; acceptable values are "Case", "Control",
+#     "Unknown", "NA"
 #   Tissue [string] [required] = tissue source
-#   Path [string] [required] = path to raw RRBS reads; can be BAM, fastq, or SRR number; multiple files are comma-separated (e.g.: sample.fq1,sample.fq2)
-#   Remove [boolean] [required] = indicate of sample should be removed from analysis; this field is modified by sample removal parameters below
+#   Path [string] [required] = path to raw RRBS reads; can be BAM, fastq, or SRR number; multiple files are comma-
+#     separated (e.g.: sample.fq1,sample.fq2)
+#   Remove [boolean] [required] = indicate of sample should be removed from analysis; this field is modified by sample
+#     removal parameters below
 #   Remove_Reason [string] [required] = reason the sample is being removed; NA if not removed
 #   Covariate_Age [numeric] [optional] = optional column for age covariate (for FTLD publication, this is age at death)
-#   Covariate_Gender [string] [optional] = optional column for ascertained gender covariate (included for FTLD publication)
+#   Covariate_Gender [string] [optional] = optional column for ascertained gender (included for FTLD publication)
 #   Covariate_* [any] [optional] = additional columns as needed for covariates
-#   Covariate_Deconvolution [any] [optional] = if deconvolution is performed (parameters below), an additional covariate column will be added
+#   Covariate_Deconvolution [any] [optional] = if deconvolution is performed (parameters below), an additional covariate
+#     column will be added for cellular deconvultion
 #   Variable_* [any] [optional] = additional optional columns that are informative for the end user
 
 # relative path to sample sheet for reference bisulfite seq for deconvolution
 deconvo_bsseq_ref: ../config/deconvo_bsseq_ref_samples.tsv
 # TSV column format: See RRBS_Samples TSV format above.
 # Provided reference file is for samples sequenced in
-#   Rizzardi LF, Hickey PF, DiBlasi VR, Tryggvadóttir R, Callahan CM, Idrizi A,
-#   Hansen KD, & Feinberg AP. Neuronal brain-region-specific DNA methylation
-#   and chromatin accessibility are associated with neuropsychiatric trait
-#   heritability. Nat Neurosci. 2019 Feb;22(2):307-316.
+#   Rizzardi LF, Hickey PF, DiBlasi VR, Tryggvadóttir R, Callahan CM, Idrizi A, Hansen KD, & Feinberg AP.
+#   Neuronal brain-region-specific DNA methylation and chromatin accessibility are associated with neuropsychiatric
+#   trait heritability. Nat Neurosci. 2019 Feb;22(2):307-316.
 #     doi: 10.1038/s41593-018-0297-8.
 #     Epub 2019 Jan 14.
 #     PMID: 30643296.
@@ -31,43 +36,50 @@ deconvo_bsseq_ref: ../config/deconvo_bsseq_ref_samples.tsv
 ref:
   # Ensembl species name
   species: homo_sapiens
-  # Ensembl release (make sure to take one where snpeff data is available, check 'snpEff databases' output)
+
+  # Ensembl release (make sure to take one where snpeff data is available; check 'snpEff databases' output)
   release: 100
+
   # Genome build
   GRCh_build: GRCh38
   hg_build: hg38
+
   # full local reference fasta path
   path: "/home/tejasvi/references/human/hg38/hg38.fa"
+
   # full local reference repeat masker path
   repeats_path: "/home/tejasvi/repbase/hg38.repeatmask.bed"
-  # For publication analysis, repeat masked bed file was generated from
-  # UCSC table browser (http://genome.ucsc.edu/cgi-bin/hgTables):
-  #  date generated: February 1, 2021
-  #  clade: Mammal
-  #  genome: Human
-  #  assembly: Dec. 2013 (GRCh38/hg38)
-  #  group: Repeats
-  #  track: RepeatMasker
-  #  table: rmsk
-  #  region: genome
-  #  identifiers (names/accessions): none uploaded
-  #  filter: none created
-  #  intersection: none created
-  #  output format: BED - browser extensible data
-  #  output filename: hg38.repeatmask.bed
-  #  file type returned: plain text
-  #  include custom track header: unchecked
-  #  create one BED record per: whole gene
+  # For publication analysis, repeat masked bed file was generated from UCSC table browser
+  # (http://genome.ucsc.edu/cgi-bin/hgTables):
+  #   date generated: February 1, 2021
+  #   clade: Mammal
+  #   genome: Human
+  #   assembly: Dec. 2013 (GRCh38/hg38)
+  #   group: Repeats
+  #   track: RepeatMasker
+  #   table: rmsk
+  #   region: genome
+  #   identifiers (names/accessions): none uploaded
+  #   filter: none created
+  #   intersection: none created
+  #   output format: BED - browser extensible data
+  #   output filename: hg38.repeatmask.bed
+  #   file type returned: plain text
+  #   include custom track header: unchecked
+  #   create one BED record per: whole gene
 
 # parameters for Illumina 450k Chip reference
 illumina450k:
   # Ensembl species name
   species: homo_sapiens
+
   # Infinium release
   release: v1.2
+
   # Genome build
   GRCh_build: GRCh37
   hg_build: hg19
+
   # full local 450k Manifest file path
   path: "/home/tejasvi/Infinium/HumanMethylation450_15017482_v1-2.csv"
   # Infinium 450k CSV Manifest File downloaded from:
@@ -77,16 +89,19 @@ illumina450k:
 qc_params:
   # Minimum coverage for Cytosine site inclusion
   min_cov: 5
+
   # Fraction of samples in cohort (RRBS_samples) that must have min_cov coverage at Cytosine site for inclusion.
-  # 0.95 means that 95% of samples in cohort must have the minimum coverage at the site for inclusion.
+  #   0.95 means that 95% of samples in cohort must have the minimum coverage at the site for inclusion.
   min_call_rate: 0.95
 
 # Which cytosine contexts to analyze
 cytosine_sites:
   # Analyze CpG sites
   CpG: True
+
   # Analyze CHG sites
   CHG: False
+
   # Analyze CHH sites
   CHH: False
 
@@ -95,25 +110,31 @@ remove_samples:
   # remove PCA outliers
   pca:
     activate: True
+
   # remove tissue discordant samples
   tissue_discordant:
     activate: True
+
   # remove genoype discordant samples
   genotype_discordant:
-    # VCF of genotypes for samples (VCF sample name must match Sample Name column in RRBS_samples sample sheet).
-    # If no path given, set vcf variable to False
+    # VCF of genotypes for samples (VCF sample name must match Sample Name column in RRBS_samples sample sheet). If no
+    #   path given, set vcf variable to empty string ("") and set activate to False.
+
     vcf: "/home/tejasvi/rrbs_cristina_scratch/genotypes/wgs-genotypes-mayo-genomes.vcf.gz"
-    # If override_tissue is True, genotypic concordance results in sample re-inclusion,
-    #   if the sample had previously been removed due to tisue discordance
     activate: True
+
+    # If override_tissue is True, genotypic concordance results in sample re-inclusion if the sample was previously
+    #   removed due to tisue discordance
     override_tissue: True
 
 # parameters for finding differentially methylated regions (DMRs)
 DMRfinder:
   # Run DMRFinder
   activate: True
+
   # git URL to download DMRFinder. Must provide even if activate is False.
   DMRFinder_git_URL: "https://github.com/jsh58/DMRfinder.git"
+
 MethylKit:
   # Run MethylKit; identify DMRs with set window_size stepped every step_size
   activate: True
@@ -124,11 +145,12 @@ MethylKit:
 edgeR:
   # set maximal false discovery rate per comparison (numeric value 0 to 1)
   FDR: 0.05
+
   # Differential methylation should be run on CpGs, promoters, DMRs (DMRFinder, MethylKit).
-  # Note: if DMRFinder or MethylKit are activated above, True value defaults to False.
   check_CpGs: True
   check_promoters: True
   check_DMRFinder: True
   check_MethylKit: True
-  # If deconvolution completes, run with deconvolution as covariate
+
+  # Re-run edgeR with deconvolution as covariate if deconvolution is available (deconvolution sample sheet)
   with_deconvolution: True

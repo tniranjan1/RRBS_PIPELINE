@@ -1,9 +1,7 @@
 #!/bin/bash
 
-## This is a master workflow initiator script.
-## This is the only script that needs to be run.
-## This script will check conda installations
-## and then start the snakemake workflow.
+# This is a master workflow initiator script. This is the only script that needs to be run. This script will check
+# conda installations and then start the snakemake workflow.
 
 std_log="./stdout.log"
 err_log="./stderr.log"

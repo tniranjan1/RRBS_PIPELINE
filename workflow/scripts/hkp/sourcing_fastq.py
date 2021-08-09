@@ -3,38 +3,60 @@ import os
 import re
 import sys
 
+## This script will generate or link the raw fastq files needed for alignment by bwa-meth.
+##   If the fastq file source is from an SRA repository, this script will download the repository temporarily
+##   and dump the fastq files. If the fastq file source is from a BAM file, this script will read sort the
+##   the bam file, and generate the fastq files from the bam. If the fastq file source is already fastq format,
+##   the fastq files will be hard-linked to other original files.
+
+#----------------------------------------------------------------------------------------------------------------------#
+
+# Get input arguments from snakemake object
 output = snakemake.output
 params = snakemake.params
 wildcards = snakemake.wildcards
 threads = snakemake.threads
 log = snakemake.log[0]
 
+# Print standard output and error to log file
 f = open(log, "w")
 sys.stderr = sys.stdout = f
+
+#----------------------------------------------------------------------------------------------------------------------#
 
 if params.type == 'SRR':
     # Get path to local SRR download repository
     sra_repository_command = "vdb-config -o n -p | grep /repository/user/main/public/root | cut -d= -f2 | sed 's/ //g'"
-    sra_download_repository = os.popen(sra_repository_command).read()
-    sra_download_repository = sra_download_repository.replace('"', '').replace("'", "").strip("\n")
-    if len(sra_download_repository) == 0:
-        sra_download_repository = "."
+    sra_loc_repo = os.popen(sra_repository_command).read()
+    sra_loc_repo = sra_loc_repo.replace('"', '').replace("'", "").strip("\n")
+    if len(sra_loc_repo) == 0:
+        sra_loc_repo = "."
     # Download SRR from SRA repository
     shell("prefetch --max-size 100000000 {params.path}")
     # multi-thread fastq dump from local SRR
     shell("mkdir -p ../resources/sra_temp")
-    shell("parallel-fastq-dump --sra-id {params.path} --threads {threads} --outdir {sra_download_repository}/{params.path} --split-files --gzip")
+    pfd="parallel-fastq-dump"
+    shell("{pfd} --sra-id {params.path} --threads {threads} --outdir {sra_loc_repo}/{params.path} --split-files --gzip")
     # move fastq dump files to desired output paths
-    shell("mv {sra_download_repository}/{params.path}/{params.path}_1.fastq.gz {output.fq1}")
-    shell("mv {sra_download_repository}/{params.path}/{params.path}_2.fastq.gz {output.fq2}")
+    shell("mv {sra_loc_repo}/{params.path}/{params.path}_1.fastq.gz {output.fq1}")
+    shell("mv {sra_loc_repo}/{params.path}/{params.path}_2.fastq.gz {output.fq2}")
     # delete local SRR download
-    shell("rm -r {sra_download_repository}/{params.path}")
+    shell("rm -r {sra_loc_repo}/{params.path}")
+
+#----------------------------------------------------------------------------------------------------------------------#
+
 elif params.type == 'bam':
     # Read sort bam file
-    shell("mkdir -p ../resources/bam_temp")
-    shell("samtools sort -@ {threads} -n -O BAM -o ../resources/bam_temp/{wildcards.sample}.bam {params.path}")
-    # Generate fastq files (gzipped) from bam file
-    shell("samtools fastq -@ {threads} -n -1 {output.fq1} -2 {output.fq2} -0 /dev/null -s /dev/null ../resources/bam_temp/{wildcards.sample}.bam")
+    tmp_fldr = "../resources/bam_temp"
+    shell("mkdir -p {tmp_fldr}")
+    tmp_bam = f"{tmp_fldr}/{wildcards.sample}.bam"
+    shell("samtools sort -@ {threads} -n -O BAM -o {tmp_bam} {params.path}")
+    # Generate fastq files from bam file. Samtools will auto-gzip the fastq files due to ".gz" extension in output names
+    shell("samtools fastq -@ {threads} -n -1 {output.fq1} -2 {output.fq2} -0 /dev/null -s /dev/null {tmp_bam}")
+    shell("rm {tmp_bam}")
+
+#----------------------------------------------------------------------------------------------------------------------#
+
 elif params.type == 'fq':
     # Get fastq paths and determine if already gzipped
     fastq_paths = params.path
@@ -47,11 +69,16 @@ elif params.type == 'fq':
         fq1_output_path = fq1_output_path.strip(".gz")
     if os.path.splitext(fq2_input_path)[1] != '.gz':
         fq2_output_path = fq2_output_path.strip(".gz")
-    # Link input fastq files to standard destiantion
+    # Link input fastq files to rule-established destination
     shell("ln {fq1_input_path} {fq1_output_path}")
     shell("ln {fq2_input_path} {fq2_output_path}")
+
+#----------------------------------------------------------------------------------------------------------------------#
+
 else:
     print('Error: When generating fastq source, param type ({}) is unknown. Workflow aborted.'.format(params.type))
     sys.exit()
 
-f.close()
+#----------------------------------------------------------------------------------------------------------------------#
+
+f.close() # Close log file
