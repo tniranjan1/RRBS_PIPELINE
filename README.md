@@ -35,18 +35,17 @@ The following packages will be managed by conda and do not need to be pre-instal
     4. gatk4
     5. bowtie2
     6. bwa
-    7. mosaik
-    8. maven
-    9. bcftools
-    10. bwameth
-    11. methyldackel
-    12. bioconductor-methylkit
-    13. bioconductor-edger
-    14. bioconductor-annotationdbi
-    15. bioconductor-org.hs.eg.db
-    16. bioconductor-rnbeads
-    17. git
-    18. pip
+    7. maven
+    8. bcftools
+    9. bwameth
+    10. methyldackel
+    11. bioconductor-methylkit
+    12. bioconductor-edger
+    13. bioconductor-annotationdbi
+    14. bioconductor-org.hs.eg.db
+    15. bioconductor-rnbeads
+    16. git
+    17. pip
 
 ### Installation
 In your desired conda environment (e.g.: base) git and pip can be installed by:
