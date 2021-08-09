@@ -106,6 +106,18 @@ def get_final_output(sample_sheet):
 
 #----------------------------------------------------------------------------------------------------------------------#
 
+# Subroutine to obtained the file names for all the RRBS samples once the have undergone methylation extraction,
+#   with or without repeats, with or without compression (bgzip), and context aware
+def get_extracted_files(sample_sheet, path, repeats, context, gz):
+    suffix = "bedGraph.gz" if gz else ".bedGraph"
+    extracted_files = []
+    for i in range(0, len(sample_sheet)):
+        file_path = f"{path}/methylation_calls/{sample_sheet.index[i]}_{context}.{repeats}.{suffix}"
+        extracted_files.append(os.path.abspath(file_path))
+    return extracted_files
+
+#----------------------------------------------------------------------------------------------------------------------#
+
 # Subroutine to get max allowed disk usage
 def get_disk_gb(source_type):
     if source_type == 'SRR':

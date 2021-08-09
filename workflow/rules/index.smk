@@ -9,6 +9,8 @@ rule reference_dict:
   log: f"{workflow_dir}/logs/index_rules/reference_dict.log"
   shell: "samtools dict -a {params.build} -s {params.species} -o {output} {input} 2> {log}"
 
+#----------------------------------------------------------------------------------------------------------------------#
+
 # Generate reference index
 rule reference_idx:
   input: "{reference}.fa"
@@ -16,6 +18,8 @@ rule reference_idx:
   conda: f"{workflow_dir}/envs/index.yaml"
   log: f"{workflow_dir}/logs/index_rules/reference_idx.log"
   shell: "samtools faidx {input} 2> {log}"
+
+#----------------------------------------------------------------------------------------------------------------------#
 
 # Generate bwa-meth index
 rule bwa_meth_index:

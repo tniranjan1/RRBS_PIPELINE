@@ -1,5 +1,4 @@
-# Generate raw fastq source by calling housekeeping script:
-#   scripts/hkp/sourcing_fastq.py
+# Generate raw fastq source by calling housekeeping "scripts/hkp/sourcing_fastq.py"
 rule prep_fastq_from_source:
   output:
     fq1=temp("{path}/raw/{sample}.fq1.gz"),
@@ -13,8 +12,9 @@ rule prep_fastq_from_source:
   log: f"{workflow_dir}/logs/align_rules/prep_fastq_from_source/{sample}.log"
   script: f"{workflow_dir}/scripts/hkp/sourcing_fastq.py"
 
-# Generate bgzipped file from input, specifically for fastq input,
-#   to indicate output is temporary
+#----------------------------------------------------------------------------------------------------------------------#
+
+# Generate bgzipped file from input, specifically for fastq input, to indicate output is temporary
 rule fastq_gzip:
   input: "{path}/{sample}.fq{num}"
   output: temp("{path}/{sample}.fq{num}.gz")
@@ -22,6 +22,8 @@ rule fastq_gzip:
   threads: 4
   log: f"{workflow_dir}/logs/align_rules/fastq_gzip/{sample}.fq{num}.log"
   shell: "bgzip -@ {threads} -c {input} > {output} 2> {log}"
+
+#----------------------------------------------------------------------------------------------------------------------#
 
 # Generate bwa-meth aligned bam files, not position sorted
 rule bwa_meth_align:
@@ -41,6 +43,8 @@ rule bwa_meth_align:
       samtools view -bh -o {output} 2> {log}
     """
 
+#----------------------------------------------------------------------------------------------------------------------#
+
 # Position sort a bam file
 rule bam_position_sort:
   input: "{path}/{sample}.bam"
@@ -49,6 +53,8 @@ rule bam_position_sort:
   conda: f"{workflow_dir}/envs/align.yaml"
   log: f"{workflow_dir}/logs/align_rules/bam_position_sort/{sample}.log"
   shell: "samtools sort -@ {threads} -O BAM -o {output} {input} 2> {log}"
+
+#----------------------------------------------------------------------------------------------------------------------#
 
 # Generate bam index
 rule bam_index:

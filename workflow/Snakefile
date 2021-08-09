@@ -52,6 +52,13 @@ reference_genome_path = abspath(config['ref']['path'])
 
 workflow_dir = os.path.abspath(os.getcwd())
 
+# Which Cytosine contexts to Analyze
+context_truth = {
+    "CpG" : True, # Default is to always analyze CpG contexts
+    "CHG" : config['cytosine_sites']['CHG'],
+    "CHH" : config['cytosine_sites']['CHH']
+}
+
 # Globally constrain all wildcards matching {sample} to not have "/" in the string
 wildcard_constraints:
   sample="[^/]"
