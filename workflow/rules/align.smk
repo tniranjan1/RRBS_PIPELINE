@@ -37,5 +37,5 @@ rule bam_sort:
     input: "{sample}.bam"
     output: "{sample}.POSsort.bam"
     threads: 4
-    conda:
+    conda: f"{workflow_dir}/envs/align.yaml"
     shell: "samtools sort -@ {threads} -O BAM -o {output} {input}"
