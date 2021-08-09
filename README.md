@@ -29,15 +29,15 @@ All packages and dependencies are managed using conda.
 See [conda installation](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) options before proceeding with this workflow.
 The following packages will be managed by conda and do not need to be pre-installed.
 
-    1. samtools [version='>=1.10']
-    2. bedtools
-    3. r [version='>=4.0.3']
-    4. gatk4
-    5. bowtie2
-    6. bwa
-    7. maven
-    8. bcftools
-    9. bwameth
+     1. samtools [version='>=1.10']
+     2. bedtools
+     3. r [version='>=4.0.3']
+     4. gatk4
+     5. bowtie2
+     6. bwa
+     7. maven
+     8. bcftools
+     9. bwameth
     10. methyldackel
     11. bioconductor-methylkit
     12. bioconductor-edger
