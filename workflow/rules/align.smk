@@ -10,7 +10,7 @@ rule prep_fastq_from_source:
   resources: disk_gb=lambda wildcards: get_disk_gb(merged_sample_sheet['type'].loc[wildcards.sample])
   threads: 8
   log: workflow_dir + "/logs/align_rules/prep_fastq_from_source/{sample}.log"
-  script: f"{workflow_dir}/scripts/hkp/sourcing_fastq.py"
+  script: workflow_dir + "/scripts/hkp/sourcing_fastq.py"
 
 #----------------------------------------------------------------------------------------------------------------------#
 
