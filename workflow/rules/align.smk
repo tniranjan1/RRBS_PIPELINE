@@ -6,7 +6,7 @@ rule prep_fastq_from_source:
   params:
     type=lambda wildcards: merged_sample_sheet['type'].loc[wildcards.sample],
     path=lambda wildcards: merged_sample_sheet['Path'].loc[wildcards.sample]
-  log: workflow_dir + "/logs/align_rules/prep_fastq_from_source/{path}{sample}.log"
+  log: lambda wildcards: f"{workflow_dir}/logs/align_rules/prep_fastq_from_source/{wildcards.sample}.log"
   resources: disk_gb=lambda wildcards: get_disk_gb(merged_sample_sheet['type'].loc[wildcards.sample])
   conda: f"{workflow_dir}/envs/align.yaml"
   threads: 8
@@ -35,8 +35,8 @@ rule bwa_meth_align:
   output:
     bam=temp("{path}/alignments/{sample}.bam")
   log: workflow_dir + "/logs/align_rules/bwa_meth_align/{sample}.log"
-  threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
+  threads: 4
   shell:
     """
     bwameth.py --reference {input.ref} -t {threads} {input.fq1} {input.fq2} | \
