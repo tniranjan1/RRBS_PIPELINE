@@ -6,8 +6,7 @@ rule reference_dict:
     build=config['ref']['hg_build'],
     species=config['ref']['species']
   conda: f"{workflow_dir}/envs/index.yaml"
-  log: f"{workflow_dir}/logs/index_rules/reference_dict.log"
-  shell: "samtools dict -a {params.build} -s {params.species} -o {output} {input} 2> {log}"
+  shell: "samtools dict -a {params.build} -s {params.species} -o {output} {input}"
 
 #----------------------------------------------------------------------------------------------------------------------#
 
@@ -16,8 +15,7 @@ rule reference_idx:
   input: "{reference}.fa"
   output: "{reference}.fa.fai"
   conda: f"{workflow_dir}/envs/index.yaml"
-  log: f"{workflow_dir}/logs/index_rules/reference_idx.log"
-  shell: "samtools faidx {input} 2> {log}"
+  shell: "samtools faidx {input}"
 
 #----------------------------------------------------------------------------------------------------------------------#
 
@@ -30,8 +28,7 @@ rule bwa_meth_index:
     ann="{reference}.fa.bwameth.c2t.ann",
     pac="{reference}.fa.bwameth.c2t.pac"
   conda: f"{workflow_dir}/envs/index.yaml"
-  log: f"{workflow_dir}/logs/index_rules/bwa_meth_index.log"
-  shell: "bwameth.py index {input} 2> {log}"
+  shell: "bwameth.py index {input}"
 
 #----------------------------------------------------------------------------------------------------------------------#
 
@@ -39,7 +36,6 @@ rule bwa_meth_index:
 rule link_repeats:
   input: abspath(config['ref']['repeats_path'])
   output: reference_repeats
-  log: f"{workflow_dir}/logs/index_rules/link_repeats.log"
   shell: "ln {input} {output}"
 
 #----------------------------------------------------------------------------------------------------------------------#

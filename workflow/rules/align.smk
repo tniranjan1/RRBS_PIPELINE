@@ -6,7 +6,7 @@ rule prep_fastq_from_source:
   params:
     type=lambda wildcards: merged_sample_sheet['type'].loc[wildcards.sample],
     path=lambda wildcards: merged_sample_sheet['Path'].loc[wildcards.sample]
-  log: clean_log(f"{workflow_dir}/logs/align_rules/prep_fastq_from_source/{{sample}}.log&{{path}}", "")
+  log: "{path}/raw/.{sample}.rule-align.prep_fastq_from_source.log"
   resources: disk_gb=lambda wildcards: get_disk_gb(merged_sample_sheet['type'].loc[wildcards.sample])
   conda: f"{workflow_dir}/envs/align.yaml"
   threads: 8
@@ -18,7 +18,7 @@ rule prep_fastq_from_source:
 rule fastq_gzip:
   input: "{path}/{sample}.fq{num}"
   output: temp("{path}/{sample}.fq{num}.gz")
-  log: workflow_dir + "/logs/align_rules/fastq_gzip/{sample}.fq{num}.log"
+  log: "{path}/.{sample}.fq{num}.rule-align.fastq_gzip.log"
   conda: f"{workflow_dir}/envs/align.yaml"
   threads: 4
   shell: "bgzip -@ {threads} -c {input} > {output} 2> {log}"
@@ -34,7 +34,7 @@ rule bwa_meth_align:
     bwamethidx=reference_genome_path + ".bwameth.c2t"
   output:
     bam=temp("{path}/alignments/{sample}.bam")
-  log: workflow_dir + "/logs/align_rules/bwa_meth_align/{sample}.log"
+  log: "{path}/alignments/.{sample}.rule-align.bwa_meth_align.log"
   conda: f"{workflow_dir}/envs/align.yaml"
   threads: 4
   shell:
@@ -49,7 +49,7 @@ rule bwa_meth_align:
 rule bam_position_sort:
   input: "{path}/{sample}.bam"
   output: "{path}/{sample}.POSsort.bam"
-  log: workflow_dir + "/logs/align_rules/bam_position_sort/{sample}.log"
+  log: "{path}/.{sample}.POSsort.rule-align.bam_position_sort.log"
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
   shell: "samtools sort -@ {threads} -O BAM -o {output} {input} 2> {log}"
@@ -60,7 +60,7 @@ rule bam_position_sort:
 rule bam_index:
   input: "{path}/{sample}.bam"
   output: "{path}/{sample}.bam.bai"
-  log: workflow_dir + "/logs/align_rules/bam_index/{sample}.log"
+  log: "{path}/.{sample}.rule-align.bam_index.log"
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
-  shell: "samtools index -@ {input}"
+  shell: "samtools index -@ {input} 2> {log}"

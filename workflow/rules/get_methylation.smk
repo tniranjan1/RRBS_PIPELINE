@@ -6,7 +6,7 @@ rule bgzip_table:
     suffix="\w+"
   threads: 8
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: f"{workflow_dir}/logs/get_methylation_rules/bgzip_table/{{sample}}.{{suffix}}.log"
+  log: "{path}/methylation_calls/.{sample}.{suffix}.rule-get_methylation.bgzip_table.log"
   shell: "bgzip -@ {threads} -c {input} > {output}"
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -26,7 +26,7 @@ rule extract_methylation:
     suffix="bedGraph|methylKit"
   threads: 4
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: f"{workflow_dir}/logs/get_methylation_rules/extract_methylation/{{sample}}.log"
+  log: "{path}/methylation_calls/.{sample}.{repeats}.{suffix}.rule-get_methylation.extract_methylation.log"
   run:
       mKit = "--methylKit" if wildcards.suffix == "methylKit" else ""
       CHG = "--CHG" if context_truth['CHG'] else ""
@@ -46,7 +46,8 @@ rule merge_methylation_by_chr:
   output: temp("{path}/methylation_calls/merged/merged_methylation.{repeats}.{context}.{chr}.bedGraph")
   params:
     sample_names=rrbs_samples.index
-  log: f"{workflow_dir}/logs/get_methylation_rules/merge_methylation_by_chr/merged_methylation.{{repeats}}.{{context}}.{{chr}}.log"
+  log: "{path}/methylation_calls/merged/" + \
+       ".merged_methylation.{repeats}.{context}.{chr}.rule-get_methylation.merge_methylation_by_chr.log"
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   shell:
       """
@@ -70,7 +71,8 @@ rule merge_coverage_by_chr:
   output: temp("{path}/methylation_calls/merged/merged_coverage.{repeats}.{context}.{chr}.bedGraph")
   params:
     sample_names=rrbs_samples.index
-  log: f"{workflow_dir}/logs/get_methylation_rules/merge_coverage_by_chr/merged_methylation.{{repeats}}.{{context}}.{{chr}}.log"
+  log: "{path}/methylation_calls/merged/" + \
+       ".merged_coverage.{repeats}.{context}.{chr}.rule-get_methylation.merge_coverage_by_chr.log"
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   shell:
       """
@@ -95,7 +97,8 @@ rule merge_table_from_chr:
   params:
     sample_names=rrbs_samples.index
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: f"{workflow_dir}/logs/get_methylation_rules/merge_table_from_chr/merged_{{meco}}.{{repeats}}.{{context}}.log"
+  log: "{path}/methylation_calls/merged/" + \
+       ".merged_{meco}.{repeats}.{context}.rule-get_methylation.merge_table_from_chr.log"
   shell:
         """
         echo "chrom" "start" "end" {params.sample_names} | sed 's/ /\t/g' > {output} ## Print header
