@@ -14,17 +14,6 @@ rule prep_fastq_from_source:
 
 #----------------------------------------------------------------------------------------------------------------------#
 
-# Generate bgzipped file from input, specifically for fastq input, to indicate output is temporary
-rule fastq_gzip:
-  input: "{path}/{sample}.fq{num}"
-  output: temp("{path}/{sample}.fq{num}.gz")
-  log: "{path}/.{sample}.fq{num}.rule-align.fastq_gzip.log"
-  conda: f"{workflow_dir}/envs/align.yaml"
-  threads: 4
-  shell: "bgzip -@ {threads} -c {input} > {output} 2> {log}"
-
-#----------------------------------------------------------------------------------------------------------------------#
-
 # Generate bwa-meth aligned bam files, not position sorted
 rule bwa_meth_align:
   input:

@@ -72,6 +72,13 @@ elif params.type == 'fq':
     # Link input fastq files to rule-established destination
     shell("ln {fq1_input_path} {fq1_output_path}")
     shell("ln {fq2_input_path} {fq2_output_path}")
+    # Gzip files if not already gzipped
+    if os.path.splitext(fq1_input_path)[1] != '.gz':
+        shell("bgzip -@ {threads} -c {fq1_output_path} > {output.fq1}")
+        shell("rm {fq1_output_path}")
+    if os.path.splitext(fq2_input_path)[1] != '.gz':
+        shell("bgzip -@ {threads} -c {fq2_output_path} > {output.fq2}")
+        shell("rm {fq2_output_path}")
 
 #----------------------------------------------------------------------------------------------------------------------#
 
