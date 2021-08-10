@@ -6,7 +6,7 @@ rule prep_fastq_from_source:
   params:
     type=lambda wildcards: merged_sample_sheet['type'].loc[wildcards.sample],
     path=lambda wildcards: merged_sample_sheet['Path'].loc[wildcards.sample]
-  log: "../logs/align_rules/prep_fastq_from_source/{sample}.log"
+  log: workflow_dir + "/logs/align_rules/prep_fastq_from_source/{sample}.log"
   resources: disk_gb=lambda wildcards: get_disk_gb(merged_sample_sheet['type'].loc[wildcards.sample])
   conda: f"{workflow_dir}/envs/align.yaml"
   threads: 8
@@ -18,9 +18,9 @@ rule prep_fastq_from_source:
 rule fastq_gzip:
   input: "{path}/{sample}.fq{num}"
   output: temp("{path}/{sample}.fq{num}.gz")
+  log: workflow_dir + "/logs/align_rules/fastq_gzip/{sample}.fq{num}.log"
   conda: f"{workflow_dir}/envs/align.yaml"
   threads: 4
-  log: f"{workflow_dir}/logs/align_rules/fastq_gzip/{{sample}}.fq{{num}}.log"
   shell: "bgzip -@ {threads} -c {input} > {output} 2> {log}"
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -34,9 +34,9 @@ rule bwa_meth_align:
     bwamethidx=reference_genome_path + ".bwameth.c2t"
   output:
     bam=temp("{path}/alignments/{sample}.bam")
+  log: workflow_dir + "/logs/align_rules/bwa_meth_align/{sample}.log"
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
-  log: f"{workflow_dir}/logs/align_rules/bwa_meth_align/{{sample}}.log"
   shell:
     """
     bwameth.py --reference {input.ref} -t {threads} {input.fq1} {input.fq2} | \
@@ -49,9 +49,9 @@ rule bwa_meth_align:
 rule bam_position_sort:
   input: "{path}/{sample}.bam"
   output: "{path}/{sample}.POSsort.bam"
+  log: workflow_dir + "/logs/align_rules/bam_position_sort/{sample}.log"
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
-  log: f"{workflow_dir}/logs/align_rules/bam_position_sort/{{sample}}.log"
   shell: "samtools sort -@ {threads} -O BAM -o {output} {input} 2> {log}"
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -60,6 +60,7 @@ rule bam_position_sort:
 rule bam_index:
   input: "{path}/{sample}.bam"
   output: "{path}/{sample}.bam.bai"
+  log: workflow_dir + "/logs/align_rules/bam_index/{sample}.log"
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
-  log: f"{workflow_dir}/logs/align_rules/bam_index/{{sample}}.log"
+  shell: "samtools index -@ {input}"
