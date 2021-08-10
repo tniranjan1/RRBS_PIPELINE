@@ -152,4 +152,4 @@ def get_disk_gb(source_type):
 
 # Subroutine for getting clean log file names
 def clean_log(use, ignore):
-    return use
+    return use.split("&")[0]
