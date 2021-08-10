@@ -6,7 +6,7 @@ rule bgzip_table:
     suffix="\w+"
   threads: 8
   conda: f"{workflow_dir}/envs/methylation.yaml"
-  log: f"{workflow_dir}/logs/get_methylation_rules/bgzip_table/{sample}.{suffix}.log"
+  log: f"{workflow_dir}/logs/get_methylation_rules/bgzip_table/{{sample}}.{{suffix}}.log"
   shell: "bgzip -@ {threads} -c {input} > {output}"
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -26,7 +26,7 @@ rule extract_methylation:
     suffix="bedGraph|methylKit"
   threads: 4
   conda: f"{workflow_dir}/envs/methylation.yaml"
-  log: f"{workflow_dir}/logs/get_methylation_rules/extract_methylation/{sample}.log"
+  log: f"{workflow_dir}/logs/get_methylation_rules/extract_methylation/{{sample}}.log"
   run:
       mKit = "--methylKit" if wildcards.suffix == "methylKit" else ""
       CHG = "--CHG" if context_truth['CHG'] else ""
@@ -41,15 +41,13 @@ rule extract_methylation:
 # Merge methylation calls for all samples in a sheet, subdivided by chromosome
 rule merge_methylation_by_chr:
   input:
-    orig: lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, path=wildcards.path,
-                                                repeats=wildcards.repeats, context=wildcards.context, gz=False),
-    gzip: lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, path=wildcards.path,
-                                                repeats=wildcards.repeats, context=wildcards.context, gz=True )
+    orig: lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=False),
+    gzip: lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=True )
   output: temp("{path}/methylation_calls/merged/merged_methylation.{repeats}.{context}.{chr}.bedGraph")
   params:
     sample_names=rrbs_samples.index
+  log: f"{workflow_dir}/logs/get_methylation_rules/merge_methylation_by_chr/merged_methylation.{{repeats}}.{{context}}.{{chr}}.log"
   conda: f"{workflow_dir}/envs/methylation.yaml"
-  log: f"{workflow_dir}/logs/get_methylation_rules/merge_methylation_by_chr/merged_methylation.{wildcards.repeats}.{wildcards.context}.{wildcards.chr}.log"
   shell:
       """
       chr_input=""
@@ -58,7 +56,7 @@ rule merge_methylation_by_chr:
         grep '^{wildcards.chr}' $i | cut -f1-4 > $i.methy_tmp
         chr_input="$chr_input $i.methy_tmp"
       done
-      bedtools unionbedg -filler NA -header -names {params.sample_names} -i $chr_input > {output}
+      bedtools unionbedg -filler NA -i $chr_input > {output}
       for i in {input.orig}; do rm $i.methy_tmp; done
       """
 
@@ -67,23 +65,39 @@ rule merge_methylation_by_chr:
 # Merge coverage information for all samples in a sheet, subdivided by chromosome
 rule merge_coverage_by_chr:
   input:
-    orig: lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, path=wildcards.path,
-                                                repeats=wildcards.repeats, context=wildcards.context, gz=False),
-    gzip: lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, path=wildcards.path,
-                                                repeats=wildcards.repeats, context=wildcards.context, gz=True )
-  output: temp("{path}/methylation_calls/merged/merged_methylation.{repeats}.{context}.{chr}.bedGraph")
+    orig: lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=False),
+    gzip: lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=True )
+  output: temp("{path}/methylation_calls/merged/merged_coverage.{repeats}.{context}.{chr}.bedGraph")
   params:
     sample_names=rrbs_samples.index
+  log: f"{workflow_dir}/logs/get_methylation_rules/merge_coverage_by_chr/merged_methylation.{{repeats}}.{{context}}.{{chr}}.log"
   conda: f"{workflow_dir}/envs/methylation.yaml"
-  log: f"{workflow_dir}/logs/get_methylation_rules/merge_methylation_by_chr/merged_methylation.{wildcards.repeats}.{wildcards.context}.{wildcards.chr}.log"
   shell:
       """
       chr_input=""
       for i in {input.orig}
       do
-        grep '^{wildcards.chr}' $i | cut -f1-4 > $i.methy_tmp
-        chr_input="$chr_input $i.methy_tmp"
+        grep '^{wildcards.chr}' $i | awk '{{print $1 "\t" $2 "\t" $3 "\t" $5+$6}}' > $i.cov_tmp
+        chr_input="$chr_input $i.cov_tmp"
       done
-      bedtools unionbedg -filler NA -header -names {params.sample_names} -i $chr_input > {output}
-      for i in {input.orig}; do rm $i.methy_tmp; done
+      bedtools unionbedg -filler NA -i $chr_input > {output}
+      for i in {input.orig}; do rm $i.cov_tmp; done
       """
+
+#----------------------------------------------------------------------------------------------------------------------#
+
+# Merge chromosome-separated tables
+rule merge_table_from_chr:
+  input:
+    fai=reference_genome_path + ".fai",
+    merge_list=lambda wildcards: get_merge_list(fai=reference_genome_path + ".fai", wildcards=wildcards)
+  output: temp("{path}/methylation_calls/merged/merged_{meco}.{repeats}.{context}.bedGraph")
+  params:
+    sample_names=rrbs_samples.index
+  conda: f"{workflow_dir}/envs/methylation.yaml"
+  log: f"{workflow_dir}/logs/get_methylation_rules/merge_table_from_chr/merged_{{meco}}.{{repeats}}.{{context}}.log"
+  shell:
+        """
+        echo "chrom" "start" "end" {params.sample_names} | sed 's/ /\t/g' > {output} ## Print header
+        cat {input.merge_list} >> {output}
+        """

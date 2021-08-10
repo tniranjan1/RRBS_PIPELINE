@@ -9,7 +9,7 @@ rule prep_fastq_from_source:
   conda: f"{workflow_dir}/envs/align.yaml"
   resources: disk_gb=lambda wildcards: get_disk_gb(merged_sample_sheet['type'].loc[wildcards.sample])
   threads: 8
-  log: f"{workflow_dir}/logs/align_rules/prep_fastq_from_source/{sample}.log"
+  log: f"{workflow_dir}/logs/align_rules/prep_fastq_from_source/{{sample}}.log"
   script: f"{workflow_dir}/scripts/hkp/sourcing_fastq.py"
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -20,7 +20,7 @@ rule fastq_gzip:
   output: temp("{path}/{sample}.fq{num}.gz")
   conda: f"{workflow_dir}/envs/align.yaml"
   threads: 4
-  log: f"{workflow_dir}/logs/align_rules/fastq_gzip/{sample}.fq{num}.log"
+  log: f"{workflow_dir}/logs/align_rules/fastq_gzip/{{sample}}.fq{{num}}.log"
   shell: "bgzip -@ {threads} -c {input} > {output} 2> {log}"
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -36,7 +36,7 @@ rule bwa_meth_align:
     bam=temp("{path}/alignments/{sample}.bam")
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
-  log: f"{workflow_dir}/logs/align_rules/bwa_meth_align/{sample}.log"
+  log: f"{workflow_dir}/logs/align_rules/bwa_meth_align/{{sample}}.log"
   shell:
     """
     bwameth.py --reference {input.ref} -t {threads} {input.fq1} {input.fq2} | \
@@ -51,7 +51,7 @@ rule bam_position_sort:
   output: "{path}/{sample}.POSsort.bam"
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
-  log: f"{workflow_dir}/logs/align_rules/bam_position_sort/{sample}.log"
+  log: f"{workflow_dir}/logs/align_rules/bam_position_sort/{{sample}}.log"
   shell: "samtools sort -@ {threads} -O BAM -o {output} {input} 2> {log}"
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -62,4 +62,4 @@ rule bam_index:
   output: "{path}/{sample}.bam.bai"
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
-  log: f"{workflow_dir}/logs/align_rules/bam_index/{sample}.log"
+  log: f"{workflow_dir}/logs/align_rules/bam_index/{{sample}}.log"

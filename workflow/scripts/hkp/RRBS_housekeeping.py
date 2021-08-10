@@ -106,15 +106,35 @@ def get_final_output(sample_sheet):
 
 #----------------------------------------------------------------------------------------------------------------------#
 
-# Subroutine to obtained the file names for all the RRBS samples once the have undergone methylation extraction,
+# Subroutine to obtain the file names for all the RRBS samples once the have undergone methylation extraction,
 #   with or without repeats, with or without compression (bgzip), and context aware
-def get_extracted_files(sample_sheet, path, repeats, context, gz):
+def get_extracted_files(sample_sheet, wildcards, gz):
     suffix = "bedGraph.gz" if gz else ".bedGraph"
+    path=wildcards.path
+    repeats=wildcards.repeats
+    context=wildcards.context
     extracted_files = []
     for i in range(0, len(sample_sheet)):
         file_path = f"{path}/methylation_calls/{sample_sheet.index[i]}_{context}.{repeats}.{suffix}"
         extracted_files.append(os.path.abspath(file_path))
     return extracted_files
+
+#----------------------------------------------------------------------------------------------------------------------#
+
+# Subroutine to obtain list of merged methylation or merged coverage files that have been separated by chr
+def get_merge_list(fai, wildcards):
+    path=wildcards.path
+    meco=wildcards.meco
+    repeats=wildcards.repeats
+    context=wildcards.context
+    if os.path.isfile(fai):
+        fai_table = pd.read_table(fai, header=None)
+        chr_list = [ chr for chr in fai_table[0].tolist() if not ('_' in chr) ]
+    else:
+        chr_list = "chrM"
+    file_template = f"{path}/methylation_calls/merged/merged_{meco}.{repeats}.{context}"
+    file_list = [ f"{file_template}.{chr}.bedGraph" for chr in chr_list if ('c' in chr) ]
+    return file_list
 
 #----------------------------------------------------------------------------------------------------------------------#
 
