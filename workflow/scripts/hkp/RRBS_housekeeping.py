@@ -92,8 +92,8 @@ def mergeSampleSheet(sheetA, sheetB):
 # output name = "../resources/{sample_destinition from function input}/alignments/{sample name from sample sheet}.bam"
 def get_initial_output(sample_sheet, sample_destination):
     output_files = []
-    prefix = "../resources/" + sample_destination + "/alignments/"
-    suffix = ".POSsort.bam"
+    prefix = "../resources/" + sample_destination + "/raw/"
+    suffix = ".fq1.gz"
     for i in range(0, len(sample_sheet)):
         output_files.append(os.path.abspath(prefix + sample_sheet.index[i] + suffix))
     return output_files
