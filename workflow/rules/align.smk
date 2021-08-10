@@ -8,9 +8,9 @@ rule prep_fastq_from_source:
     path=lambda wildcards: merged_sample_sheet['Path'].loc[wildcards.sample]
   log: "{path}/raw/.{sample}.rule-align.prep_fastq_from_source.log"
   resources: disk_gb=lambda wildcards: get_disk_gb(merged_sample_sheet['type'].loc[wildcards.sample])
-  conda: f"{workflow_dir}/envs/align.yaml"
+  conda: workflow_dir + "/envs/align.yaml"
   threads: 8
-  script: f"{workflow_dir}/scripts/hkp/sourcing_fastq.py"
+  script: workflow_dir + "/scripts/hkp/sourcing_fastq.py"
 
 #----------------------------------------------------------------------------------------------------------------------#
 
