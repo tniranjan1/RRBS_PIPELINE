@@ -6,7 +6,8 @@ rule prep_fastq_from_source:
   params:
     type=lambda wildcards: merged_sample_sheet['type'].loc[wildcards.sample],
     path=lambda wildcards: merged_sample_sheet['Path'].loc[wildcards.sample]
-  log: lambda wildcards: f"{workflow_dir}/logs/align_rules/prep_fastq_from_source/" + wildcards.sample + ".log"
+  log:
+    log=lambda wildcards: f"{workflow_dir}/logs/align_rules/prep_fastq_from_source/" + wildcards.sample + ".log"
   resources: disk_gb=lambda wildcards: get_disk_gb(merged_sample_sheet['type'].loc[wildcards.sample])
   conda: f"{workflow_dir}/envs/align.yaml"
   threads: 8
