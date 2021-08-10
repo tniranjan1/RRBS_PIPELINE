@@ -48,9 +48,12 @@ if DMRFinder_repo.bare:
     DMRF_error = DMRF_error + ' Recommend checking DMRFinder git url in ../config/config.yaml. Workflow aborted.'
     print(DMRF_error)
 
+# Set paths for reference files and working directory
+workflow_dir = os.path.abspath(os.getcwd()) # absolute path to current working directory
+resource_dir = os.path.abspath(os.getcwd() + "../resources")
 reference_genome_path = abspath(config['ref']['path'])
-
-workflow_dir = os.path.abspath(os.getcwd())
+reference_repeats = f"{resource_dir}/references/repeats/{config['ref']['hg_build']}.repeats.bed"
+inverted_repeats = f"{resource_dir}/references/repeats/{config['ref']['hg_build']}.invert_repeats.bed"
 
 # Which Cytosine contexts to Analyze
 context_truth = {

@@ -5,7 +5,7 @@ rule bgzip_table:
   wildcard_constraints:
     suffix="\w+"
   threads: 8
-  conda: f"{workflow_dir}/envs/methylation.yaml"
+  conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: f"{workflow_dir}/logs/get_methylation_rules/bgzip_table/{{sample}}.{{suffix}}.log"
   shell: "bgzip -@ {threads} -c {input} > {output}"
 
@@ -25,7 +25,7 @@ rule extract_methylation:
   wildcard_constraints:
     suffix="bedGraph|methylKit"
   threads: 4
-  conda: f"{workflow_dir}/envs/methylation.yaml"
+  conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: f"{workflow_dir}/logs/get_methylation_rules/extract_methylation/{{sample}}.log"
   run:
       mKit = "--methylKit" if wildcards.suffix == "methylKit" else ""
@@ -47,7 +47,7 @@ rule merge_methylation_by_chr:
   params:
     sample_names=rrbs_samples.index
   log: f"{workflow_dir}/logs/get_methylation_rules/merge_methylation_by_chr/merged_methylation.{{repeats}}.{{context}}.{{chr}}.log"
-  conda: f"{workflow_dir}/envs/methylation.yaml"
+  conda: f"{workflow_dir}/envs/get_methylation.yaml"
   shell:
       """
       chr_input=""
@@ -71,7 +71,7 @@ rule merge_coverage_by_chr:
   params:
     sample_names=rrbs_samples.index
   log: f"{workflow_dir}/logs/get_methylation_rules/merge_coverage_by_chr/merged_methylation.{{repeats}}.{{context}}.{{chr}}.log"
-  conda: f"{workflow_dir}/envs/methylation.yaml"
+  conda: f"{workflow_dir}/envs/get_methylation.yaml"
   shell:
       """
       chr_input=""
@@ -94,7 +94,7 @@ rule merge_table_from_chr:
   output: temp("{path}/methylation_calls/merged/merged_{meco}.{repeats}.{context}.bedGraph")
   params:
     sample_names=rrbs_samples.index
-  conda: f"{workflow_dir}/envs/methylation.yaml"
+  conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: f"{workflow_dir}/logs/get_methylation_rules/merge_table_from_chr/merged_{{meco}}.{{repeats}}.{{context}}.log"
   shell:
         """

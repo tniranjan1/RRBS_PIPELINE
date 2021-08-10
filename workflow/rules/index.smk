@@ -32,3 +32,45 @@ rule bwa_meth_index:
   conda: f"{workflow_dir}/envs/index.yaml"
   log: f"{workflow_dir}/logs/index_rules/bwa_meth_index.log"
   shell: "bwameth.py index {input} 2> {log}"
+
+#----------------------------------------------------------------------------------------------------------------------#
+
+# Hard link reference repeats bed file to resource directory
+rule link_repeats:
+  input: abspath(config['ref']['repeats_path'])
+  output: reference_repeats
+  log: f"{workflow_dir}/logs/index_rules/link_repeats.log"
+  shell: "ln {input} {output}"
+
+#----------------------------------------------------------------------------------------------------------------------#
+
+# Invert repeats (isolate regions exclusive of repeat regions)
+rule invert_repeat_regions:
+  input:
+    repeats=reference_repeats,
+    fai=reference_genome_path + ".fai"
+  output: inverted_repeats
+  conda: f"{workflow_dir}/envs/get_methylation.yaml"
+  shell:
+      """
+      cat {input.repeats} | \
+        awk '{{ split($1, a, "_"); gsub("chr", "", a[1]); print a[1] "\t" $1 "\t" $2 "\t" $3 }}' | \
+        sed 's/^X/23/' | \
+        sed 's/^Y/24/' | \
+        sed 's/^M/25/' | \
+        sed 's/^Un/26/' | \
+        sort -k 1,1n -k 2,2 -k 3,3n | \
+        cut -f2-4 > {input.repeats}.tmp
+
+      cat {input.fai} | \
+        awk '{{ split($1, a, "_"); gsub("chr", "", a[1]); print a[1] "\t" $1 "\t1\t" $2 }}' | \
+        sed 's/^X/23/' | \
+        sed 's/^Y/24/' | \
+        sed 's/^M/25/' | \
+        sed 's/^Un/26/' | \
+        sort -k 1,1n -k 2,2 -k 3,3n | \
+        cut -f2-4 > {input.repeats}.ref.bed
+
+      bedtools subtract -a {input.repeats}.ref.bed -b {input.repeats}.tmp > {output}
+      rm {input.repeats}.tmp {input.repeats}.ref.bed
+      """

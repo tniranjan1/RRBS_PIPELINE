@@ -68,6 +68,11 @@ ref:
   #   include custom track header: unchecked
   #   create one BED record per: whole gene
 
+# if genotyping checks are to be done (see remove_samples:genotype_discordant below), using the following variant sites
+genotyping:
+  GRCh37: https://support.illumina.com/content/dam/illumina-support/documents/downloads/productfiles/global-screening-array-24/v3-0/GSA-24v3-0-A1-manifest-file-csv.zip
+  GRCh38: https://support.illumina.com/content/dam/illumina-support/documents/downloads/productfiles/global-screening-array-24/v3-0/GSA-24v3-0-A2-manifest-file-csv.zip
+
 # parameters for Illumina 450k Chip reference
 illumina450k:
   # Ensembl species name
@@ -119,7 +124,6 @@ remove_samples:
   genotype_discordant:
     # VCF of genotypes for samples (VCF sample name must match Sample Name column in RRBS_samples sample sheet). If no
     #   path given, set vcf variable to empty string ("") and set activate to False.
-
     vcf: "/home/tejasvi/rrbs_cristina_scratch/genotypes/wgs-genotypes-mayo-genomes.vcf.gz"
     activate: True
 
