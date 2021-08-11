@@ -100,16 +100,6 @@ def get_initial_output(sample_sheet, sample_destination):
 
 #----------------------------------------------------------------------------------------------------------------------#
 
-# Subroutine to obtain the names of all final output files for a given sample sheet
-def get_final_output(sample_sheet, config, workflow_dir, resource_dir, results_dir, context_truth):
-    meco = [ 'methylation', 'coverage' ]
-    repeats = [ 'with_repeats', 'without_repeats' ]
-    context = [ key for key in list(context_truth.keys()) if context_truth[key] ]
-    return expand(f"{results_dir}/methylation_calls/merged/merged_{{meco}}.{{repeats}}.{{context}}.bedGraph.gz",
-                  meco=meco, repeats=repeats, context=context)
-
-#----------------------------------------------------------------------------------------------------------------------#
-
 # Subroutine to obtain the file names for all the RRBS samples once the have undergone methylation extraction,
 #   with or without repeats, with or without compression (bgzip), and context aware
 def get_extracted_files(sample_sheet, wildcards, gz):

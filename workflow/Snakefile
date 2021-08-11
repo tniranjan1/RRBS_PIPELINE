@@ -67,6 +67,18 @@ context_truth = {
 wildcard_constraints:
   sample = '|'.join([x for x in merged_sample_sheet.index])
 
+#----------------------------------------------------------------------------------------------------------------------#
+
+# Subroutine to obtain the names of all final output files for a given sample sheet
+def get_final_output():
+    meco = [ 'methylation', 'coverage' ]
+    repeats = [ 'with_repeats', 'without_repeats' ]
+    context = [ key for key in list(context_truth.keys()) if context_truth[key] ]
+    return expand(f"{results_dir}/methylation_calls/merged/merged_{{meco}}.{{repeats}}.{{context}}.bedGraph.gz",
+                  meco=meco, repeats=repeats, context=context)
+
+#----------------------------------------------------------------------------------------------------------------------#
+
 # Load rules
 include: 'rules/align.smk'
 include: 'rules/index.smk'
@@ -76,4 +88,4 @@ rule all:
     input:
         get_initial_output(rrbs_samples, "rrbs_samples"),
         get_initial_output(deconvo_ref_samples, "deconvo_ref_samples"),
-        get_final_output(rrbs_samples, config, workflow_dir, resource_dir, results_dir, context_truth)
+        get_final_output()
