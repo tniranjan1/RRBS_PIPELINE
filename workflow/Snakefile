@@ -62,6 +62,7 @@ context_truth = {
     "CHG" : config['cytosine_sites']['CHG'],
     "CHH" : config['cytosine_sites']['CHH']
 }
+context_to_use = [ key for key in list(context_truth.keys()) if context_truth[key] ]
 
 # Globally constrain all wildcards matching {sample} to not have "/" in the string
 wildcard_constraints:
@@ -73,8 +74,8 @@ wildcard_constraints:
 def get_final_output():
     meco = [ 'methylation', 'coverage' ]
     repeats = [ 'with_repeats', 'without_repeats' ]
-    context = [ key for key in list(context_truth.keys()) if context_truth[key] ]
-    return "/home/tejasvi/rrbs_cristina_scratch/RRBS_PIPELINE/results/rrbs_samples/methylation_calls/samples/Ctrl.CER.5138_CpG.with_repeats.bedGraph"
+    context = context_to_use
+    return "/home/tejasvi/rrbs_cristina_scratch/RRBS_PIPELINE/results/rrbs_samples/methylation_calls/samples/Ctrl.CER.5138.with_repeats_CpG.bedGraph"
 #    return expand(f"{results_dir}/methylation_calls/merged/merged_{{meco}}.{{repeats}}.{{context}}.bedGraph.gz",
 #                  meco=meco, repeats=repeats, context=context)
 

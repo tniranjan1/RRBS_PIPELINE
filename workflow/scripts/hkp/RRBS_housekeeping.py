@@ -109,7 +109,7 @@ def get_extracted_files(sample_sheet, wildcards, gz):
     context=wildcards.context
     extracted_files = []
     for i in range(0, len(sample_sheet)):
-        file_path = f"{path}/methylation_calls/samples/{sample_sheet.index[i]}_{context}.{repeats}.{suffix}"
+        file_path = f"{path}/methylation_calls/samples/{sample_sheet.index[i]}.{repeats}_{context}.{suffix}"
         extracted_files.append(os.path.abspath(file_path))
     return extracted_files
 

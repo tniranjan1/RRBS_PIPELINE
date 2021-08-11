@@ -17,9 +17,10 @@ rule extract_methylation:
     ref=reference_genome_path,
     ir=inverted_repeats
   output:
-    CpG=temp("{path}/methylation_calls/samples/{sample}_CpG.{repeats}.bedGraph") if context_truth['CpG'] else [],
-    CHG=temp("{path}/methylation_calls/samples/{sample}_CHG.{repeats}.bedGraph") if context_truth['CHG'] else [],
-    CHH=temp("{path}/methylation_calls/samples/{sample}_CHG.{repeats}.bedGraph") if context_truth['CHH'] else [],
+    temp(
+        expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph",
+            context=context_to_use, allow_missing=TRUE)
+        )
   wildcard_constraints:
     suffix="bedGraph|methylKit"
   threads: 4
@@ -30,7 +31,7 @@ rule extract_methylation:
       CHG = "--CHG" if context_truth['CHG'] else ""
       CHH = "--CHH" if context_truth['CHH'] else ""
       repeat = "-l " + input.ir if wildcards.repeats == "without_repeats" else ""
-      prefix = wildcards.path + "/methylation_calls/" + wildcards.sample
+      prefix = wildcards.path + "/methylation_calls/" + wildcards.sample + "." + wildcards.repeats
       MDkl = "MethylDackel extract -q 20 -d 5"
       shell("{MDkl} -@ {threads} {repeat} {CHG} {CHH} {mKit} -o {prefix} {input.ref} {input.bam} > {log} 2> {log}")
 
