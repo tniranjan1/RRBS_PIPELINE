@@ -19,7 +19,7 @@ rule extract_methylation:
   output:
     temp(
         expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph",
-            context=context_to_use, allow_missing=TRUE)
+            context=context_to_use, allow_missing=True)
         )
   wildcard_constraints:
     suffix="bedGraph|methylKit"
