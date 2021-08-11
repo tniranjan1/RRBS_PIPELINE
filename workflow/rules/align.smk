@@ -6,7 +6,7 @@ rule prep_fastq_from_source:
   params:
     type=lambda wildcards: merged_sample_sheet['type'].loc[wildcards.sample],
     path=lambda wildcards: merged_sample_sheet['Path'].loc[wildcards.sample]
-  #log: "{path}/raw/.{sample}.rule-align.prep_fastq_from_source.log"
+  log: "{path}/raw/.{sample}.rule-align.prep_fastq_from_source.log"
   resources: disk_gb=lambda wildcards: get_disk_gb(merged_sample_sheet['type'].loc[wildcards.sample])
   conda: f"{workflow_dir}/envs/align.yaml"
   threads: 8
@@ -23,7 +23,7 @@ rule bwa_meth_align:
     bwamethidx=reference_genome_path + ".bwameth.c2t"
   output:
     bam=temp("{path}/alignments/{sample}.bam")
-#  log: "{path}/alignments/.{sample}.rule-align.bwa_meth_align.log"
+  log: "{path}/alignments/.{sample}.rule-align.bwa_meth_align.log"
   conda: f"{workflow_dir}/envs/align.yaml"
   threads: 4
   shell:
@@ -38,7 +38,7 @@ rule bwa_meth_align:
 rule bam_position_sort:
   input: "{path}/{sample}.bam"
   output: "{path}/{sample}.POSsort.bam"
-#  log: "{path}/.{sample}.POSsort.rule-align.bam_position_sort.log"
+  log: "{path}/.{sample}.POSsort.rule-align.bam_position_sort.log"
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
   shell: "samtools sort -@ {threads} -O BAM -o {output} {input} 2> {log}"
@@ -49,7 +49,7 @@ rule bam_position_sort:
 rule bam_index:
   input: "{path}/{sample}.bam"
   output: "{path}/{sample}.bam.bai"
-#  log: "{path}/.{sample}.rule-align.bam_index.log"
+  log: "{path}/.{sample}.rule-align.bam_index.log"
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
   shell: "samtools index -@ {input} 2> {log}"
