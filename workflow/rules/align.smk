@@ -1,7 +1,7 @@
 # Generate raw fastq source by calling housekeeping "scripts/hkp/sourcing_fastq.py"
 rule prep_fastq_from_source:
   output:
-    fq1="{path}/raw/{sample}.fq1.gz",
+    fq1=temp("{path}/raw/{sample}.fq1.gz"),
     fq2=temp("{path}/raw/{sample}.fq2.gz")
   params:
     type=lambda wildcards: merged_sample_sheet['type'].loc[wildcards.sample],
