@@ -121,7 +121,7 @@ def get_merge_list(fai, wildcards):
     meco=wildcards.meco
     repeats=wildcards.repeats
     context=wildcards.context
-    if os.path.isfile(fai):
+    if os.path.isfile(fai): # get names of chromosomes
         fai_table = pd.read_table(fai, header=None)
         chr_list = [ chr for chr in fai_table[0].tolist() if not ('_' in chr) ]
     else:
