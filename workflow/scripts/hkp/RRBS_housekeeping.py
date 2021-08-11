@@ -28,16 +28,16 @@ def importSampleSheet(sample_path, schema_path):
         print("Validation failed on ", sample_path, ". Workflow aborted.", sep="")
         sys.exit(-1)
 
-    # Name each sample with the format: SampleID.SampleGroup.Tissue
+    # Name each sample with the format: SampleGroup.Tissue.SampleID
     sample_names = []
     for i in range(0, len(sample_sheet)):
-        new_name = sample_sheet[['SampleID', 'SampleGroup', 'Tissue']].iloc[i].str.cat(sep=".")
+        new_name = sample_sheet[['SampleGroup', 'Tissue', 'SampleID']].iloc[i].str.cat(sep=".")
         # Ensure new sample name can be used as filename (no invalid characters)
         slugify = re.sub(r'(?u)[^-\w.]', '', new_name)
         sample_names.append(new_name)
         # Print error and abort if there are invalid characters
         if slugify != new_name:
-            print("For SampleID.SampleGroup.Tissue = ", new_name, ", invalid character(s) detected.", sep="")
+            print("For SampleGroup.Tissue.SampleID = ", new_name, ", invalid character(s) detected.", sep="")
             print("Valid characters are Aa-Zz0-9.-_.")
             print("Remove invalid characters from ", sample_path, ". Workflow aborted.", sep="")
             sys.exit(-1)
@@ -74,10 +74,10 @@ def mergeSampleSheet(sheetA, sheetB):
             type_list.append(value)
         else: # Abort with error specifying invalid or too many path types.
             if len(value) == 0:
-                print("Usable path type  not found for SampleID.SampleGroup.Tissue = {}.".format(mergedSheet.index[i]))
+                print("Usable path type  not found for SampleGroup.Tissue.SampleID = {}.".format(mergedSheet.index[i]))
                 print("Ensure path to sample reads is SRR***, ***.bam, or ***.fq1(.gz),***.fq2(.gz).")
             else:
-                print("Too many  path types found for SampleID.SampleGroup.Tissue = {}.".format(mergedSheet.index[i]))
+                print("Too many  path types found for SampleGroup.Tissue.SampleID = {}.".format(mergedSheet.index[i]))
                 print("Currently, the workflow can only accept one path type (SRR, BAM, fastq) per sample.")
             print("Workflow aborted.")
             sys.exit(-1)

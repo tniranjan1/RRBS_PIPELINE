@@ -73,6 +73,6 @@ include: 'rules/index.smk'
 # Target rule
 rule all:
     input:
-        get_initial_output(rrbs_samples, "rrbs_samples")[8:12]#,
-#        get_initial_output(deconvo_ref_samples, "deconvo_ref_samples")[0:4]#,
+        get_initial_output(rrbs_samples, "rrbs_samples"),
+        get_initial_output(deconvo_ref_samples, "deconvo_ref_samples")#,
 #        get_final_output(rrbs_samples)
