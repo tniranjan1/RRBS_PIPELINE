@@ -17,9 +17,9 @@ rule extract_methylation:
     ref=reference_genome_path,
     ir=inverted_repeats
   output:
-    CpG=temp("{path}/methylation_calls/samples/{sample}_CpG.{repeats}.{suffix}") if context_truth['CpG'] else [],
-    CHG=temp("{path}/methylation_calls/samples/{sample}_CHG.{repeats}.{suffix}") if context_truth['CHG'] else [],
-    CHH=temp("{path}/methylation_calls/samples/{sample}_CHG.{repeats}.{suffix}") if context_truth['CHH'] else [],
+    CpG=temp("{path}/methylation_calls/samples/{sample}_CpG.{repeats}.bedGraph") if context_truth['CpG'] else [],
+    CHG=temp("{path}/methylation_calls/samples/{sample}_CHG.{repeats}.bedGraph") if context_truth['CHG'] else [],
+    CHH=temp("{path}/methylation_calls/samples/{sample}_CHG.{repeats}.bedGraph") if context_truth['CHH'] else [],
   wildcard_constraints:
     suffix="bedGraph|methylKit"
   threads: 4
