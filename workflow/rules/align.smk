@@ -28,8 +28,9 @@ rule bwa_meth_align:
   threads: 4
   shell:
     """
+    exec > {log}; exec 2> {log}
     bwameth.py --reference {input.ref} -t {threads} {input.fq1} {input.fq2} | \
-      samtools view -bh -o {output} 2> {log}
+      samtools view -bh -o {output}
     """
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -41,7 +42,7 @@ rule bam_position_sort:
   log: "{path}/.{sample}.POSsort.rule-align.bam_position_sort.log"
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
-  shell: "samtools sort -@ {threads} -O BAM -o {output} {input} 2> {log}"
+  shell: "samtools sort -@ {threads} -O BAM -o {output} {input} > {log} 2> {log}"
 
 #----------------------------------------------------------------------------------------------------------------------#
 
@@ -52,4 +53,4 @@ rule bam_index:
   log: "{path}/.{sample}.rule-align.bam_index.log"
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
-  shell: "samtools index -@ {input} 2> {log}"
+  shell: "samtools index -@ {input} > {log} 2> {log}"

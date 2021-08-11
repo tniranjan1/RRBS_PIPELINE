@@ -1,13 +1,11 @@
 # Bgzip methylation tables for storage space reduction
 rule bgzip_table:
-  input: "{path}/methylation_calls/{sample}.{suffix}"
-  output: "{path}/methylation_calls/{sample}.{suffix}.gz"
-  wildcard_constraints:
-    suffix="\w+"
+  input: "{path}/{sample}.{suffix}"
+  output: "{path}/{sample}.{suffix}.gz"
   threads: 8
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: "{path}/methylation_calls/.{sample}.{suffix}.rule-get_methylation.bgzip_table.log"
-  shell: "bgzip -@ {threads} -c {input} > {output}"
+  log: "{path}/.{sample}.{suffix}.rule-get_methylation.bgzip_table.log"
+  shell: "bgzip -@ {threads} -c {input} > {output} > {log} 2> {log}"
 
 #----------------------------------------------------------------------------------------------------------------------#
 
@@ -33,8 +31,8 @@ rule extract_methylation:
       CHH = "--CHH" if context_truth['CHH'] else ""
       repeat = "-l " + input.ir if wildcards.repeats == "without_repeats" else ""
       prefix = wildcards.path + "/methylation_calls/" + wildcards.sample
-      MDackel = "MethylDackel extract"
-      shell("{MDackel} -@ {threads} -q 20 -d 5 {repeat} {CHG} {CHH} {mKit} -o {prefix} {input.ref} {input.bam}")
+      MDkl = "MethylDackel extract -q 20 -d 5"
+      shell("{MDkl} -@ {threads} {repeat} {CHG} {CHH} {mKit} -o {prefix} {input.ref} {input.bam} > {log} 2> {log}")
 
 #----------------------------------------------------------------------------------------------------------------------#
 
@@ -51,6 +49,7 @@ rule merge_methylation_by_chr:
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   shell:
       """
+      exec > {log}; exec 2> {log}
       chr_input=""
       for i in {input.orig}
       do
@@ -76,6 +75,7 @@ rule merge_coverage_by_chr:
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   shell:
       """
+      exec > {log}; exec 2> {log}
       chr_input=""
       for i in {input.orig}
       do
@@ -101,6 +101,7 @@ rule merge_table_from_chr:
        ".merged_{meco}.{repeats}.{context}.rule-get_methylation.merge_table_from_chr.log"
   shell:
         """
+        exec > {log}; exec 2> {log}
         echo "chrom" "start" "end" {params.sample_names} | sed 's/ /\t/g' > {output} ## Print header
         cat {input.merge_list} >> {output}
         """
