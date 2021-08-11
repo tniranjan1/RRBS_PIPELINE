@@ -63,8 +63,8 @@ context_truth = {
 }
 
 # Globally constrain all wildcards matching {sample} to not have "/" in the string
-wildcard_constraints:
-  sample="[^/]"
+#wildcard_constraints:
+#  sample="[^/]"
 
 # Load rules
 include: 'rules/align.smk'
