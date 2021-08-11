@@ -1,10 +1,10 @@
 # Bgzip methylation tables for storage space reduction
 rule bgzip_table:
-  input: "{path}/{sample}.{suffix}"
-  output: "{path}/{sample}.{suffix}.gz"
+  input: "{path}/{file_name}"
+  output: "{path}/{file_name}.gz"
   threads: 8
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: "{path}/.{sample}.{suffix}.rule-get_methylation.bgzip_table.log"
+  log: "{path}/.{file_name}.rule-get_methylation.bgzip_table.log"
   shell: "bgzip -@ {threads} -c {input} > {output} > {log} 2> {log}"
 
 #----------------------------------------------------------------------------------------------------------------------#
