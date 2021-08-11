@@ -88,6 +88,17 @@ def mergeSampleSheet(sheetA, sheetB):
 
 #----------------------------------------------------------------------------------------------------------------------#
 
+# Subroutine to obtain initial input files for fastq generation
+def initial_input(wildcards, sample_sheet):
+    type=sample_sheet['type'].loc[wildcards.sample]
+    path=sample_sheet['Path'].loc[wildcards.sample]
+    if type == "bam" or type == "fq":
+        return path.split(",")
+    else:
+        return []
+
+#----------------------------------------------------------------------------------------------------------------------#
+
 # Subroutine to obtain the names of all inital output files (alignments) for a given sample sheet
 # output name = "../resources/{sample_destinition from function input}/alignments/{sample name from sample sheet}.bam"
 def get_initial_output(sample_sheet, sample_destination):
