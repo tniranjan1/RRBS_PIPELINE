@@ -86,10 +86,8 @@ rule merge_coverage_by_chr:
 rule merge_table_from_chr:
   input:
     fai=reference_genome_path + ".fai",
-    merge_list=temp(
-                   expand("{path}/methylation_calls/merged/merged_{meco}.{repeats}.{context}.{chr}.bedGraph",
-                       chr=chromosomes, allow_missing=True)
-                   )
+    merge_list=expand("{path}/methylation_calls/merged/merged_{meco}.{repeats}.{context}.{chr}.bedGraph",
+                      chr=chromosomes, allow_missing=True)
     #lambda wildcards: get_merge_list(fai=reference_genome_path + ".fai", wildcards=wildcards)
   output: temp("{path}/methylation_calls/merged/merged_{meco}.{repeats}.{context}.bedGraph")
   params:
