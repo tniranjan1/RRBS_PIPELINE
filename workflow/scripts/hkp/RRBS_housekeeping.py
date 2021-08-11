@@ -152,4 +152,4 @@ def chromosome_constraint(reference_genome_path):
         chr_list = [ chr for chr in fai_table[0].tolist() if not ('_' in chr) ]
     else:
         chr_list = "chrM"
-    return '|'.join(chr_list)
+    return chr_list

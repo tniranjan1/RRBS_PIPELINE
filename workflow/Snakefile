@@ -64,10 +64,13 @@ context_truth = {
 }
 context_to_use = [ key for key in list(context_truth.keys()) if context_truth[key] ]
 
+# Clean set of chromosomes to run on
+chromosomes = chromosome_constraint(reference_genome_path)
+
 # Globally constrain all wildcards matching {sample} to not have "/" in the string
 wildcard_constraints:
   sample = '|'.join([x for x in merged_sample_sheet.index]),
-  chr = chromosome_constraint(reference_genome_path),
+  chr = '|'.join(chromosomes),
   repeats = "with_repeats|without_repeats",
   meco = "methylation|coverage"
 
