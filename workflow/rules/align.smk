@@ -17,13 +17,13 @@ rule prep_fastq_from_source:
 # Generate bwa-meth aligned bam files, not position sorted
 rule bwa_meth_align:
   input:
-    fq1="{path}/raw/{sample}.fq1.gz",
-    fq2="{path}/raw/{sample}.fq2.gz",
+    fq1="{top_path}/resources/{bot_path}/raw/{sample}.fq1.gz",
+    fq2="{top_path}/resources/{bot_path}/raw/{sample}.fq2.gz",
     ref=reference_genome_path,
     bwamethidx=reference_genome_path + ".bwameth.c2t"
   output:
-    bam=temp("{path}/alignments/{sample}.bam")
-  log: "{path}/alignments/.{sample}.rule-align.bwa_meth_align.log"
+    bam=temp("{top_path}/results/{bot_path}/alignments/{sample}.bam")
+  log: "{top_path}/results/{bot_path}/alignments/.{sample}.rule-align.bwa_meth_align.log"
   conda: f"{workflow_dir}/envs/align.yaml"
   threads: 4
   shell:

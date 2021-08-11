@@ -92,7 +92,7 @@ def mergeSampleSheet(sheetA, sheetB):
 # output name = "../resources/{sample_destinition from function input}/alignments/{sample name from sample sheet}.bam"
 def get_initial_output(sample_sheet, sample_destination):
     output_files = []
-    prefix = "../resources/" + sample_destination + "/alignments/"
+    prefix = "../results/" + sample_destination + "/alignments/"
     suffix = ".POSsort.bam"
     for i in range(0, len(sample_sheet)):
         output_files.append(os.path.abspath(prefix + sample_sheet.index[i] + suffix))
@@ -101,8 +101,12 @@ def get_initial_output(sample_sheet, sample_destination):
 #----------------------------------------------------------------------------------------------------------------------#
 
 # Subroutine to obtain the names of all final output files for a given sample sheet
-def get_final_output(sample_sheet):
-    return ""
+def get_final_output(sample_sheet, config, workflow_dir, resource_dir, results_dir, context_truth):
+    meco = [ 'methylation', 'coverage' ]
+    repeats = [ 'with_repeats', 'without_repeats' ]
+    context = [ key for key in list(context_truth.keys()) if context_truth[key] ]
+    return expand(f"{results_dir}/methylation_calls/merged/merged_{{meco}}.{{repeats}}.{{context}}.bedGraph.gz",
+                  meco=meco, repeats=repeats, context=context)
 
 #----------------------------------------------------------------------------------------------------------------------#
 
@@ -115,7 +119,7 @@ def get_extracted_files(sample_sheet, wildcards, gz):
     context=wildcards.context
     extracted_files = []
     for i in range(0, len(sample_sheet)):
-        file_path = f"{path}/methylation_calls/{sample_sheet.index[i]}_{context}.{repeats}.{suffix}"
+        file_path = f"{path}/methylation_calls/samples/{sample_sheet.index[i]}_{context}.{repeats}.{suffix}"
         extracted_files.append(os.path.abspath(file_path))
     return extracted_files
 
