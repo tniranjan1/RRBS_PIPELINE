@@ -18,7 +18,7 @@ rule extract_methylation:
     ir=inverted_repeats
   output:
     temp(
-        expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph",
+        expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.{suffix}",
             context=context_to_use, allow_missing=True)
         )
   wildcard_constraints:
@@ -26,14 +26,7 @@ rule extract_methylation:
   threads: 4
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{path}/methylation_calls/samples/.{sample}.{repeats}.rule-get_methylation.extract_methylation.log"
-  run:
-      mKit = "--methylKit" if wildcards.suffix == "methylKit" else ""
-      CHG = "--CHG" if context_truth['CHG'] else ""
-      CHH = "--CHH" if context_truth['CHH'] else ""
-      repeat = "-l " + input.ir if wildcards.repeats == "without_repeats" else ""
-      prefix = wildcards.path + "/methylation_calls/" + wildcards.sample + "." + wildcards.repeats
-      MDkl = "MethylDackel extract -q 20 -d 5"
-      shell("{MDkl} -@ {threads} {repeat} {CHG} {CHH} {mKit} -o {prefix} {input.ref} {input.bam} > {log} 2> {log}")
+  script: f"{workflow_dir}/scripts/anl/run_MethylDackel.py"
 
 #----------------------------------------------------------------------------------------------------------------------#
 
