@@ -12,19 +12,19 @@ rule bgzip_table:
 # Extract methylation using MethylDackel
 rule extract_methylation:
   input:
-    bam="{path}/alignments/{source}.POSsort.bam",
-    bai="{path}/alignments/{source}.POSsort.bam.bai",
+    bam="{path}/alignments/{sample}.POSsort.bam",
+    bai="{path}/alignments/{sample}.POSsort.bam.bai",
     ref=reference_genome_path,
     ir=inverted_repeats
   output:
-    CpG=temp("{path}/methylation_calls/samples/{source}_CpG.{repeats}.bedGraph") if context_truth['CpG'] else [],
-    CHG=temp("{path}/methylation_calls/samples/{source}_CHG.{repeats}.bedGraph") if context_truth['CHG'] else [],
-    CHH=temp("{path}/methylation_calls/samples/{source}_CHG.{repeats}.bedGraph") if context_truth['CHH'] else [],
+    CpG=temp("{path}/methylation_calls/samples/{sample}_CpG.{repeats}.bedGraph") if context_truth['CpG'] else [],
+    CHG=temp("{path}/methylation_calls/samples/{sample}_CHG.{repeats}.bedGraph") if context_truth['CHG'] else [],
+    CHH=temp("{path}/methylation_calls/samples/{sample}_CHG.{repeats}.bedGraph") if context_truth['CHH'] else [],
   wildcard_constraints:
     suffix="bedGraph|methylKit"
   threads: 4
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: "{path}/methylation_calls/samples/.{sample}.{repeats}.{suffix}.rule-get_methylation.extract_methylation.log"
+  log: "{path}/methylation_calls/samples/.{sample}.{repeats}.rule-get_methylation.extract_methylation.log"
   run:
       mKit = "--methylKit" if wildcards.suffix == "methylKit" else ""
       CHG = "--CHG" if context_truth['CHG'] else ""

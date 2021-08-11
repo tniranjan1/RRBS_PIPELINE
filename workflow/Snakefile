@@ -83,6 +83,7 @@ def get_final_output():
 # Load rules
 include: 'rules/align.smk'
 include: 'rules/index.smk'
+include: 'rules/get_methylation.smk'
 
 # Target rule
 rule all:
