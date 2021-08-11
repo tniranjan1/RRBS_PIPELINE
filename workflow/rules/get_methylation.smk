@@ -12,14 +12,14 @@ rule bgzip_table:
 # Extract methylation using MethylDackel
 rule extract_methylation:
   input:
-    bam="{path}/alignments/{sample}.POSsort.bam",
-    bai="{path}/alignments/{sample}.POSsort.bam.bai",
+    bam="{path}/alignments/{source}.POSsort.bam",
+    bai="{path}/alignments/{source}.POSsort.bam.bai",
     ref=reference_genome_path,
     ir=inverted_repeats
   output:
-    CpG=temp("{path}/methylation_calls/samples/{sample}_CpG.{repeats}.bedGraph") if context_truth['CpG'] else [],
-    CHG=temp("{path}/methylation_calls/samples/{sample}_CHG.{repeats}.bedGraph") if context_truth['CHG'] else [],
-    CHH=temp("{path}/methylation_calls/samples/{sample}_CHG.{repeats}.bedGraph") if context_truth['CHH'] else [],
+    CpG=temp("{path}/methylation_calls/samples/{source}_CpG.{repeats}.bedGraph") if context_truth['CpG'] else [],
+    CHG=temp("{path}/methylation_calls/samples/{source}_CHG.{repeats}.bedGraph") if context_truth['CHG'] else [],
+    CHH=temp("{path}/methylation_calls/samples/{source}_CHG.{repeats}.bedGraph") if context_truth['CHH'] else [],
   wildcard_constraints:
     suffix="bedGraph|methylKit"
   threads: 4
