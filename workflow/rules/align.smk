@@ -48,9 +48,9 @@ rule bam_position_sort:
 
 # Generate bam index
 rule bam_index:
-  input: "{path}/{sample}.bam"
-  output: "{path}/{sample}.bam.bai"
-  log: "{path}/.{sample}.rule-align.bam_index.log"
+  input: "{path}/{prefix}.bam"
+  output: "{path}/{prefix}.bam.bai"
+  log: "{path}/.{prefix}.rule-align.bam_index.log"
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"
   shell: "samtools index -@ {input} > {log} 2> {log}"
