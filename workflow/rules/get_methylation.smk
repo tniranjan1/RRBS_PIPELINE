@@ -25,7 +25,7 @@ rule extract_methylation:
     suffix="bedGraph|methylKit"
   threads: 4
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: "{path}/methylation_calls/samples/.{sample}.{repeats}.rule-get_methylation.extract_methylation.log"
+  log: "{path}/methylation_calls/samples/.{sample}.{repeats}.{suffix}.rule-get_methylation.extract_methylation.log"
   script: f"{workflow_dir}/scripts/anl/run_MethylDackel.py"
 
 #----------------------------------------------------------------------------------------------------------------------#
