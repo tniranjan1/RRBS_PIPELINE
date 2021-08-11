@@ -75,9 +75,9 @@ def get_final_output():
     meco = [ 'methylation', 'coverage' ]
     repeats = [ 'with_repeats', 'without_repeats' ]
     context = context_to_use
-#    return "/home/tejasvi/rrbs_cristina_scratch/RRBS_PIPELINE/results/rrbs_samples/methylation_calls/samples/Ctrl.CER.5138.with_repeats_CpG.bedGraph"
-    return expand(f"{results_dir}/methylation_calls/merged/merged_{{meco}}.{{repeats}}.{{context}}.bedGraph.gz",
-                  meco=meco, repeats=repeats, context=context)
+    return "/home/tejasvi/rrbs_cristina_scratch/RRBS_PIPELINE/results/rrbs_samples/methylation_calls/samples/Ctrl.CER.5138.with_repeats_CpG.bedGraph"
+#    return expand(f"{results_dir}/methylation_calls/merged/merged_{{meco}}.{{repeats}}.{{context}}.bedGraph.gz",
+#                  meco=meco, repeats=repeats, context=context)
 
 #----------------------------------------------------------------------------------------------------------------------#
 

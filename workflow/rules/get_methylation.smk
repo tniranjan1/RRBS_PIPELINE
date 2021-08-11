@@ -35,7 +35,7 @@ rule merge_methylation_by_chr:
   input:
     orig=lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=False),
     gzip=lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=True )
-  output: temp("{path}/methylation_calls/merged/merged_methylation.{repeats}.{context}.{chr}.bedGraph")
+  output: temp("{path}/methylation_calls/merged/merged_methylation.{repeats}.{context}.{chr, '[^\.]'}.bedGraph")
   params:
     sample_names=rrbs_samples.index
   log: "{path}/methylation_calls/merged/" + \
@@ -61,7 +61,7 @@ rule merge_coverage_by_chr:
   input:
     orig=lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=False),
     gzip=lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=True )
-  output: temp("{path}/methylation_calls/merged/merged_coverage.{repeats}.{context}.{chr, '\w+'}.bedGraph")
+  output: temp("{path}/methylation_calls/merged/merged_coverage.{repeats}.{context}.{chr, '[^\.]'}.bedGraph")
   params:
     sample_names=rrbs_samples.index
   log: "{path}/methylation_calls/merged/" + \
