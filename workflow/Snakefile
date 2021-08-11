@@ -50,8 +50,8 @@ if DMRFinder_repo.bare:
 
 # Set paths for reference files and working directory
 workflow_dir = os.path.abspath(os.getcwd()) # absolute path to current working directory
-resource_dir = os.path.abspath(os.getcwd() + "../resources")
-results_dir = os.path.abspath(os.getcwd() + "../results")
+resource_dir = os.path.abspath(os.getcwd() + "/../resources")
+results_dir = os.path.abspath(os.getcwd() + "/../results")
 reference_genome_path = abspath(config['ref']['path'])
 reference_repeats = f"{resource_dir}/references/repeats/{config['ref']['hg_build']}.repeats.bed"
 inverted_repeats = f"{resource_dir}/references/repeats/{config['ref']['hg_build']}.invert_repeats.bed"
