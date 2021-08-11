@@ -39,8 +39,8 @@ rule extract_methylation:
 # Merge methylation calls for all samples in a sheet, subdivided by chromosome
 rule merge_methylation_by_chr:
   input:
-    orig: lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards, gz=False),
-    gzip: lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards, gz=True )
+    orig=lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=False),
+    gzip=lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=True )
   output: temp("{path}/methylation_calls/merged/merged_methylation.{repeats}.{context}.{chr}.bedGraph")
   params:
     sample_names=rrbs_samples.index
