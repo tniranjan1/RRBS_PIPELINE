@@ -141,3 +141,15 @@ def get_disk_gb(source_type):
     elif source_type == 'fq':
         return 1
     return 1
+
+#----------------------------------------------------------------------------------------------------------------------#
+
+# Subroutine to restrict to full chromosomes in reference
+def chromosome_constraint(reference_genome_path):
+    fai=reference_genome_path + '.fai'
+    if os.path.isfile(fai): # get names of chromosomes
+        fai_table = pd.read_table(fai, header=None)
+        chr_list = [ chr for chr in fai_table[0].tolist() if not ('_' in chr) ]
+    else:
+        chr_list = "chrM"
+    return '|'.join(chr_list)
