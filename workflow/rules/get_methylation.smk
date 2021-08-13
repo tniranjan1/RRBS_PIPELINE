@@ -6,7 +6,7 @@ rule bgzip_table:
     suffix="MethylDackel"
   threads: 4
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: "{top_path}/results/{bot_path}/.{file_name}.rule-get_methylation.bgzip_table.log"
+  log: "{top_path}/results/{bot_path}/.{prefix}_{file_name}.rule-get_methylation.bgzip_table.log"
   shell: "bgzip -@ {threads} -c {input} > {output} > {log} 2> {log}"
 
 #----------------------------------------------------------------------------------------------------------------------#
