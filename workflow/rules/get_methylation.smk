@@ -29,8 +29,6 @@ rule merge_methylation_by_chr:
     gzip=expand("{path}/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
                 sample=rrbs_samples.index, allow_missing=True)
   output: temp("{path}/merged/merged_methylation.{repeats}.{context}.{chr}.bedGraph")
-  params:
-    sample_names=rrbs_samples.index
   log: "{path}/merged/.merged_methylation.{repeats}.{context}.{chr}.rule-get_methylation.merge_methylation_by_chr.log"
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   shell:
@@ -56,8 +54,6 @@ rule merge_coverage_by_chr:
     gzip=expand("{path}/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
                 sample=rrbs_samples.index, allow_missing=True)
   output: temp("{path}/merged/merged_coverage.{repeats}.{context}.{chr}.bedGraph")
-  params:
-    sample_names=rrbs_samples.index
   log: "{path}/merged/.merged_coverage.{repeats}.{context}.{chr}.rule-get_methylation.merge_coverage_by_chr.log"
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   shell:
@@ -101,4 +97,4 @@ rule bgzip_merged_tables:
   threads: 4
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{path}/.merged_{file_name}.rule-get_methylation.bgzip_table.log"
-  shell: "bgzip -@ {threads} -c {input} > {output} > {log} 2> {log}"
+  shell: "bgzip -@ {threads} -c {input} > {output} 2> {log}"
