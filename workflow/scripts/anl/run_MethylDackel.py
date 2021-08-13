@@ -3,8 +3,9 @@ import os
 import re
 import sys
 
-## This script will generate ...
-##   ...
+## This script will extract methylation from bwameth-aligned BAM files.
+##   Extraction will be done in all three contexts [ 'CpG', 'CHG', 'CHH' ].
+##   Extracted files will then be bgzipped.
 
 #----------------------------------------------------------------------------------------------------------------------#
 
@@ -27,8 +28,11 @@ CHG = "--CHG" if len([ c for c in wildcards.context if c == "CHG" ]) == 1 else "
 CHH = "--CHH" if len([ c for c in wildcards.context if c == "CHH" ]) == 1 else ""
 repeats = "-l " + input.ir if wildcards.repeats == "without_repeats" else ""
 prefix = wildcards.path + "/methylation_calls/" + wildcards.sample + "." + wildcards.repeats
-MDkl = "MethylDackel extract -q 20 -d 5"
-shell("{MDkl} -@ {threads} {repeats} {CHG} {CHH} {mKit} -o {prefix} {input.ref} {input.bam} > {log} 2> {log}")
+MDkl = "MethylDackel extract -q 20 -d 5 --CHG --CHH"
+shell("{MDkl} -@ {threads} {repeats} {mKit} -o {prefix} {input.ref} {input.bam} > {log} 2> {log}")
+shell("bgzip -@ {threads} -c {prefix}_CpG.{wildcards.suffix} > {prefix}_CpG.{wildcards.suffix}.gz 2>> {log}")
+shell("bgzip -@ {threads} -c {prefix}_CHG.{wildcards.suffix} > {prefix}_CHG.{wildcards.suffix}.gz 2>> {log}")
+shell("bgzip -@ {threads} -c {prefix}_CHH.{wildcards.suffix} > {prefix}_CHH.{wildcards.suffix}.gz 2>> {log}")
 
 #----------------------------------------------------------------------------------------------------------------------#
 

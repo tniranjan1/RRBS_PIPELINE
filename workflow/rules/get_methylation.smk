@@ -2,7 +2,7 @@
 rule bgzip_table:
   input: "{top_path}/results/{bot_path}/{file_name}"
   output: "{top_path}/results/{bot_path}/{file_name}.gz"
-  threads: 8
+  threads: 4
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{top_path}/results/{bot_path}/.{file_name}.rule-get_methylation.bgzip_table.log"
   shell: "bgzip -@ {threads} -c {input} > {output} > {log} 2> {log}"
@@ -17,10 +17,12 @@ rule extract_methylation:
     ref=reference_genome_path,
     ir=inverted_repeats
   output:
-    temp(
-        expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.{suffix}",
-            context=context_to_use, allow_missing=True)
-        )
+    orig=temp(
+         expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.{suffix}",
+                context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
+             ),
+    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.{suffix}.gz",
+                context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
   wildcard_constraints:
     suffix="bedGraph|methylKit"
   threads: 4
@@ -49,11 +51,11 @@ rule merge_methylation_by_chr:
       chr_input=""
       for i in {input.orig}
       do
-        grep '^{wildcards.chr}' $i | cut -f1-4 > $i.methy_tmp
-        chr_input="$chr_input $i.methy_tmp"
+        grep '^{wildcards.chr}' $i | cut -f1-4 > $i.{wildcards.chr}.methy_tmp
+        chr_input="$chr_input $i.{wildcards.chr}.methy_tmp"
       done
       bedtools unionbedg -filler NA -i $chr_input > {output}
-      for i in {input.orig}; do rm $i.methy_tmp; done
+      for i in {input.orig}; do rm $i.{wildcards.chr}.methy_tmp; done
       """
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -77,11 +79,11 @@ rule merge_coverage_by_chr:
       chr_input=""
       for i in {input.orig}
       do
-        grep '^{wildcards.chr}' $i | awk '{{print $1 "\t" $2 "\t" $3 "\t" $5+$6}}' > $i.cov_tmp
-        chr_input="$chr_input $i.cov_tmp"
+        grep '^{wildcards.chr}' $i | awk '{{print $1 "\t" $2 "\t" $3 "\t" $5+$6}}' > $i.{wildcards.chr}.cov_tmp
+        chr_input="$chr_input $i.{wildcards.chr}.cov_tmp"
       done
       bedtools unionbedg -filler NA -i $chr_input > {output}
-      for i in {input.orig}; do rm $i.cov_tmp; done
+      for i in {input.orig}; do rm $i.{wildcards.chr}.cov_tmp; done
       """
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -92,7 +94,6 @@ rule merge_table_from_chr:
     fai=reference_genome_path + ".fai",
     merge_list=expand("{path}/methylation_calls/merged/merged_{meco}.{repeats}.{context}.{chr}.bedGraph",
                       chr=chromosomes, allow_missing=True)
-    #lambda wildcards: get_merge_list(fai=reference_genome_path + ".fai", wildcards=wildcards)
   output: temp("{path}/methylation_calls/merged/merged_{meco}.{repeats}.{context}.bedGraph")
   params:
     sample_names=rrbs_samples.index

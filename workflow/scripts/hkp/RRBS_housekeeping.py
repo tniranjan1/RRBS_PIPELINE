@@ -100,21 +100,6 @@ def get_initial_output(sample_sheet, sample_destination):
 
 #----------------------------------------------------------------------------------------------------------------------#
 
-# Subroutine to obtain the file names for all the RRBS samples once the have undergone methylation extraction,
-#   with or without repeats, with or without compression (bgzip), and context aware
-def get_extracted_files(sample_sheet, wildcards, gz):
-    suffix = "bedGraph.gz" if gz else ".bedGraph"
-    path=wildcards.path
-    repeats=wildcards.repeats
-    context=wildcards.context
-    extracted_files = []
-    for i in range(0, len(sample_sheet)):
-        file_path = f"{path}/methylation_calls/samples/{sample_sheet.index[i]}.{repeats}_{context}.{suffix}"
-        extracted_files.append(os.path.abspath(file_path))
-    return extracted_files
-
-#----------------------------------------------------------------------------------------------------------------------#
-
 # Subroutine to obtain list of merged methylation or merged coverage files that have been separated by chr
 def get_merge_list(fai, wildcards):
     path=wildcards.path
