@@ -35,7 +35,7 @@ rule merge_methylation_by_chr:
   input:
     orig=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph",
                 sample=rrbs_samples.index, allow_missing=True),
-    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph.gz"
+    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph.gz",
                 sample=rrbs_samples.index, allow_missing=True)
   output: temp("{path}/methylation_calls/merged/merged_methylation.{repeats}.{context}.{chr}.bedGraph")
   params:
@@ -63,7 +63,7 @@ rule merge_coverage_by_chr:
   input:
     orig=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph",
                 sample=rrbs_samples.index, allow_missing=True),
-    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph.gz"
+    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph.gz",
                 sample=rrbs_samples.index, allow_missing=True)
   output: temp("{path}/methylation_calls/merged/merged_coverage.{repeats}.{context}.{chr}.bedGraph")
   params:
