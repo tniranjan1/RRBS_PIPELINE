@@ -34,7 +34,6 @@ def importSampleSheet(sample_path, schema_path):
         new_name = sample_sheet[['SampleGroup', 'Tissue', 'SampleID']].iloc[i].str.cat(sep=".")
         # Ensure new sample name can be used as filename (no invalid characters)
         slugify = re.sub(r'(?u)[^-\w.]', '', new_name)
-        slugify = re.sub('_', '-', slugify)
         sample_names.append(new_name)
         # Print error and abort if there are invalid characters
         if slugify != new_name:
