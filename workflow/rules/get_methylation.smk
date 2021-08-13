@@ -18,10 +18,10 @@ rule extract_methylation:
     ir=inverted_repeats
   output:
     orig=temp(
-         expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.{suffix}",
+         expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.MethylDackel.{suffix}",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
              ),
-    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.{suffix}.gz",
+    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}..MethylDackel.{suffix}.gz",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
   wildcard_constraints:
     suffix="bedGraph|methylKit"
@@ -35,9 +35,9 @@ rule extract_methylation:
 # Merge methylation calls for all samples in a sheet, subdivided by chromosome
 rule merge_methylation_by_chr:
   input:
-    orig=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph",
+    orig=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.MethylDackel.bedGraph",
                 sample=rrbs_samples.index, allow_missing=True),
-    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph.gz",
+    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.MethylDackel.bedGraph.gz",
                 sample=rrbs_samples.index, allow_missing=True)
   output: temp("{path}/methylation_calls/merged/merged_methylation.{repeats}.{context}.{chr}.bedGraph")
   params:
@@ -63,9 +63,9 @@ rule merge_methylation_by_chr:
 # Merge coverage information for all samples in a sheet, subdivided by chromosome
 rule merge_coverage_by_chr:
   input:
-    orig=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph",
+    orig=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.MethylDackel.bedGraph",
                 sample=rrbs_samples.index, allow_missing=True),
-    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph.gz",
+    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.MethylDackel.bedGraph.gz",
                 sample=rrbs_samples.index, allow_missing=True)
   output: temp("{path}/methylation_calls/merged/merged_coverage.{repeats}.{context}.{chr}.bedGraph")
   params:
