@@ -7,10 +7,10 @@ rule extract_methylation:
     ir=inverted_repeats
   output:
     orig=temp(
-         expand("{path}/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
+         expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
              ),
-    gzip=expand("{path}/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
+    gzip=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
   wildcard_constraints:
     suffix="bedGraph|methylKit"
@@ -79,22 +79,12 @@ rule merge_coverage_by_chr:
 rule merge_table_from_chr:
   input:
     fai=reference_genome_path + ".fai",
-<<<<<<< HEAD
-    merge_list=expand("{path}/merged/merged_{meco}.{repeats}.{context}.{chr}.bedGraph",
-                      chr=chromosomes, allow_missing=True)
-  output: temp("{path}/merged/merged_{meco}.{repeats}.{context}.bedGraph")
-  params:
-    sample_names=rrbs_samples.index
-  conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: "{path}/merged/.merged_{meco}.{repeats}.{context}.rule-get_methylation.merge_table_from_chr.log"
-=======
     merge_list=expand("{path}/merged_{meco}.{repeats}.{context}.{chr}.bedGraph", chr=chromosomes, allow_missing=True)
   output: temp("{path}/merged_{meco}.{repeats}.{context}.bedGraph")
   params:
     sample_names=rrbs_samples.index
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{path}/.merged_{meco}.{repeats}.{context}.rule-get_methylation.merge_table_from_chr.log"
->>>>>>> 3a03b8e5e3705f5b325e67b7624b8d32cea8e3c6
   shell:
         """
         exec > {log}; exec 2> {log}
