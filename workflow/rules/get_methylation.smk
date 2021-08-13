@@ -1,16 +1,3 @@
-# Bgzip methylation tables for storage space reduction
-rule bgzip_table:
-  input: "{top_path}/results/{bot_path}/{file_name}"
-  output: "{top_path}/results/{bot_path}/{file_name}.gz"
-  wildcard_constraints:
-    file_name='(?!MethylDackel).+' # Negative lookahead assertion to not re-bgzip extraction files
-  threads: 4
-  conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: "{top_path}/results/{bot_path}/.{file_name}.rule-get_methylation.bgzip_table.log"
-  shell: "bgzip -@ {threads} -c {input} > {output} > {log} 2> {log}"
-
-#----------------------------------------------------------------------------------------------------------------------#
-
 # Extract methylation using MethylDackel
 rule extract_methylation:
   input:
@@ -108,3 +95,14 @@ rule merge_table_from_chr:
         echo "chrom" "start" "end" {params.sample_names} | sed 's/ /\t/g' > {output} ## Print header
         cat {input.merge_list} >> {output}
         """
+
+#----------------------------------------------------------------------------------------------------------------------#
+
+# Bgzip methylation tables for storage space reduction
+rule bgzip_merged_tables:
+  input: "{top_path}/results/{bot_path}/merged_{file_name}"
+  output: "{top_path}/results/{bot_path}/merged_{file_name}.gz"
+  threads: 4
+  conda: f"{workflow_dir}/envs/get_methylation.yaml"
+  log: "{top_path}/results/{bot_path}/.merged_{file_name}.rule-get_methylation.bgzip_table.log"
+  shell: "bgzip -@ {threads} -c {input} > {output} > {log} 2> {log}"
