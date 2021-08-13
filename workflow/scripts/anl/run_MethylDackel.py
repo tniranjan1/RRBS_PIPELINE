@@ -24,8 +24,6 @@ sys.stderr = sys.stdout = f
 #----------------------------------------------------------------------------------------------------------------------#
 
 mKit = "--methylKit" if wildcards.suffix == "methylKit" else ""
-CHG = "--CHG" if len([ c for c in wildcards.context if c == "CHG" ]) == 1 else ""
-CHH = "--CHH" if len([ c for c in wildcards.context if c == "CHH" ]) == 1 else ""
 repeats = "-l " + input.ir if wildcards.repeats == "without_repeats" else ""
 prefix = wildcards.path + "/methylation_calls/" + wildcards.sample + "." + wildcards.repeats
 MDkl = "MethylDackel extract -q 20 -d 5 --CHG --CHH"
