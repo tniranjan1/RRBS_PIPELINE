@@ -33,8 +33,10 @@ rule extract_methylation:
 # Merge methylation calls for all samples in a sheet, subdivided by chromosome
 rule merge_methylation_by_chr:
   input:
-    orig=lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=False),
-    gzip=lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=True )
+    orig: expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph",
+                 sample=rrbs_samples.index, allow_missing=True)
+    gzip= expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph.gz"
+                 sample=rrbs_samples.index, allow_missing=True)
   output: temp("{path}/methylation_calls/merged/merged_methylation.{repeats}.{context}.{chr}.bedGraph")
   params:
     sample_names=rrbs_samples.index
@@ -59,8 +61,10 @@ rule merge_methylation_by_chr:
 # Merge coverage information for all samples in a sheet, subdivided by chromosome
 rule merge_coverage_by_chr:
   input:
-    orig=lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=False),
-    gzip=lambda wildcards: get_extracted_files(sample_sheet=rrbs_samples, wildcards=wildcards, gz=True )
+    orig: expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph",
+                 sample=rrbs_samples.index, allow_missing=True)
+    gzip= expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.bedGraph.gz"
+                 sample=rrbs_samples.index, allow_missing=True)
   output: temp("{path}/methylation_calls/merged/merged_coverage.{repeats}.{context}.{chr}.bedGraph")
   params:
     sample_names=rrbs_samples.index
