@@ -24,15 +24,14 @@ rule extract_methylation:
 # Merge methylation calls for all samples in a sheet, subdivided by chromosome
 rule merge_methylation_by_chr:
   input:
-    orig=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph",
+    orig=expand("{path}/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph",
                 sample=rrbs_samples.index, allow_missing=True),
-    gzip=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
+    gzip=expand("{path}/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
                 sample=rrbs_samples.index, allow_missing=True)
-  output: temp("{path}/methylation_calls/merged/merged_methylation.{repeats}.{context}.{chr}.bedGraph")
+  output: temp("{path}/merged/merged_methylation.{repeats}.{context}.{chr}.bedGraph")
   params:
     sample_names=rrbs_samples.index
-  log: "{path}/methylation_calls/merged/" + \
-       ".merged_methylation.{repeats}.{context}.{chr}.rule-get_methylation.merge_methylation_by_chr.log"
+  log: "{path}/merged/.merged_methylation.{repeats}.{context}.{chr}.rule-get_methylation.merge_methylation_by_chr.log"
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   shell:
       """
@@ -52,15 +51,14 @@ rule merge_methylation_by_chr:
 # Merge coverage information for all samples in a sheet, subdivided by chromosome
 rule merge_coverage_by_chr:
   input:
-    orig=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph",
+    orig=expand("{path}/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph",
                 sample=rrbs_samples.index, allow_missing=True),
-    gzip=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
+    gzip=expand("{path}/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
                 sample=rrbs_samples.index, allow_missing=True)
-  output: temp("{path}/methylation_calls/merged/merged_coverage.{repeats}.{context}.{chr}.bedGraph")
+  output: temp("{path}/merged/merged_coverage.{repeats}.{context}.{chr}.bedGraph")
   params:
     sample_names=rrbs_samples.index
-  log: "{path}/methylation_calls/merged/" + \
-       ".merged_coverage.{repeats}.{context}.{chr}.rule-get_methylation.merge_coverage_by_chr.log"
+  log: "{path}/merged/.merged_coverage.{repeats}.{context}.{chr}.rule-get_methylation.merge_coverage_by_chr.log"
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   shell:
       """
@@ -81,14 +79,13 @@ rule merge_coverage_by_chr:
 rule merge_table_from_chr:
   input:
     fai=reference_genome_path + ".fai",
-    merge_list=expand("{path}/methylation_calls/merged/merged_{meco}.{repeats}.{context}.{chr}.bedGraph",
+    merge_list=expand("{path}/merged/merged_{meco}.{repeats}.{context}.{chr}.bedGraph",
                       chr=chromosomes, allow_missing=True)
-  output: temp("{path}/methylation_calls/merged/merged_{meco}.{repeats}.{context}.bedGraph")
+  output: temp("{path}/merged/merged_{meco}.{repeats}.{context}.bedGraph")
   params:
     sample_names=rrbs_samples.index
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: "{path}/methylation_calls/merged/" + \
-       ".merged_{meco}.{repeats}.{context}.rule-get_methylation.merge_table_from_chr.log"
+  log: "{path}/merged/.merged_{meco}.{repeats}.{context}.rule-get_methylation.merge_table_from_chr.log"
   shell:
         """
         exec > {log}; exec 2> {log}
@@ -100,9 +97,9 @@ rule merge_table_from_chr:
 
 # Bgzip methylation tables for storage space reduction
 rule bgzip_merged_tables:
-  input: "{top_path}/results/{bot_path}/merged_{file_name}"
-  output: "{top_path}/results/{bot_path}/merged_{file_name}.gz"
+  input: "{path}/merged_{file_name}"
+  output: "{path}/merged_{file_name}.gz"
   threads: 4
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: "{top_path}/results/{bot_path}/.merged_{file_name}.rule-get_methylation.bgzip_table.log"
+  log: "{path}/.merged_{file_name}.rule-get_methylation.bgzip_table.log"
   shell: "bgzip -@ {threads} -c {input} > {output} > {log} 2> {log}"
