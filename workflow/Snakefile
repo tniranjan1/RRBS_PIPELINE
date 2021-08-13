@@ -94,6 +94,6 @@ include: 'rules/get_methylation.smk'
 # Target rule
 rule all:
     input:
-        get_initial_output(rrbs_samples, "rrbs_samples"),
-        get_initial_output(deconvo_ref_samples, "deconvo_ref_samples"),
+        #get_initial_output(rrbs_samples, "rrbs_samples"),
+        #get_initial_output(deconvo_ref_samples, "deconvo_ref_samples"),
         get_final_output()
