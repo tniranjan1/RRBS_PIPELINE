@@ -2,6 +2,8 @@
 rule bgzip_table:
   input: "{top_path}/results/{bot_path}/{file_name}"
   output: "{top_path}/results/{bot_path}/{file_name}.gz"
+  wildcard_constraints:
+    suffix="*MethylDackel*"
   threads: 4
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{top_path}/results/{bot_path}/.{file_name}.rule-get_methylation.bgzip_table.log"
