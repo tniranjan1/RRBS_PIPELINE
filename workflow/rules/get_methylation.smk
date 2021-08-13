@@ -1,9 +1,9 @@
 # Bgzip methylation tables for storage space reduction
 rule bgzip_table:
-  input: "{top_path}/results/{bot_path}/{file_name}"
-  output: "{top_path}/results/{bot_path}/{file_name}.gz"
+  input: "{top_path}/results/{bot_path}/{prefix}_{file_name}"
+  output: "{top_path}/results/{bot_path}/{prefix}_{file_name}.gz"
   wildcard_constraints:
-    suffix="*MethylDackel*"
+    suffix="MethylDackel"
   threads: 4
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{top_path}/results/{bot_path}/.{file_name}.rule-get_methylation.bgzip_table.log"
@@ -20,16 +20,16 @@ rule extract_methylation:
     ir=inverted_repeats
   output:
     orig=temp(
-         expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.MethylDackel.{suffix}",
+         expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
              ),
-    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}..MethylDackel.{suffix}.gz",
+    gzip=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
   wildcard_constraints:
     suffix="bedGraph|methylKit"
   threads: 4
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: "{path}/methylation_calls/samples/.{sample}.{repeats}.{suffix}.rule-get_methylation.extract_methylation.log"
+  log: "{path}/methylation_calls/samples/.MethylDackel_{sample}.{repeats}.{suffix}.rule-get_methylation.extract_methylation.log"
   script: f"{workflow_dir}/scripts/anl/run_MethylDackel.py"
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -37,9 +37,9 @@ rule extract_methylation:
 # Merge methylation calls for all samples in a sheet, subdivided by chromosome
 rule merge_methylation_by_chr:
   input:
-    orig=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.MethylDackel.bedGraph",
+    orig=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph",
                 sample=rrbs_samples.index, allow_missing=True),
-    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.MethylDackel.bedGraph.gz",
+    gzip=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
                 sample=rrbs_samples.index, allow_missing=True)
   output: temp("{path}/methylation_calls/merged/merged_methylation.{repeats}.{context}.{chr}.bedGraph")
   params:
@@ -65,9 +65,9 @@ rule merge_methylation_by_chr:
 # Merge coverage information for all samples in a sheet, subdivided by chromosome
 rule merge_coverage_by_chr:
   input:
-    orig=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.MethylDackel.bedGraph",
+    orig=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph",
                 sample=rrbs_samples.index, allow_missing=True),
-    gzip=expand("{path}/methylation_calls/samples/{sample}.{repeats}_{context}.MethylDackel.bedGraph.gz",
+    gzip=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
                 sample=rrbs_samples.index, allow_missing=True)
   output: temp("{path}/methylation_calls/merged/merged_coverage.{repeats}.{context}.{chr}.bedGraph")
   params:
