@@ -72,7 +72,8 @@ wildcard_constraints:
   sample = '|'.join([x for x in merged_sample_sheet.index]),
   chr = '|'.join(chromosomes),
   repeats = "with_repeats|without_repeats",
-  meco = "methylation|coverage"
+  meco = "methylation|coverage",
+  context = [ 'CpG', 'CHG', 'CHH']
 
 #----------------------------------------------------------------------------------------------------------------------#
 

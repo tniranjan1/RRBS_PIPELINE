@@ -105,9 +105,9 @@ rule bgzip_merged_tables:
 rule remove_NA:
   input: "{path}/merged_{file_name}.{context}.bedGraph.gz"
   output: "{path}/merged_{file_name}.noNAs.{context}.bedGraph"
-  threads: 1
+  threads: 2
   wildcard_constraints:
-    context=[ 'CpG', 'CHG', 'CHH' ]
+    context='CpG'
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{path}/.merged_{file_name}.noNAs.{context}.rule-get_methylation.remove_NA.log"
   shell: "zcat {input} | grep -vP '\tNA' > {output}"
