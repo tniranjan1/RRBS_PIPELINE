@@ -81,7 +81,7 @@ def get_final_output():
     meco = [ 'methylation', 'coverage' ]
     repeats = [ 'with_repeats', 'without_repeats' ]
     context = context_to_use
-    return expand(f"{results_dir}/rrbs_samples/methylation_calls/merged/merged_{{meco}}.{{repeats}}.{{context}}.bedGraph.gz",
+    return expand(f"{results_dir}/rrbs_samples/methylation_calls/merged/merged_{{meco}}.{{repeats}}.noNAs.{{context}}.bedGraph.gz",
                   meco=meco, repeats=repeats, context=context)
 
 #----------------------------------------------------------------------------------------------------------------------#

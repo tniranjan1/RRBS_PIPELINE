@@ -98,3 +98,16 @@ rule bgzip_merged_tables:
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{path}/.merged_{file_name}.rule-get_methylation.bgzip_table.log"
   shell: "bgzip -@ {threads} -c {input} > {output} 2> {log}"
+
+#----------------------------------------------------------------------------------------------------------------------#
+
+# Remove sites with <100% call rate (remove NAs) from merged methylation/coverage table.
+rule remove_NA:
+  input: "{path}/merged_{file_name}.{context}.bedGraph.gz"
+  output: "{path}/merged_{file_name}.noNAs.{context}.bedGraph"
+  threads: 1
+  wildcard_constraints:
+    context=[ 'CpG', 'CHG', 'CHH' ]
+  conda: f"{workflow_dir}/envs/get_methylation.yaml"
+  log: "{path}/.merged_{file_name}.noNAs.{context}.rule-get_methylation.remove_NA.log"
+  shell: "zcat {input} | grep -vP '\tNA' > {output}"
