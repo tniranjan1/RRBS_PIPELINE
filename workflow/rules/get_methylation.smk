@@ -107,7 +107,7 @@ rule remove_NA:
   output: "{path}/merged_{file_name}.noNAs.{context}.bedGraph"
   threads: 2
   wildcard_constraints:
-    context='CpG'
+    context='CHG'
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{path}/.merged_{file_name}.noNAs.{context}.rule-get_methylation.remove_NA.log"
   shell: "zcat {input} | grep -vP '\tNA' > {output}"
