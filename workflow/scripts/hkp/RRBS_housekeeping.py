@@ -88,6 +88,18 @@ def mergeSampleSheet(sheetA, sheetB):
 
 #----------------------------------------------------------------------------------------------------------------------#
 
+# Subroutine to restrict to full chromosomes in reference
+def chromosome_constraint(reference_genome_path):
+    fai = reference_genome_path + '.fai'
+    if os.path.isfile(fai): # get names of chromosomes
+        fai_table = pd.read_table(fai, header=None)
+        chr_list = [ chr for chr in fai_table[0].tolist() if not ('_' in chr) ]
+    else:
+        chr_list = "chrM"
+    return chr_list
+
+#----------------------------------------------------------------------------------------------------------------------#
+
 # Subroutine to obtain the names of all inital output files (alignments) for a given sample sheet
 # output name = "../resources/{sample_destinition from function input}/alignments/{sample name from sample sheet}.bam"
 def get_initial_output(sample_sheet, sample_destination):
@@ -126,15 +138,3 @@ def get_disk_gb(source_type):
     elif source_type == 'fq':
         return 1
     return 1
-
-#----------------------------------------------------------------------------------------------------------------------#
-
-# Subroutine to restrict to full chromosomes in reference
-def chromosome_constraint(reference_genome_path):
-    fai=reference_genome_path + '.fai'
-    if os.path.isfile(fai): # get names of chromosomes
-        fai_table = pd.read_table(fai, header=None)
-        chr_list = [ chr for chr in fai_table[0].tolist() if not ('_' in chr) ]
-    else:
-        chr_list = "chrM"
-    return chr_list

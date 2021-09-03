@@ -1,0 +1,10 @@
+channel:
+  - bioconda
+  - conda-forge
+dependencies:
+  - snakemake
+  - mamba
+  - python=3.8
+  - samtools=1.13
+  - bedtools=2.30.0
+  - methyldackel=0.3.0

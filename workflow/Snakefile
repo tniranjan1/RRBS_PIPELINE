@@ -52,6 +52,8 @@ if DMRFinder_repo.bare:
 workflow_dir = os.path.abspath(os.getcwd()) # absolute path to current working directory
 resource_dir = os.path.abspath(os.getcwd() + "/../resources")
 results_dir = os.path.abspath(os.getcwd() + "/../results")
+genotype_dir = resource_dir + "/references/genotypes"
+
 reference_genome_path = abspath(config['ref']['path'])
 reference_repeats = f"{resource_dir}/references/repeats/{config['ref']['hg_build']}.repeats.bed"
 inverted_repeats = f"{resource_dir}/references/repeats/{config['ref']['hg_build']}.invert_repeats.bed"
@@ -66,6 +68,15 @@ context_to_use = [ key for key in list(context_truth.keys()) if context_truth[ke
 
 # Clean set of chromosomes to run on
 chromosomes = chromosome_constraint(reference_genome_path)
+
+# Verify vcf file
+vcf_file = "{genotype_dir}/sample.original_genotypes.vcf.gz"
+if config['remove_samples']['genotype_discordant']['activate']:
+    vcf_source = config['remove_samples']['genotype_discordant']['vcf']
+    if not os.path.isfile(vcf_source):
+        print("VCF file ({}) could not be found. Please check path. Workflow aborted.".format(vcf_file))
+    else
+        vcf_source = ''
 
 # Globally constrain all wildcards matching {sample} to not have "/" in the string
 wildcard_constraints:
@@ -82,8 +93,11 @@ def get_final_output():
     meco = [ 'methylation', 'coverage' ]
     repeats = [ 'with_repeats', 'without_repeats' ]
     context = context_to_use
-    return expand(f"{results_dir}/rrbs_samples/methylation_calls/merged/merged_{{meco}}.{{repeats}}.noNAs.{{context}}.bedGraph.gz",
-                  meco=meco, repeats=repeats, context=context)
+    to_return = expand(
+       f"{results_dir}/rrbs_samples/methylation_calls/merged/merged_{{meco}}.{{repeats}}.noNAs.{{context}}.bedGraph.gz",
+       meco=meco, repeats=repeats, context=context)
+    # TBD: if vcf add back is activated, also include compression of input vcf as target
+    return to_return
 
 #----------------------------------------------------------------------------------------------------------------------#
 
