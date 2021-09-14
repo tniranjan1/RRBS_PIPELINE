@@ -36,8 +36,8 @@ deconvo_bsseq_ref: ../config/deconvo_bsseq_ref_samples.tsv
 lrs:
   # if methlyation from ont sequencing has been performed and age-estimation should be done
   activate: True
-  # common path sample sheet, format is SamplID "\t" filepath
-  path: "/results/rr/ont/hg38s/*P200*/"
+  # path to sample sheet, format is SamplID '\t' Covariate_Age '\t' Covariate_Gender '\t' Path
+  path: "../config/nanopore_methylation_samples.tsv"
 
 # parameters for reference genome
 ref:
