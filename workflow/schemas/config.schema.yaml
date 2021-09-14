@@ -11,6 +11,17 @@ properties:
   deconvo_bsseq_ref:
     type: string
 
+  lrs:
+    type: object
+    properties:
+      activate:
+        type: boolean
+      path:
+        type: string
+    required:
+      - activate
+      - path
+
   ref:
     type: object
     properties:

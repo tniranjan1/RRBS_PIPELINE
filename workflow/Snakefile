@@ -37,6 +37,12 @@ deconvo_ref_samples = importSampleSheet(sample_path=deconvo_ref_sheet_path, sche
 # Merge sample sheets for easy access to input files in the rules
 merged_sample_sheet = mergeSampleSheet(sheetA=rrbs_samples, sheetB=deconvo_ref_samples)
 
+# LRS methylation samples, if activated
+if config['lrs']['activate']:
+    lrs_methyl_sample_path = abspath(config['lrs']['path'])
+    schema_path = abspath('schema/lrs-methyl.schema.yaml')
+    lrs_methyl_sample_sheet = importLRSmethylSheet(sample_path=lrs_methyl_sample_path, schema_path=schema_path)
+
 # Install DMRFinder from github if not done already
 DMRFinder_repo_path = abspath('../resources/DMRFinder')
 if not os.path.isdir(DMRFinder_repo_path):
@@ -96,6 +102,8 @@ def get_final_output():
     to_return = expand(
        f"{results_dir}/rrbs_samples/methylation_calls/merged/merged_{{meco}}.{{repeats}}.noNAs.{{context}}.bedGraph.gz",
        meco=meco, repeats=repeats, context=context)
+    if config['lrs']['activate']:
+
     # TBD: if vcf add back is activated, also include compression of input vcf as target
     return to_return
 
@@ -109,6 +117,4 @@ include: 'rules/get_methylation.smk'
 # Target rule
 rule all:
     input:
-        #get_initial_output(rrbs_samples, "rrbs_samples"),
-        #get_initial_output(deconvo_ref_samples, "deconvo_ref_samples"),
         get_final_output()

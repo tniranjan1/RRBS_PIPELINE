@@ -1,0 +1,23 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: an entry in the lrs-methylation sample sheet
+
+properties:
+  SampleID:
+    type: string
+    description: patient source identifier
+  Covariate_Age:
+    type: integer
+    description: age at which sample was ascertained
+  Covariate_Gender:
+    type: string
+    description: ascertained gender of sample
+  Path:
+    type: string
+    description: path to ONT LRS methylation file
+
+required:
+  - SampleID
+  - Covariate_Age
+  - Covariate_Gender
+  - Path
