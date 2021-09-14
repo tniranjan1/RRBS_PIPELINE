@@ -55,8 +55,6 @@ def importLRSmethylSheet(sample_path, schema_path):
 
     # Convert appropriate columns to string, if not already in string format
     stringed_columns = ['SampleID','Covariate_Age','Covariate_Gender','Path']
-    for c in stringed_columns:
-        sample_sheet[c] = sample_sheet[c].astype('str')
 
     try: snakemake.utils.validate(sample_sheet, schema=schema_path)
     except snakemake.exceptions.WorkflowError as e:

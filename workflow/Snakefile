@@ -22,9 +22,6 @@ if not os.path.isfile(config_path):
     sys.exit()
 snakemake.utils.validate(config, schema='schemas/config.schema.yaml')
 
-# Setup report destination
-report: 'report/workflow.rst'
-
 # Load RRBS sample sheet and validate structure
 rrbs_sample_sheet_path = abspath(config['RRBS_samples'])
 schema_path = abspath('schemas/samples.schema.yaml')
@@ -40,7 +37,7 @@ merged_sample_sheet = mergeSampleSheet(sheetA=rrbs_samples, sheetB=deconvo_ref_s
 # LRS methylation samples, if activated
 if config['lrs']['activate']:
     lrs_methyl_sample_path = abspath(config['lrs']['path'])
-    schema_path = abspath('schema/lrs-methyl.schema.yaml')
+    schema_path = abspath('schemas/lrs-methyl.schema.yaml')
     lrs_methyl_sample_sheet = importLRSmethylSheet(sample_path=lrs_methyl_sample_path, schema_path=schema_path)
 
 # Install DMRFinder from github if not done already
