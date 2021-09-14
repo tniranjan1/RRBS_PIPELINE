@@ -32,6 +32,13 @@ deconvo_bsseq_ref: ../config/deconvo_bsseq_ref_samples.tsv
 #     PMID: 30643296.
 #     PMCID: PMC6348048.
 
+# long-read methylation calls (gzipped tsv format) from nanopolish; separate workflow needed for these files
+lrs:
+  # if methlyation from ont sequencing has been performed and age-estimation should be done
+  activate: True
+  # common path sample sheet, format is SamplID "\t" filepath
+  path: "/results/rr/ont/hg38s/*P200*/"
+
 # parameters for reference genome
 ref:
   # Ensembl species name

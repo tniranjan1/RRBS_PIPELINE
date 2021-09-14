@@ -109,3 +109,5 @@ rule remove_NA:
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{path}/.merged_{file_name}.noNAs.{context}.rule-get_methylation.remove_NA.log"
   shell: "zcat {input} | grep -vP '\tNA' > {output}"
+
+#----------------------------------------------------------------------------------------------------------------------#
