@@ -1,5 +1,5 @@
 # relative path to sample sheet for study RRBS samples
-RRBS_samples: ../config/RRBS_samples.tsv
+RRBS_samples: "../config/RRBS_samples.tsv"
 # TSV column format:
 #   SampleID [string] [required] = patient source identifier; can be reused for samples from the same patient but
 #     different tissues
@@ -21,7 +21,7 @@ RRBS_samples: ../config/RRBS_samples.tsv
 #   Variable_* [any] [optional] = additional optional columns that are informative for the end user
 
 # relative path to sample sheet for reference bisulfite seq for deconvolution
-deconvo_bsseq_ref: ../config/deconvo_bsseq_ref_samples.tsv
+deconvo_bsseq_ref: "../config/deconvo_bsseq_ref_samples.tsv"
 # TSV column format: See RRBS_Samples TSV format above.
 # Provided reference file is for samples sequenced in
 #   Rizzardi LF, Hickey PF, DiBlasi VR, Tryggvadóttir R, Callahan CM, Idrizi A, Hansen KD, & Feinberg AP.
@@ -78,18 +78,20 @@ genotyping:
   GRCh38: https://support.illumina.com/content/dam/illumina-support/documents/downloads/productfiles/global-screening-array-24/v3-0/GSA-24v3-0-A2-manifest-file-csv.zip
 
 # parameters for Illumina 450k Chip reference
-illumina450k:
+infinium450k:
   # Ensembl species name
   species: homo_sapiens
   # Infinium release
   release: v1.2
   # Genome build
-  GRCh_build: GRCh37
-  hg_build: hg19
+  GRCh_build: GRCh38
+  hg_build: hg38
   # full local 450k Manifest file path
-  path: "/home/tejasvi/Infinium/HumanMethylation450_15017482_v1-2.csv"
-  # Infinium 450k CSV Manifest File downloaded from:
-  #  ftp://webdata2:webdata2@ussd-ftp.illumina.com/downloads/ProductFiles/HumanMethylation450/HumanMethylation450_15017482_v1-2.csv
+  url: "http://zhouserver.research.chop.edu/InfiniumAnnotation/20180909/HM450/HM450.hg38.manifest.tsv.gz"
+  # Infinium 450k TSV Manifest File lifted over from hg19 to hg38. Download reference:
+  #    Zhou W, Laird PW and Shen H.
+  #    Comprehensive characterization, annotation and innovative use of Infinium DNA Methylation BeadChip probes.
+  #    Nucleic Acids Research 2017
 
 # parameters for quality control and general analysis
 qc_params:

@@ -43,7 +43,7 @@ properties:
       - path
       - repeats_path
 
-  illumina450k:
+  infinium450k:
     type: object
     properties:
       species:
@@ -54,13 +54,13 @@ properties:
         type: string
       hg_build:
         type: string
-      path:
+      url:
         type: string
     required:
       - release
       - GRCh_build
       - hg_build
-      - path
+      - url
 
   qc_params:
     type: object

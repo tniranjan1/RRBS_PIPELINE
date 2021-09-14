@@ -1,0 +1,11 @@
+channel:
+  - bioconda
+  - conda-forge
+dependencies:
+  - snakemake
+  - mamba
+  - python=3.8
+  - r-base=4.1.1
+  - bioconductor-watermelon
+  - r-parallelly
+  - bedtools=2.30.0
