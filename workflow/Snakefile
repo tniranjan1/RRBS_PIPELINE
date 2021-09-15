@@ -84,8 +84,9 @@ if config['remove_samples']['genotype_discordant']['activate']:
     else: vcf_source = ''
 
 # Globally constrain all wildcards matching {sample} to not have "/" in the string
+all_sample_names = rrbs_sample_names + deconvo_sample_names + lrs_sample_names
 wildcard_constraints:
-  sample = '|'.join([x for x in merged_sample_sheet.index]),
+  sample = '|'.join([x for x in all_sample_names ]),
   chr = '|'.join(chromosomes),
   repeats = "with_repeats|without_repeats",
   meco = "methylation|coverage",

@@ -25,9 +25,9 @@ rule extract_methylation:
 rule merge_methylation_by_chr:
   input:
     orig=expand("{path}/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph",
-                sample=rrbs_samples.index, allow_missing=True),
+                sample=rrbs_sample_names, allow_missing=True),
     gzip=expand("{path}/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
-                sample=rrbs_samples.index, allow_missing=True)
+                sample=rrbs_sample_names, allow_missing=True)
   output: temp("{path}/merged/merged_methylation.{repeats}.{context}.{chr}.bedGraph")
   log: "{path}/merged/.merged_methylation.{repeats}.{context}.{chr}.rule-get_methylation.merge_methylation_by_chr.log"
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
@@ -50,9 +50,9 @@ rule merge_methylation_by_chr:
 rule merge_coverage_by_chr:
   input:
     orig=expand("{path}/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph",
-                sample=rrbs_samples.index, allow_missing=True),
+                sample=rrbs_sample_names, allow_missing=True),
     gzip=expand("{path}/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
-                sample=rrbs_samples.index, allow_missing=True)
+                sample=rrbs_sample_names, allow_missing=True)
   output: temp("{path}/merged/merged_coverage.{repeats}.{context}.{chr}.bedGraph")
   log: "{path}/merged/.merged_coverage.{repeats}.{context}.{chr}.rule-get_methylation.merge_coverage_by_chr.log"
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
