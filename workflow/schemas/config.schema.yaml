@@ -174,7 +174,7 @@ required:
   - RRBS_samples
   - deconvo_bsseq_ref
   - ref
-  - illumina450k
+  - infinium450k
   - qc_params
   - cytosine_sites
   - remove_samples
