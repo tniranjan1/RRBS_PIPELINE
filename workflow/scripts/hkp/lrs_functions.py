@@ -7,12 +7,13 @@ import sys
 #----------------------------------------------------------------------------------------------------------------------#
 
 # Distinguish between lrs and rrbs sample names
-def distinguish_lrs_rrbs(wildcards):
-    if wildcards.path == 'lrs_methyl':
+def distinguish_lrs_rrbs(middle_folder, path_prefix, path_suffix, lrs_sample_names, rrbs_sample_names):
+    if middle_folder == 'lrs_methyl':
         use = lrs_sample_names
     else:
         use = rrbs_sample_names
-    full_path = results_dir + "/" + wildcards.path + "/samples/{sample}.agePrediction.txt"
-    return expand(full_path, sample = use)
+    expansion = []
+    for u in sample: expansion.append(path_prefix + u + path_suffix)
+    return expansion
 
 #----------------------------------------------------------------------------------------------------------------------#
