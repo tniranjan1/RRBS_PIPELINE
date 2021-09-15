@@ -53,6 +53,10 @@ if config['lrs']['activate']:
     schema_path = abspath('schemas/lrs-methyl.schema.yaml')
     lrs_methyl_sample_sheet = importLRSmethylSheet(sample_path=lrs_methyl_sample_path, schema_path=schema_path)
     lrs_sample_names = lrs_methyl_sample_sheet.index.tolist()
+# Distinguish between lrs and rrbs sample names
+def distinguish_lrs_rrbs(middle_folder):
+    use = lrs_sample_names if middle_folder == 'lrs_methyl' else rrbs_sample_names
+    return expand(f"{results_dir}/{middle_folder}/samples/{{u}}.agePrediction.txt", u=use)
 
 # Install DMRFinder from github if not done already
 DMRFinder_repo_path = abspath('../resources/DMRFinder')
