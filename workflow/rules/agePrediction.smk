@@ -30,8 +30,8 @@ rule restrict_LRS_methyl_toInfinium:
   input:
     methyl=lambda wildcards: lrs_methyl_sample_sheet['Path'].loc[wildcards.sample],
     infinium=resource_dir + "/infinium450k/infinium450k_hg38.bed"
-  output: results_dir + "/lrs-methyl/samples/{sample}.methylationForEpiclock.bedGraph.gz"
-  log: results_dir + "/lrs-methyl/samples/.{sample}.rule-agePrediction.restrict_LRS_methyl_toInfinium.log"
+  output: results_dir + "/lrs-methyl/samples/{lrs_sample}.methylationForEpiclock.bedGraph.gz"
+  log: results_dir + "/lrs-methyl/samples/.{lrs_sample}.rule-agePrediction.restrict_LRS_methyl_toInfinium.log"
   conda: f"{workflow_dir}/envs/agePrediction.yaml"
   threads: 2
   shell:
@@ -52,9 +52,9 @@ rule restrict_LRS_methyl_toInfinium:
 
 # Run epiclock on a sample bedgraph.gz
 rule run_epiclock:
-  input: "{path}/{sample}.methylationForEpiclock.bedGraph.gz"
-  output: temp("{path}/{sample}.agePrediction.txt")
-  log: "{path}/.{sample}.epiclockPrediction.rule-agePrediction.run_epiclock.log"
+  input: "{path}/{prefix}.methylationForEpiclock.bedGraph.gz"
+  output: temp("{path}/{prefix}.agePrediction.txt")
+  log: "{path}/.{prefix}.epiclockPrediction.rule-agePrediction.run_epiclock.log"
   conda: f"{workflow_dir}/envs/agePrediction.yaml"
   threads: 1
   shell: "touch {output}" # change output as non-temporary, and shift shell to Rscript
@@ -63,8 +63,8 @@ rule run_epiclock:
 
 # Merge epiclock results for lrs sample group
 rule merge_and_markdown_epiclock:
-  input: lambda wildcards: expand(f"{results_dir}/{wildcards.path}/samples/{{sample}}.agePrediction.txt",
-                                  sample = lrs_sample_names if wildcards.path == 'lrs-methyl' else rrbs_sample_names)
+  input: lambda wildcards: expand(f"{results_dir}/{wildcards.path}/samples/{{name}}.agePrediction.txt",
+                                  name = lrs_sample_names if wildcards.path == 'lrs-methyl' else rrbs_sample_names)
   output:
     merge=results_dir + "/{path}/merged/merged.agePrediction.txt",
     mrkdn=results_dir + "/{path}/merged/merged.agePredction.markdown"
