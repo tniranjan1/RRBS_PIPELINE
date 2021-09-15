@@ -68,5 +68,6 @@ rule merge_and_markdown_epiclock:
   output: results_dir + "/{lrsORrrbs}/merged/merged.agePrediction.txt"
   log: results_dir + "/{lrsORrrbs}/merged/.merged.agePredction.rule-agePredction.merge_and_markdown_epiclock.log"
   conda: f"{workflow_dir}/envs/agePrediction.yaml"
+  wildcard_constraints: lrsORrrbs="lrs_methyl|rrbs_samples/methylation_calls"
   threads: 1
   shell: "touch {output}"
