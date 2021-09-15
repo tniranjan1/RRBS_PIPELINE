@@ -63,12 +63,10 @@ rule run_epiclock:
 
 # Merge epiclock results for lrs sample group
 rule merge_and_markdown_epiclock:
-  input: lambda wildcards: expand(f"{results_dir}/{{lrsORrrbs}}/samples/{{name}}.agePrediction.txt",
-                           name = lrs_sample_names if wildcards.lrsORrrbs == 'lrs_methyl' else rrbs_sample_names)
-  output: "/home/tejasvi/rrbs_cristina_scratch/RRBS_PIPELINE/results/lrs_methyl/merged/merged.agePrediction.txt"
-#  results_dir + "/{lrsORrrbs}/merged/merged.agePrediction.txt"
-  log: results_dir + "/{lrsORrrbs}/merged/.merged.agePredction.rule-agePredction.merge_and_markdown_epiclock.log"
+  input: lambda wildcards: expand(f"{results_dir}/{{path}}/samples/{{sample}}.agePrediction.txt",
+                           sample = lrs_sample_names if wildcards.path == 'lrs_methyl' else rrbs_sample_names)
+  output: results_dir + "/{path}/merged/merged.agePrediction.txt"
+  log: results_dir + "/{path}/merged/.merged.agePrediction.rule-agePrediction.merge_and_markdown_epiclock.log"
   conda: f"{workflow_dir}/envs/agePrediction.yaml"
-  wildcard_constraints: lrsORrrbs="lrs_methyl|rrbs_samples/methylation_calls"
   threads: 1
   shell: "touch {output}"
