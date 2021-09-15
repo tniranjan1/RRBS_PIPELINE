@@ -63,11 +63,8 @@ rule run_epiclock:
 
 # Merge epiclock results for lrs sample group
 rule merge_and_markdown_epiclock:
-  input: lambda wildcards: distinguish_lrs_rrbs(middle_folder=wildcards.path,
-                                                path_prefix=f"{results_dir}/{wildcards.path}/samples/",
-                                                path_suffix=".agePrediction.txt",
-                                                lrs_sample_names=lrs_sample_names,
-                                                rrbs_sample_names=rrbs_sample_names)
+  input: lambda wildcards: distinguish_lrs_rrbs(middle_folder=wildcards.path, top_path=results_dir,
+                                                lrs=lrs_sample_names, rrbs=rrbs_sample_names)
   output: results_dir + "/{path}/merged/merged.agePrediction.txt"
   log: results_dir + "/{path}/merged/.merged.agePrediction.rule-agePrediction.merge_and_markdown_epiclock.log"
   conda: f"{workflow_dir}/envs/agePrediction.yaml"
