@@ -55,9 +55,10 @@ if config['lrs']['activate']:
     lrs_sample_names = lrs_methyl_sample_sheet.index.tolist()
 # Distinguish between lrs and rrbs sample names
 def distinguish_lrs_rrbs(middle_folder):
-    use = rrbs_sample_names
-    if middle_folder == 'lrs_methyl': use = lrs_sample_names
-    return expand(results_dir + "/" + middle_folder + "/samples/{u}.agePrediction.txt", u = use)
+    use = lrs_sample_names if middle_folder == 'lrs_methyl' else rrbs_sample_names
+    expansion = []
+    for u in use: expansion.append(f"{results_dir}/{middle_folder}/samples/" + u + ".agePrediction.txt")
+    return expansion
 
 # Install DMRFinder from github if not done already
 DMRFinder_repo_path = abspath('../resources/DMRFinder')
