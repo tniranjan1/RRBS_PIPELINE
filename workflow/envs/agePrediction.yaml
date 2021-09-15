@@ -8,4 +8,5 @@ dependencies:
   - r-base=4.1.1
   - bioconductor-watermelon
   - r-parallelly
+  - samtools=1.13
   - bedtools=2.30.0

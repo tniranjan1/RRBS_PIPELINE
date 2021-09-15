@@ -78,7 +78,7 @@ rule merge_table_from_chr:
     merge_list=expand("{path}/merged_{meco}.{repeats}.{context}.{chr}.bedGraph", chr=chromosomes, allow_missing=True)
   output: temp("{path}/merged_{meco}.{repeats}.{context}.bedGraph")
   params:
-    sample_names=rrbs_samples.index.tolist()
+    sample_names = rrbs_sample_names
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{path}/.merged_{meco}.{repeats}.{context}.rule-get_methylation.merge_table_from_chr.log"
   shell:

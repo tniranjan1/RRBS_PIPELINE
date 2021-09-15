@@ -20,8 +20,7 @@ rule infinium450k_tsvTObed:
   shell:
     """
     exec > {log} 2> {log}
-    echo -e "CHR\tStart\tStop\tProbeID" > {output}
-    zcat {input} | grep '^chr' | awk 'BEGIN{{OFS="\t"}}{{$2=$2+1; print $0}}' | cut -f 1-3,5 >> {output}
+    zcat {input} | grep '^chr' | awk 'BEGIN{{OFS="\t"}}{{$2=$2+1; print $0}}' | cut -f 1-3,5 > {output}
     """
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -31,10 +30,45 @@ rule restrict_LRS_methyl_toInfinium:
   input:
     methyl=lambda wildcards: lrs_methyl_sample_sheet['Path'].loc[wildcards.sample],
     infinium=resource_dir + "/infinium450k/infinium450k_hg38.bed"
-  output: results_dir + "/lrs-methyl/samples/{sample}.methylation.bedGraph.gz"
+  output: results_dir + "/lrs-methyl/samples/{sample}.methylationForEpiclock.bedGraph.gz"
   log: results_dir + "/lrs-methyl/samples/.{sample}.rule-agePrediction.restrict_LRS_methyl_toInfinium.log"
   conda: f"{workflow_dir}/envs/agePrediction.yaml"
-  threads: 1
-  script: ""
+  threads: 2
+  shell:
+    """
+    exec > {log} 2> {log}
+
+    zcat {input.methyl} | awk '($5>4)' | cut -f 1-3,7 |    \
+      awk 'BEGIN{{OFS="\t"}}{{$2=$2+1;$3=$3+1;print $0}}' | \
+      tail -n +2 > {output}.tmp
+
+    bedtools unionbedg -i {output}.tmp {input.infinium} -filler 'remove' | grep -v 'remove' > {output}.uncomp
+    rm {output}.tmp
+    bgzip -@ {threads} -c {output}.uncomp > {output}
+    rm {output}.uncomp
+    """
 
 #----------------------------------------------------------------------------------------------------------------------#
+
+# Run epiclock on a sample bedgraph.gz
+rule run_epiclock:
+  input: "{path}/{sample}.methylationForEpiclock.bedGraph.gz"
+  output: temp("{path}/{sample}.agePrediction.txt")
+  log: "{path}/.{sample}.epiclockPrediction.rule-agePrediction.run_epiclock.log"
+  conda: f"{workflow_dir}/envs/agePrediction.yaml"
+  threads: 1
+  shell: "touch {output}" # change output as non-temporary, and shift shell to Rscript
+
+#----------------------------------------------------------------------------------------------------------------------#
+
+# Merge epiclock results for lrs sample group
+rule merge_and_markdown_epiclock:
+  input: lambda wildcards: expand(results_dir + "/" + wildcards.path + "/samples/{sample}.agePrediction.txt",
+                                  sample = lrs_sample_names if wildcards.path == 'lrs-methyl' else rrbs_sample_names)
+  output:
+    merge=results_dir + "/{path}/merged/merged.agePrediction.txt",
+    mrkdn=results_dir + "/{path}/merged/merged.agePredction.markdown"
+  log: results_dir + "/{path}/merged/.merged.agePredction.rule-agePredction.merge_and_markdown_epiclock.log"
+  conda: f"{workflow_dir}/envs/agePrediction.yaml"
+  threads: 1
+  shell: "touch {output.merge}; touch {output.markdn}"
