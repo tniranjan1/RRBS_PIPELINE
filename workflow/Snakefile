@@ -7,7 +7,6 @@ import snakemake
 import git
 sys.path.insert(0, os.path.abspath(os.getcwd()) + '/scripts/hkp')
 from RRBS_housekeeping import *
-from lrs_functions import *
 
 # Check correct snakemake version is being used.
 try: snakemake.utils.min_version('6.5.3')
