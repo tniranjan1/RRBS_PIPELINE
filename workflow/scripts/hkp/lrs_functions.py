@@ -7,7 +7,7 @@ import sys
 #----------------------------------------------------------------------------------------------------------------------#
 
 # Distinguish between lrs and rrbs sample names
-def distingish_lrs_rrbs(wildcards):
+def distinguish_lrs_rrbs(wildcards):
     if wildcards.path == 'lrs_methyl':
         use = lrs_sample_names
     else:

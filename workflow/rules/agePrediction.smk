@@ -63,7 +63,7 @@ rule run_epiclock:
 
 # Merge epiclock results for lrs sample group
 rule merge_and_markdown_epiclock:
-  input: distinguish
+  input: distinguish_lrs_rrbs
   output: results_dir + "/{path}/merged/merged.agePrediction.txt"
   log: results_dir + "/{path}/merged/.merged.agePrediction.rule-agePrediction.merge_and_markdown_epiclock.log"
   conda: f"{workflow_dir}/envs/agePrediction.yaml"
