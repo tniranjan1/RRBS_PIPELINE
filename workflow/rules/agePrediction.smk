@@ -30,8 +30,8 @@ rule restrict_LRS_methyl_toInfinium:
   input:
     methyl=lambda wildcards: lrs_methyl_sample_sheet['Path'].loc[wildcards.sample],
     infinium=resource_dir + "/infinium450k/infinium450k_hg38.bed"
-  output: results_dir + "/lrs_methyl/samples/{lrs_sample}.methylationForEpiclock.bedGraph.gz"
-  log: results_dir + "/lrs_methyl/samples/.{lrs_sample}.rule-agePrediction.restrict_LRS_methyl_toInfinium.log"
+  output: results_dir + "/lrs_methyl/samples/{sample}.methylationForEpiclock.bedGraph.gz"
+  log: results_dir + "/lrs_methyl/samples/.{sample}.rule-agePrediction.restrict_LRS_methyl_toInfinium.log"
   conda: f"{workflow_dir}/envs/agePrediction.yaml"
   threads: 2
   shell:
