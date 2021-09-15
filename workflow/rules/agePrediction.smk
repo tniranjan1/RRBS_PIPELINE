@@ -63,7 +63,7 @@ rule run_epiclock:
 
 # Merge epiclock results for lrs sample group
 rule merge_and_markdown_epiclock:
-  input: lambda wildcards: expand(results_dir + "/" + wildcards.path + "/samples/{sample}.agePrediction.txt",
+  input: lambda wildcards: expand(f"{results_dir}/{wildcards.path}/samples/{{sample}}.agePrediction.txt",
                                   sample = lrs_sample_names if wildcards.path == 'lrs-methyl' else rrbs_sample_names)
   output:
     merge=results_dir + "/{path}/merged/merged.agePrediction.txt",
