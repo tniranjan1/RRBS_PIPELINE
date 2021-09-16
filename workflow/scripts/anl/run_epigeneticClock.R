@@ -18,11 +18,25 @@ threads <- as.numeric(args[2])
 
 methylation <- read.table(gzfile(filename), sep="\t", header=FALSE, stringsAsFactors=FALSE)
 
+removeDuplicates <- function(df)
+{
+  checkDuplicates <- table(df[,5])
+  for(n in names(checkDuplicates[which(checkDuplicates > 1)]))
+  {
+    where <- which(df[,5] == n)
+    for(i in 2:length(where)) df[where[i],5] <- NA
+  }
+  df <- df[!is.na(df[,5]),]
+  return(df)
+}
+
 getClockOverlap <- function(sites)
 {
   # is the tagged prove name in the clock list?
   truthTable <- unlist(mclapply(methylation[,5], function(x) { sum(x == sites) > 0 }, mc.cores=threads))
   sitesToReturn <- methylation[truthTable,1:5]
+  sitesToReturn <- removeDuplicates(sitesToReturn)
+
   rownames(sitesToReturn) <- sitesToReturn[,5]
   sitesToReturn <- sitesToReturn[,1:4]
   sitesToReturn <- sitesToReturn[sites,]
