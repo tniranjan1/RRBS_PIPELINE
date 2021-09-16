@@ -63,9 +63,21 @@ rule run_epiclock:
 
 # Merge epiclock results for lrs sample group
 rule merge_and_markdown_epiclock:
-  input: lambda wildcards: distinguish_lrs_rrbs(middle_folder=wildcards.path)
+  input: lambda wildcards: distinguish_lrs_rrbs(middle_folder=wildcards.path, return_value="files")
   output: results_dir + "/{path}/merged/merged.agePrediction.txt"
+  params: lambda wildcards: distinguish_lrs_rrbs(middle_folder=wildcards.path, return_value="samples")
   log: results_dir + "/{path}/merged/.merged.agePrediction.rule-agePrediction.merge_and_markdown_epiclock.log"
   conda: f"{workflow_dir}/envs/agePrediction.yaml"
   threads: 1
-  shell: "touch {output}"
+  run:
+    output_df = lrs_methyl_sample_sheet[ [ 'SampleID', 'Covariate_Age' ] ]
+    output_df['EpiToc'] = [ np.nan ] * len(output_df)
+    output_df['Horvath'] = [ np.nan ] * len(output_df)
+    output_df['Hannum'] = [ np.nan ] * len(output_df)
+    for index in range(len(input)):
+        filename = input[index]
+        samplename = params[index]
+        predictions = pd.read_table(filename, sep="=", names=[ 'Value' ], index_col=0)
+        for index in predictions.index:
+            output_df.at[samplename,index] = predictions['Value'][index]
+    output_df.to_csv(output, sep='\t', index=False)

@@ -36,7 +36,6 @@ getClockOverlap <- function(sites)
   truthTable <- unlist(mclapply(methylation[,5], function(x) { sum(x == sites) > 0 }, mc.cores=threads))
   sitesToReturn <- methylation[truthTable,1:5]
   sitesToReturn <- removeDuplicates(sitesToReturn)
-
   rownames(sitesToReturn) <- sitesToReturn[,5]
   sitesToReturn <- sitesToReturn[,1:4]
   sitesToReturn <- sitesToReturn[sites,]

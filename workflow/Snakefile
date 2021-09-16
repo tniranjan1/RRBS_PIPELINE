@@ -3,6 +3,7 @@ import glob
 import re
 import sys
 import pandas as pd
+import numpy as np
 import snakemake
 import git
 sys.path.insert(0, os.path.abspath(os.getcwd()) + '/scripts/hkp')
@@ -53,11 +54,14 @@ if config['lrs']['activate']:
     lrs_methyl_sample_sheet = importLRSmethylSheet(sample_path=lrs_methyl_sample_path, schema_path=schema_path)
     lrs_sample_names = lrs_methyl_sample_sheet.index.tolist()
 # Distinguish between lrs and rrbs sample names
-def distinguish_lrs_rrbs(middle_folder):
+def distinguish_lrs_rrbs(middle_folder, return_value):
     samples2use = lrs_sample_names if middle_folder == 'lrs_methyl' else rrbs_sample_names
     expansion = []
     for u in samples2use: expansion.append(f"{results_dir}/{middle_folder}/samples/" + u + ".agePrediction.txt")
-    return expansion
+    if return_value == "files":
+        return expansion
+    else:
+        return samples2use
 
 # Install DMRFinder from github if not done already
 DMRFinder_repo_path = abspath('../resources/DMRFinder')

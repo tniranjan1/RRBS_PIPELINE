@@ -71,7 +71,7 @@ def importLRSmethylSheet(sample_path, schema_path):
         sample_names.append(new_name)
         # Print error and abort if there are invalid characters
         if slugify != new_name:
-            print("For SampleGroup.Tissue.SampleID = ", new_name, ", invalid character(s) detected.", sep="")
+            print("For SampleID = ", new_name, ", invalid character(s) detected.", sep="")
             print("Valid characters are Aa-Zz0-9.-.")
             print("Remove invalid characters from ", sample_path, ". Workflow aborted.", sep="")
             sys.exit(-1)
