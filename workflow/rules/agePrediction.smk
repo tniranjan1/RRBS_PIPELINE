@@ -72,7 +72,7 @@ rule merge_and_markdown_epiclock:
     f = open("/home/tejasvi/delicacy.txt", "a")
     print(len(params), file=f)
     print(len(input), file=f)
-    for element in params:
+    for element in params[0]:
         f.write(element)
     f.close()
     output_df = lrs_methyl_sample_sheet[ [ 'SampleID', 'Covariate_Age' ] ]
