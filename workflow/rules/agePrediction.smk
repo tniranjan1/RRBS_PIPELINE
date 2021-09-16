@@ -69,7 +69,9 @@ rule merge_and_markdown_epiclock:
   log: results_dir + "/{path}/merged/.merged.agePrediction.rule-agePrediction.merge_and_markdown_epiclock.log"
   threads: 1
   run:
-    print(params, file="/home/tejasvi/delicacy.txt")
+    f = open("/home/tejasvi/delicacy.txt", "a")
+    for p in params: f.write(p + "\n")
+    f.close()
     output_df = lrs_methyl_sample_sheet[ [ 'SampleID', 'Covariate_Age' ] ]
     output_df['EpiToc'] = [ np.nan ] * len(output_df)
     output_df['Horvath'] = [ np.nan ] * len(output_df)
