@@ -53,11 +53,11 @@ rule restrict_LRS_methyl_toInfinium:
 # Run epiclock on a sample bedgraph.gz
 rule run_epiclock:
   input: "{path}/{sample}.methylationForEpiclock.bedGraph.gz"
-  output: temp("{path}/{sample}.agePrediction.txt")
+  output: "{path}/{sample}.agePrediction.txt"
   log: "{path}/.{sample}.epiclockPrediction.rule-agePrediction.run_epiclock.log"
   conda: f"{workflow_dir}/envs/agePrediction.yaml"
-  threads: 1
-  shell: "touch {output}" # change output as non-temporary, and shift shell to Rscript
+  threads: 12
+  shell: f"Rscript {workflow_dir}/scripts/anl/run_epigeneticClock.R {input} {threads} > {output}"
 
 #----------------------------------------------------------------------------------------------------------------------#
 
