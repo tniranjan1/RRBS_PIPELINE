@@ -80,4 +80,4 @@ rule merge_and_markdown_epiclock:
         predictions = pd.read_table(filename, sep="=", names=[ 'Value' ], index_col=0)
         for index in predictions.index:
             output_df.at[sample_name,index] = predictions['Value'][index]
-    output_df.to_csv(output, sep='\t', index=False)
+    output_df.to_csv(output[0], sep='\t', index=False)
