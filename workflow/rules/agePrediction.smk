@@ -70,6 +70,7 @@ rule merge_and_markdown_epiclock:
   threads: 1
   run:
     f = open("/home/tejasvi/delicacy.txt", "a")
+    print(type(params[0]), file=f)
     print(len(params), file=f)
     print(len(input), file=f)
     for element in params[0]:
