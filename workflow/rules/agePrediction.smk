@@ -70,7 +70,7 @@ rule merge_and_markdown_epiclock:
   threads: 1
   run:
     f = open("/home/tejasvi/delicacy.txt", "a")
-    for p in params: f.write(p)
+    f.write(" ".join(params))
     f.close()
     output_df = lrs_methyl_sample_sheet[ [ 'SampleID', 'Covariate_Age' ] ]
     output_df['EpiToc'] = [ np.nan ] * len(output_df)
