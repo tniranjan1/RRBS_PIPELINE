@@ -57,7 +57,7 @@ rule run_epiclock:
   log: "{path}/.{sample}.epiclockPrediction.rule-agePrediction.run_epiclock.log"
   conda: f"{workflow_dir}/envs/agePrediction.yaml"
   threads: 12
-  shell: f"Rscript {workflow_dir}/scripts/anl/run_epigeneticClock.R {input} {threads} > {output}"
+  shell: f"Rscript {workflow_dir}/scripts/anl/run_epigeneticClock.R {{input}} {{threads}} > {{output}}"
 
 #----------------------------------------------------------------------------------------------------------------------#
 
