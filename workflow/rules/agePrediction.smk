@@ -67,7 +67,6 @@ rule merge_and_markdown_epiclock:
   output: results_dir + "/{path}/merged/merged.agePrediction.txt"
   params: lambda wildcards: distinguish_lrs_rrbs(middle_folder=wildcards.path, return_value="samples")
   log: results_dir + "/{path}/merged/.merged.agePrediction.rule-agePrediction.merge_and_markdown_epiclock.log"
-  conda: f"{workflow_dir}/envs/agePrediction.yaml"
   threads: 1
   run:
     output_df = lrs_methyl_sample_sheet[ [ 'SampleID', 'Covariate_Age' ] ]
