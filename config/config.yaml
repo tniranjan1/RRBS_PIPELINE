@@ -36,7 +36,7 @@ deconvo_bsseq_ref: "../config/deconvo_bsseq_ref_samples.tsv"
 #   long-read based methylation data can be provided in this workflow to also calculate epigenetic clock
 lrs:
   # if methlyation from ont sequencing has been performed and age-estimation by epigenetic clock should be done
-  activate: False
+  activate: True
   # path to sample sheet, format is SamplID '\t' Covariate_Age '\t' Covariate_Gender '\t' Path
   path: "../config/nanopore_methylation_samples.tsv"
 
