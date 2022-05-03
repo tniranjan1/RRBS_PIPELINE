@@ -3,31 +3,69 @@
 rule link_vcf:
   input: vcf_source
   output: vcf_file
-  shell: "ln {input} {output}"
+  run:
+    import shutil
+    with open(input, 'rb') as test_f:
+        if test_f.read(2) == b'\x1f\x8b':
+            shutil.copy(input, output)
+        else:
+            test_f.close()
+            import gzip
+            with open(input, 'rb') as f_in, gzip.open(output, 'wb') as f_out:
+                f_out.writelines(f_in)
 
 #----------------------------------------------------------------------------------------------------------------------#
 
 # Compress input vcf file genotypes.
 #  This rule will take an input vcf file (from config file) containing genotypes for one or more samples in the study,
 #  extract A <-> T transversion sites, and compress this information into a tab file for simpler access during
-#  comparisons. This will be done for an individual chromosome to allow for parallelization.
-rule compress_input_vcf_by_chr:
+#  comparisons.
+rule compress_input_vcf:
   input: vcf_file
-  output: temp("{genotype_dir}/sample.compressed_genotypes.{chr}.txt")
+  output: f"{genotype_dir}/sample.AT_genotypes.txt"
   threads: 1
   conda: f"{workflow_dir}/envs/check_genotypes.yaml"
-  log: "{genotype_dir}/.sample.compressed_genotypes.{chr}.rule-check_genotypes.compress_input_vcf_by_chr.log"
-  script: f"{workflow_dir}/scripts/anl/compress_genotypes.py"
+  log: f"{genotype_dir}/.sample.AT_genotypes.rule-check_genotypes.compress_input_vcf.log"
+  shell:
+    """
+    zcat {input} | \
+        grep -v '#' | \
+        awk '{ if( ($4 == "A" && $5 == "T") || ($4 == "T" && $5 =="A")) print $1 "\t" $2 "\t" $2+1}' > {output}
+    """
 
 #----------------------------------------------------------------------------------------------------------------------#
 
-# Rule to merge compressed genotypes across chromosomes.
-rule merge_compressed_input_vcf:
-  input: expand("{genotype_dir}/sample.compressed_genotypes.{chr}.txt", chr=chromosomes, allow_missing=True)
-  output: "{genotype_dir}/sample.compressed_genotypes.txt"
+# Rule to get coverage at potential genotyping sites.
+rule compress_adequate_cov_input_vcf:
+  input:
+    bam=expand("{path}/alignments/{sample}.POSsort.bam", path=results_dir, sample=rrbs_sample_names),
+    bai=expand("{path}/alignments/{sample}.POSsort.bam.bai", path=results_dir, sample=rrbs_sample_names),
+    bed=f"{genotype_dir}/sample.AT_genotypes.txt"
+  output: f"{genotype_dir}/sample.potential_gt_cov.txt"
   threads: 1
   conda: f"{workflow_dir}/envs/check_genotypes.yaml"
-  log: "{genotype_dir}/.sample.compressed_genotypes.rule-check_genotypes.merge_compressed_input_vcf.log"
-  shll:
+  log: f"{genotype_dir}/.sample.potential_gt_cov.rule-check_genotypes.compress_adequate_cov_input_vcf.log"
+  shell:
+    """
+    samtools mpileup -d 10 -l [input.bed] {input.bam} | \
+      awk '{s=0; for(i=1;i<=NF;i++){if((i-1) % 3 == 0){if($i < 5)s++}};if(s==0) print $1 "\t" $2 "\t" $2+1}' > {output}
+    """
 
 #----------------------------------------------------------------------------------------------------------------------#
+
+# get sample genotypes
+rule get_sample_genotypes
+  input:
+    bam=expand("{path}/alignments/{sample}.POSsort.bam", path=results_dir, sample=rrbs_sample_names),
+    bai=expand("{path}/alignments/{sample}.POSsort.bam.bai", path=results_dir, sample=rrbs_sample_names),
+    bed=f"{genotype_dir}/sample.potential_gt_cov.txt",
+    ref=reference_genome_path
+  output: f"{genotype_dir}/all_samples.gt.vcf"
+  threads: 1
+  conda: f"{workflow_dir}/envs/bcftools.yaml"
+  log: f"{path}/genotypes/.{sample}.gt.rule-check_genotypes.get_sample_genotypes.log"
+  shell:
+    """
+    bcftools mpileup -R [input.bed] --fasta-ref {input.ref} {input.bam} | bcftools call -m - > {output}
+
+    """

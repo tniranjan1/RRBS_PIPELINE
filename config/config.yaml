@@ -122,7 +122,7 @@ remove_samples:
   genotype_discordant:
     # VCF of genotypes for samples (VCF sample name must match Sample Name column in RRBS_samples sample sheet). If no
     #   path given, set vcf variable to empty string ("") and set activate to False. VCF can be gzipped.
-    #   Missing samples or extraneous sampels are allowed.
+    #   Missing samples or extraneous samples are allowed.
     vcf: "/home/tejasvi/rrbs_cristina_scratch/genotypes/wgs-genotypes-mayo-genomes_corrected.vcf.gz"
     activate: True
     # If override_tissue is True, genotypic concordance results in sample re-inclusion if the sample was previously
