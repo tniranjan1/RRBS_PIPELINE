@@ -3,7 +3,6 @@ rule link_vcf:
   input: vcf_source
   output: vcf_file
   threads: 1
-  conda: f"{workflow_dir}/envs/check_genotypes.yaml"
   run:
     import shutil
     with open(input, 'rb') as test_f:
