@@ -126,7 +126,7 @@ include: 'rules/align.smk'
 include: 'rules/index.smk'
 include: 'rules/get_methylation.smk'
 include: 'rules/agePrediction.smk'
-include: 'rule/check_genotypes.smk'
+include: 'rules/check_genotypes.smk'
 
 # Target rule
 rule all:
