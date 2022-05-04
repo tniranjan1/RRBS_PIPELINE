@@ -5,4 +5,4 @@ dependencies:
   - snakemake
   - mamba
   - python=3.8
-  - bcftools=0.3.0
+  - bcftools=1.15.1
