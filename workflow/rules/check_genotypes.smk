@@ -38,8 +38,8 @@ rule compress_input_vcf:
 # Rule to get coverage at potential genotyping sites.
 rule compress_adequate_cov_input_vcf:
   input:
-    bam=expand(f"{results_dir}/rrbs_samples/alignments/{sample}.POSsort.bam", sample=rrbs_sample_names),
-    bai=expand(f"{results_dir}/rrbs_samples/alignments/{sample}.POSsort.bam.bai", sample=rrbs_sample_names),
+    bam=expand("{results_dir}/rrbs_samples/alignments/{sample}.POSsort.bam", sample=rrbs_sample_names),
+    bai=expand("{results_dir}/rrbs_samples/alignments/{sample}.POSsort.bam.bai", sample=rrbs_sample_names),
     bed=f"{genotype_dir}/sample.AT_genotypes.txt"
   output: f"{genotype_dir}/sample.potential_gt_cov.txt"
   threads: 1
