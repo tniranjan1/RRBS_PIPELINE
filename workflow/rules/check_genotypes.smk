@@ -5,13 +5,13 @@ rule link_vcf:
   threads: 1
   run:
     import shutil
-    with open(input, 'rb') as test_f:
+    with open(input[0], 'rb') as test_f:
         if test_f.read(2) == b'\x1f\x8b':
-            shutil.copy(input, output)
+            shutil.copy(input[0], output[0])
         else:
             test_f.close()
             import gzip
-            with open(input, 'rb') as f_in, gzip.open(output, 'wb') as f_out:
+            with open(input[0], 'rb') as f_in, gzip.open(output[0], 'wb') as f_out:
                 f_out.writelines(f_in)
 
 #----------------------------------------------------------------------------------------------------------------------#
