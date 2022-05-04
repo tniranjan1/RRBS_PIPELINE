@@ -67,5 +67,5 @@ rule get_sample_genotypes:
   log: f"{results_dir}/genotypes/.all_samples.gt.rule-check_genotypes.get_sample_genotypes.log"
   shell:
     """
-    bcftools mpileup -R [input.bed] --fasta-ref {input.ref} {input.bam} | bcftools call -m - > {output}
+    bcftools mpileup -R {input.bed} --fasta-ref {input.ref} {input.bam} | bcftools call -m - > {output}
     """
