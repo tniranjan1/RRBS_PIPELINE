@@ -1,8 +1,9 @@
 # Link source vcf to resource dir
-
 rule link_vcf:
   input: vcf_source
   output: vcf_file
+  threads: 1
+  conda: f"{workflow_dir}/envs/check_genotypes.yaml"
   run:
     import shutil
     with open(input, 'rb') as test_f:
@@ -54,7 +55,7 @@ rule compress_adequate_cov_input_vcf:
 #----------------------------------------------------------------------------------------------------------------------#
 
 # get sample genotypes
-rule get_sample_genotypes
+rule get_sample_genotypes:
   input:
     bam=expand("{path}/alignments/{sample}.POSsort.bam", path=results_dir, sample=rrbs_sample_names),
     bai=expand("{path}/alignments/{sample}.POSsort.bam.bai", path=results_dir, sample=rrbs_sample_names),
