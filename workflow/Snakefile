@@ -64,7 +64,7 @@ def distinguish_lrs_rrbs(middle_folder, return_value):
         return samples2use
 
 # Install DMRFinder from github if not done already
-DMRFinder_repo_path = abspath('../resources/DMRFinder')
+DMRFinder_repo_path = abspath('resources/DMRFinder')
 if not os.path.isdir(DMRFinder_repo_path):
     git.Repo.clone_from(config['DMRfinder']['DMRFinder_git_URL'], DMRFinder_repo_path)
 DMRFinder_repo = git.Repo(DMRFinder_repo_path)
