@@ -67,5 +67,4 @@ rule get_sample_genotypes
   shell:
     """
     bcftools mpileup -R [input.bed] --fasta-ref {input.ref} {input.bam} | bcftools call -m - > {output}
-
     """

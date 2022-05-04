@@ -86,12 +86,13 @@ context_to_use = [ key for key in list(context_truth.keys()) if context_truth[ke
 chromosomes = chromosome_constraint(reference_genome_path)
 
 # Verify vcf file
-vcf_file = "{genotype_dir}/sample.original_genotypes.vcf.gz"
+vcf_file = f"{genotype_dir}/sample.original_genotypes.vcf.gz"
 if config['remove_samples']['genotype_discordant']['activate']:
     vcf_source = config['remove_samples']['genotype_discordant']['vcf']
     if not os.path.isfile(vcf_source):
         print("VCF file ({}) could not be found. Please check path. Workflow aborted.".format(vcf_file))
     else: vcf_source = ''
+genotypes = f"{genotype_dir}/all_samples.gt.vcf"
 
 # Globally constrain all wildcards matching {sample} to not have "/" in the string
 all_sample_names = rrbs_sample_names + deconvo_sample_names + lrs_sample_names
@@ -114,7 +115,7 @@ def get_final_output():
          meco=meco, repeats=repeats, context=context)
 #    if config['lrs']['activate']:
 #        to_return.append(results_dir + "/lrs_methyl/merged/merged.agePrediction.txt")
-
+    to_return.append(genotypes)
     # TBD: if vcf add back is activated, also include compression of input vcf as target
     return to_return
 
