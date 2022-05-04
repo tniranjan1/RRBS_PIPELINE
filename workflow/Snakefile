@@ -91,8 +91,6 @@ if config['remove_samples']['genotype_discordant']['activate']:
     vcf_source = config['remove_samples']['genotype_discordant']['vcf']
     if not os.path.isfile(vcf_source):
         print("VCF file ({}) could not be found. Please check path. Workflow aborted.".format(vcf_source))
-    else: vcf_source = ''
-print("VCF source is: " + vcf_source)
 genotypes = f"{genotype_dir}/all_samples.gt.vcf"
 
 # Globally constrain all wildcards matching {sample} to not have "/" in the string
