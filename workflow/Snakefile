@@ -43,6 +43,7 @@ rrbs_sample_names = rrbs_samples.index.tolist()
 deconvo_ref_sheet_path = abspath(config['deconvo_bsseq_ref'])
 deconvo_ref_samples = importSampleSheet(sample_path=deconvo_ref_sheet_path, schema_path=schema_path)
 deconvo_sample_names = deconvo_ref_samples.index.tolist()
+set_options = {"rrbs_samples": rrbs_sample_names, "deconvo_ref_samples": deconvo_sample_names}
 
 # Merge sample sheets for easy access to input files in the rules
 merged_sample_sheet = mergeSampleSheet(sheetA=rrbs_samples, sheetB=deconvo_ref_samples)
