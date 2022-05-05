@@ -52,12 +52,15 @@ rule merge_methylation_by_chr:
 # Merge coverage information for all samples in a sheet, subdivided by chromosome
 rule merge_coverage_by_chr:
   input:
-    orig=expand("{path}/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph",
-                sample=rrbs_sample_names, allow_missing=True),
-    gzip=expand("{path}/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
-                sample=rrbs_sample_names, allow_missing=True)
-  output: temp("{path}/merged/merged_coverage.{repeats}.{context}.{chr}.bedGraph")
-  log: "{path}/merged/.merged_coverage.{repeats}.{context}.{chr}.rule-get_methylation.merge_coverage_by_chr.log"
+    orig=lambda wc:
+            expand(results_dir+"/{set}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph",
+                sample=set_options[wc.set], allow_missing=True),
+    gzip=lambda wc:
+            expand(results_dir+"/{set}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
+                   sample=set_options[wc.set], allow_missing=True)
+  output: temp(results_dir + "/{set}/methylation_calls/merged/merged_coverage.{repeats}.{context}.{chr}.bedGraph")
+  log: results_dir + "/{set}/methylation_calls/merged/.merged_coverage.{repeats}.{context}.{chr}." +
+                     "rule-get_methylation.merge_coverage_by_chr.log"
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   shell:
       """
