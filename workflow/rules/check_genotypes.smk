@@ -48,7 +48,7 @@ rule compress_adequate_cov_input_vcf:
   shell:
     """
     samtools mpileup -d 10 -l {input.bed} {input.bam} | \
-      awk '{{s=0; for(i=1;i<=NF;i++){{if((i-1) % 3 == 0){{if($i < 5)s++}}}};if(s==0) print $1 "\t" $2 "\t" $2+1}}' \
+      awk '{{s=0; for(i=1;i<=NF;i++){{if((i-1) % 3 == 0){{if($i < 5)s++}}}};if(s==0) print $1 "\t" $2-1 "\t" $2-1}}' \
       > {output}
     """
 
