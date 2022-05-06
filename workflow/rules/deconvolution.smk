@@ -22,7 +22,7 @@ rule reduce_methylation_for_deconvolution:
   input:
     sample="{path}/{file}.bedGraph.gz",
     bed=deconvo_site_list
-  output: temp("{path}/{file}.deco.tmp")
+  output: "{path}/{file}.deco.tmp"
   threads: 1
   conda: f"{workflow_dir}/envs/deconvolution.yaml"
   log: "{path}/.{file}.deco.tmp.rule-get_methylation.reduce_methylation_for_deconvolution.log"
