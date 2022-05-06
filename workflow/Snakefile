@@ -44,6 +44,8 @@ deconvo_ref_sheet_path = abspath(config['deconvo_bsseq_ref'])
 deconvo_ref_samples = importSampleSheet(sample_path=deconvo_ref_sheet_path, schema_path=schema_path)
 deconvo_sample_names = deconvo_ref_samples.index.tolist()
 set_options = {"rrbs_samples": rrbs_sample_names, "deconvo_ref_samples": deconvo_sample_names}
+deconvo_site_list = results_dir + "/deconvo_ref_samples/methylation_calls/merged/deconvolution_sites/sites.bed"
+deconvolution_result = results_dir + "/rrbs_samples/deconvolution/deconvolution.txt"
 
 # Merge sample sheets for easy access to input files in the rules
 merged_sample_sheet = mergeSampleSheet(sheetA=rrbs_samples, sheetB=deconvo_ref_samples)
@@ -119,6 +121,7 @@ def get_final_output():
 #    if config['lrs']['activate']:
 #        to_return.append(results_dir + "/lrs_methyl/merged/merged.agePrediction.txt")
     to_return.append(genotypes)
+    to_return.append(deconvolution_result)
     # TBD: if vcf add back is activated, also include compression of input vcf as target
     return to_return
 
@@ -130,6 +133,7 @@ include: 'rules/index.smk'
 include: 'rules/get_methylation.smk'
 include: 'rules/agePrediction.smk'
 include: 'rules/check_genotypes.smk'
+include: 'rules/deconvolution.smk'
 
 # Target rule
 rule all:
