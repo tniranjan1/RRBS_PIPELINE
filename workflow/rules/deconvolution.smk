@@ -20,7 +20,7 @@ rule condensed_sites_list:
 # rule reduce methylation data to deconvolution site list for deconvulation
 rule reduce_methylation_for_deconvolution:
   input:
-    sample="{path}/{file}.gz",
+    sample="{path}/{file}.bedGraph.gz",
     bed=deconvo_site_list
   output: temp("{path}/{file}.deco.tmp")
   threads: 1
