@@ -17,6 +17,33 @@ rule condensed_sites_list:
 
 #----------------------------------------------------------------------------------------------------------------------#
 
+# Get more permissivecondensed sites for deconvolution
+rule condensed_permissive_sites_list:
+  input:
+    rrbs="{path1}/rrbs_samples/{path2}/merged_methylation.without_repeats.CpG.bedGraph.gz",
+    deconv="{path1}/deconvo_ref_samples/{path2}/merged_methylation.without_repeats.CpG.bedGraph.gz"
+  output: "{path1}/deconvo_ref_samples/{path2}/deconvolution_sites/perm_sites.bed"
+  threads: 1
+  conda: f"{workflow_dir}/envs/deconvolution.yaml"
+  log: "{path1}/deconvo_ref_samples/{path2}/deconvolution_sites/.sites.rule-get_methylation.condensed_sites_list.log"
+  shell:
+    """
+    zcat {input.rrbs} | grep -P '^chr\d+' | \
+      awk '{{z=0;
+             for(i=4;i<=NF;i++) if($i!="NA") z++;
+             if( z/( NF-3 ) > 0.9 ) print $1 "\t" $2 "\t" $3
+           }}' > {input.rrbs}.fix
+    zcat {input.deconv} | grep -P '^chr\d+' | \
+      awk '{{z=0;
+             for(i=4;i<=NF;i++) if($i!="NA") z++;
+             if( z/( NF-3 ) > 0.9 ) print $1 "\t" $2 "\t" $3
+           }} > {input.deconv}.fix
+    bedtools intersect -a {input.deconv}.fix -b {input.rrbs}.fix > {output}
+    rm {input.rrbs}.fix {input.deconv}.fix
+    """
+
+#----------------------------------------------------------------------------------------------------------------------#
+
 # rule reduce methylation data to deconvolution site list for deconvulation
 rule reduce_methylation_for_deconvolution:
   input:
