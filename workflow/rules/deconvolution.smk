@@ -28,16 +28,17 @@ rule condensed_permissive_sites_list:
   log: "{path1}/deconvo_ref_samples/{path2}/deconvolution_sites/.sites.rule-get_methylation.condensed_sites_list.log"
   shell:
     """
-    zcat {input.rrbs} | grep -P '^chr\d+' | \
+    exec > {log}; exec 2> {log}
+    zcat {input.rrbs} | grep -P '^chr\d+\t' | \
       awk '{{z=0;
              for(i=4;i<=NF;i++) if($i!="NA") z++;
              if( z/( NF-3 ) > 0.9 ) print $1 "\t" $2 "\t" $3
            }}' > {input.rrbs}.fix
-    zcat {input.deconv} | grep -P '^chr\d+' | \
+    zcat {input.deconv} | grep -P '^chr\d+\t' | \
       awk '{{z=0;
              for(i=4;i<=NF;i++) if($i!="NA") z++;
              if( z/( NF-3 ) > 0.9 ) print $1 "\t" $2 "\t" $3
-           }} > {input.deconv}.fix
+           }}' > {input.deconv}.fix
     bedtools intersect -a {input.deconv}.fix -b {input.rrbs}.fix > {output}
     rm {input.rrbs}.fix {input.deconv}.fix
     """
