@@ -44,4 +44,4 @@ rule deconvSeq:
   threads: 1
   conda: f"{workflow_dir}/envs/deconvolution.yaml"
   log: f"{results_dir}/rrbs_samples/deconvolution/.deconvolution.log"
-  script: "echo 'done' > {output}"
+  shell: "echo 'done' > {output}"
