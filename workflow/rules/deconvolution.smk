@@ -17,7 +17,7 @@ rule condensed_sites_list:
 
 #----------------------------------------------------------------------------------------------------------------------#
 
-# Get more permissivecondensed sites for deconvolution
+# Get more permissive condensed sites for deconvolution
 rule condensed_permissive_sites_list:
   input:
     rrbs="{path1}/rrbs_samples/{path2}/merged_methylation.without_repeats.CpG.bedGraph.gz",
