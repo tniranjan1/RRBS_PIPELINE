@@ -27,7 +27,7 @@ convert <- function(f)
   return(new_name)
 }
 
-new_names <- mclapply(files, convert, mc.cores=threads)
+#new_names <- mclapply(files, convert, mc.cores=threads)
 
 # files variable should be same as new_names
 files <- list.files(path=dir, pattern='hg38.bed.gz', full.names=T)
@@ -40,7 +40,7 @@ tool <- 'bedtools unionbedg -i'
 params <- '-header -filler NA -names'
 out <- paste(dir, 'merge.bed', sep='/')
 command <- paste(tool, paste(files, collapse=' '), params, paste(names, collapse=' '), '>', out)
-system(command)
+#system(command)
 
 # compress union file
 in <- out
