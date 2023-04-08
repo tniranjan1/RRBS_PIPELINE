@@ -1,7 +1,7 @@
 # Get additional reference
 rule get_GSE186458:
   input: f"{workflow_dir}/scripts/anl.bigwig_to_bed.R"
-  output: "{path1}/deconvo_ref_samples/GSE186458/merge.sorted.bed.gz"
+  output: "{path1}/deconvo_ref_samples/GSE186458/merge.intersect.bed.gz"
   params:
     url="https://ftp.ncbi.nlm.nih.gov/geo/series/GSE186nnn/GSE186458/suppl/GSE186458_RAW.tar",
     dir=lambda wc: wc.path1 + "/deconvo_ref_samples/GSE186458"
