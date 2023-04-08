@@ -9,3 +9,4 @@ dependencies:
   - bedtools=2.30.0
   - r-base=4.1.1
   - r-devtools
+  - ucsc-bigwigtobedgraph

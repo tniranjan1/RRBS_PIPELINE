@@ -1,18 +1,18 @@
-# Get condensed sites for deconvolution
-rule condensed_sites_list:
-  input:
-    rrbs="{path1}/rrbs_samples/{path2}/merged_methylation.without_repeats.noNAs.CpG.bedGraph.gz",
-    deconv="{path1}/deconvo_ref_samples/{path2}/merged_methylation.without_repeats.noNAs.CpG.bedGraph.gz"
-  output: "{path1}/deconvo_ref_samples/{path2}/deconvolution_sites/sites.bed"
-  threads: 1
+# Get additional reference
+rule get_GSE186458:
+  input: f"{workflow_dir}/scripts/anl.bigwig_to_bed.R"
+  output: "{path1}/deconvo_ref_samples/GSE186458/merge.sorted.bed.gz"
+  params:
+    url="https://ftp.ncbi.nlm.nih.gov/geo/series/GSE186nnn/GSE186458/suppl/GSE186458_RAW.tar",
+    dir=lambda wc: wc.path1 + "/deconvo_ref_samples/GSE186458"
+  threads: 12
   conda: f"{workflow_dir}/envs/deconvolution.yaml"
-  log: "{path1}/deconvo_ref_samples/{path2}/deconvolution_sites/.sites.rule-get_methylation.condensed_sites_list.log"
+  log: "{path1}/deconvo_ref_samples/GSE186458/.get_GSE186458.log"
   shell:
     """
-    zcat {input.rrbs} | cut -f-3 > {input.rrbs}.fix
-    zcat {input.deconv} | cut -f-3 > {input.deconv}.fix
-    bedtools intersect -a {input.deconv}.fix -b {input.rrbs}.fix > {output}
-    rm {input.rrbs}.fix {input.deconv}.fix
+    wget -O {params.dir}/GSE186458_RAW.tar {params.url}
+    tar -xvf {params.dir}/GSE186458_RAW.tar -C {params.dir}
+    Rscript {input} {params.dir} {threads}
     """
 
 #----------------------------------------------------------------------------------------------------------------------#
