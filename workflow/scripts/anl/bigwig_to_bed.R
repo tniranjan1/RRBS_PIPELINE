@@ -80,7 +80,7 @@ sort_by_chr <- function(chr)
 
 # bind chromosome-split sorted files
 out <- paste(dir, 'merge.sorted.bed.gz', sep='/')
-command <- paste('cat', header, paste(out_by_chr, collapse=' '), '|', compress, '>', out)
+#command <- paste('cat', header, paste(out_by_chr, collapse=' '), '|', compress, '>', out)
 #system(command)
 command <- paste('rm', header)
 #system(command)
