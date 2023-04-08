@@ -48,22 +48,22 @@ awk_command <- 'awk \'BEGIN{FS=OFS="\t"}{ if($2 != "start"){$2 = $2 + 1}; print}
 compress <- paste('bgzip -@', threads, '-c')
 out <- paste(dir, 'merge.bed.gz', sep='/')
 command <- paste('cat', input, '|', awk_command, '|', compress, '>', out)
-system(command)
+#system(command)
 
 # remove unnecessary files
 extensions <- c('merge.bed', '*.bigwig', '*.beta', '*.hg38.bed.gz', 'GSE186458_RAW.tar', '*.pat.gz*')
 for(e in extensions)
 {
   command <- paste('rm ', dir, '/', e, sep='')
-  system(command)
+  #system(command)
 }
 
 # separate header and position sort, split by chromosome
 header <- paste(dir, 'header.txt', sep='/')
 command <- paste('zcat', out, '| head -n 1 >', header)
-system(command)
+#system(command)
 command <- paste('zcat', out, '| tail -n +2 | cut -f1 | uniq | sort -k 1,1 | uniq')
-chromosomes <- system(command, intern=T)
+#chromosomes <- system(command, intern=T)
 
 # function to position sort, one thread per chromosome for speed-up
 sort_by_chr <- function(chr)
@@ -76,33 +76,33 @@ sort_by_chr <- function(chr)
   system(command)
   return(new_out)
 }
-out_by_chr <- unlist(mclapply(chromosomes, sort_by_chr, mc.cores=threads))
+#out_by_chr <- unlist(mclapply(chromosomes, sort_by_chr, mc.cores=threads))
 
 # bind chromosome-split sorted files
 out <- paste(dir, 'merge.sorted.bed.gz', sep='/')
 command <- paste('cat', header, paste(out_by_chr, collapse=' '), '|', compress, '>', out)
-system(command)
+#system(command)
 command <- paste('rm', header)
-system(command)
+#system(command)
 
 # merge with rrbs methylation file
 bedtools_command <- paste('bedtools intersect -sorted -wb -a stdin -b', out)
 intersect <- paste(dir, 'merge.intersect.bed', sep='/')
 command <- paste('zcat', rrbs, '| tail -n +2 | sort -k 1,1 -k2,2n |', bedtools_command, '>', intersect)
-system(command)
+#system(command)
 
 # build merged header
-command <- paste('zcat', rrbs, '| head -n 1')
-header <- strsplit(system(command, intern=T), '\t')[[1]]
-command <- paste('zcat', paste(dir, 'merge.bed.gz', sep='/'), '| head -n 1')
-header <- c(header, strsplit(system(command, intern=T), '\t')[[1]])
-header <- paste(header, collapse="\t")
-header <- paste(header, '\n', sep='')
-cat(header, file=paste(dir, 'header.txt', sep='/'))
+#command <- paste('zcat', rrbs, '| head -n 1')
+#header <- strsplit(system(command, intern=T), '\t')[[1]]
+#command <- paste('zcat', paste(dir, 'merge.bed.gz', sep='/'), '| head -n 1')
+#header <- c(header, strsplit(system(command, intern=T), '\t')[[1]])
+#header <- paste(header, collapse="\t")
+#header <- paste(header, '\n', sep='')
+#cat(header, file=paste(dir, 'header.txt', sep='/'))
 
 # combined header and bed file, then compress
 out <- paste(dir, 'merge.intersect.bed.gz', sep='/')
-command <- paste('cat', paste(dir, 'header.txt', sep='/'), intersect, '|', compress, '>', out
+command <- paste('cat', paste(dir, 'header.txt', sep='/'), intersect, '|', compress, '>', out)
 system(command)
 
 # remove unnecessary files
