@@ -43,11 +43,11 @@ command <- paste(tool, paste(files, collapse=' '), params, paste(names, collapse
 #system(command)
 
 # compress union file
-in <- out
+input <- out
 awk_command <- 'awk \'BEGIN{FS=OFS="\t"}{ if($2 != "start"){$2 = $2 + 1}; print}\''
 compress <- paste('bgzip -@', threads, '-c')
 out <- paste(dir, 'merge.bed.gz', sep='/')
-command <- paste('cat', in, '|', awk_command, '|', compress, '>', out)
+command <- paste('cat', input, '|', awk_command, '|', compress, '>', out)
 system(command)
 
 # remove unnecessary files
