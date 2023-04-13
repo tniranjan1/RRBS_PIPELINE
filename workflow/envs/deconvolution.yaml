@@ -10,3 +10,6 @@ dependencies:
   - r-base=4.1.1
   - r-devtools
   - ucsc-bigwigtobedgraph
+  - r-e1071
+  - r-ggplot2
+  - r-nnls

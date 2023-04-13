@@ -1,10 +1,10 @@
 # Get additional reference
 rule get_GSE186458:
-  input: f"{workflow_dir}/scripts/anl.bigwig_to_bed.R"
   output: "{path1}/deconvo_ref_samples/GSE186458/merge.intersect.bed.gz"
   params:
     url="https://ftp.ncbi.nlm.nih.gov/geo/series/GSE186nnn/GSE186458/suppl/GSE186458_RAW.tar",
-    dir=lambda wc: wc.path1 + "/deconvo_ref_samples/GSE186458"
+    dir=lambda wc: wc.path1 + "/deconvo_ref_samples/GSE186458",
+    script=f"{workflow_dir}/scripts/anl/bigwig_to_bed.R"
   threads: 12
   conda: f"{workflow_dir}/envs/deconvolution.yaml"
   log: "{path1}/deconvo_ref_samples/GSE186458/.get_GSE186458.log"
@@ -12,35 +12,26 @@ rule get_GSE186458:
     """
     wget -O {params.dir}/GSE186458_RAW.tar {params.url}
     tar -xvf {params.dir}/GSE186458_RAW.tar -C {params.dir}
-    Rscript {input} {params.dir} {threads}
+    Rscript {params.script} {params.dir} {threads}
     """
 
 #----------------------------------------------------------------------------------------------------------------------#
 
-# Get more permissive condensed sites for deconvolution
-rule condensed_permissive_sites_list:
+# Perform deconvolution
+rule deconvolute:
   input:
-    rrbs="{path1}/rrbs_samples/{path2}/merged_methylation.without_repeats.CpG.bedGraph.gz",
-    deconv="{path1}/deconvo_ref_samples/{path2}/merged_methylation.without_repeats.CpG.bedGraph.gz"
-  output: "{path1}/deconvo_ref_samples/{path2}/deconvolution_sites/perm_sites.bed"
-  threads: 1
+    merge1="{path1}/deconvo_ref_samples/GSE186458/merge.intersect.bed.gz",
+    neuN="{path1}/deconvo_ref_samples/methylation_calls/merged/merged_methylation.with_repeats.CpG.bedGraph.gz"
+  output: "{path1}/deconvo_ref_samples/deconvolution/deconvo_values.txt"
+  params:
+    script=f"{workflow_dir}/scripts/anl/deconvolute.R"
+  threads: 12
   conda: f"{workflow_dir}/envs/deconvolution.yaml"
-  log: "{path1}/deconvo_ref_samples/{path2}/deconvolution_sites/.sites.rule-get_methylation.condensed_sites_list.log"
+  log: "{path1}/deconvo_ref_samples/deconvolution/.deconvo_values.log"
   shell:
     """
     exec > {log}; exec 2> {log}
-    zcat {input.rrbs} | grep -P '^chr\d+\t' | \
-      awk '{{z=0;
-             for(i=4;i<=NF;i++) if($i!="NA") z++;
-             if( z/( NF-3 ) > 0.9 ) print $1 "\t" $2 "\t" $3
-           }}' > {input.rrbs}.fix
-    zcat {input.deconv} | grep -P '^chr\d+\t' | \
-      awk '{{z=0;
-             for(i=4;i<=NF;i++) if($i!="NA") z++;
-             if( z/( NF-3 ) > 0.9 ) print $1 "\t" $2 "\t" $3
-           }}' > {input.deconv}.fix
-    bedtools intersect -a {input.deconv}.fix -b {input.rrbs}.fix > {output}
-    rm {input.rrbs}.fix {input.deconv}.fix
+    Rscript {threads} {input.merge1} {input.neuN} {output}
     """
 
 #----------------------------------------------------------------------------------------------------------------------#
