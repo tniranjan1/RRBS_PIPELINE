@@ -62,6 +62,7 @@ rownames(neuN_ref) <- rownames(gse_data)
 
 # adjust methylation values to 0-1 range
 neuN_ref[,4:15] <- neuN_ref[,4:15] / 100
+rrbs_data[,4:ncol(rrbs_data)] <- rrbs_data[,4:ncol(rrbs_data)] / 100
 
 # bind all reference data and remove redundant tables
 data <- cbind(gse_data, neuN_ref[,4:15])
@@ -108,7 +109,8 @@ reduced_meth_sign[,'Other'] <- apply(data[,setdiff(non_neuron_cols, oligo_cols)]
 #'
 #' @return  (numeric) vector of mean methylations at each locus for a given cell type "o"
 other_mean <- function(o) { apply(as.matrix(data[,names(other_groups)[other_groups==o]]), 1, mean, na.rm=T) }
-add_to_meth <- mclapply(unique(other_groups), other_mean, mc.cores=threads)
+max_threads <- if(threads > 4) { 4 } else { threads}
+add_to_meth <- mclapply(unique(other_groups), other_mean, mc.cores=max_threads)
 names(add_to_meth) <- unique(other_groups)
 for(o in unique(other_groups)) meth_sign[,o] <- add_to_meth[[o]]
 rm(add_to_meth)
@@ -149,12 +151,13 @@ nnls_cell_prop <- function(i, useful, ret = F)
 	sample_name <- colnames(rrbs_data)[i]
 	sample_group <- strsplit(sample_name, '\\.')[[1]]
 	sample_group <- paste(sample_group[1:grep('FCX|CER', sample_group, perl=T)], collapse='.')
-	# isolate sample methylation, removing NAs
-	sample_meth <- if(useful) { rrbs_data[most_useful,i] / 100 } else { rrbs_data[,i] / 100 }
-	sample_meth <- sample_meth[!is.na(sample_meth)]
+	# isolate sample methylation
+	sample_meth <- if(useful) { rrbs_data[most_useful,i] } else { rrbs_data[,i] }
 	# isolate reference methylation signature
 	sig_matrix <- if(useful) { meth_sign[most_useful,] } else { meth_sign }
+	# remove NAs
 	sig_matrix <- sig_matrix[!is.na(sample_meth),]
+	sample_meth <- sample_meth[!is.na(sample_meth)]
 	# get intersection of sample methylation (sample_meth) and methylation signature matrix (sig_matrix)
 	sample_meth <- sample_meth[rowSums(is.na(sig_matrix))==0]
 	sig_matrix <- sig_matrix[rowSums(is.na(sig_matrix))==0,]
@@ -174,13 +177,13 @@ nnls_cell_prop <- function(i, useful, ret = F)
 
 # get cell type proportions using nnls using all cell types and only most useful loci
 proportions <- data.frame(sample_name=character(), group=character())
-prop_list <- mclapply(seq(4, ncol(rrbs)), nnls_cell_prop, useful = T, mc.cores=threads)
+prop_list <- mclapply(seq(4, ncol(rrbs_data)), nnls_cell_prop, useful = T, mc.cores=threads)
 for(p in prop_list) proportions[rownames(p), colnames(p)] <- p
 prop.allCellTypes.usefulLoci <- proportions
 
 # get cell type proportions using nnls using all cell types and all loci
 proportions <- data.frame(sample_name=character(), group=character())
-prop_list <- mclapply(seq(4, ncol(rrbs)), nnls_cell_prop, useful = F, mc.cores=threads)
+prop_list <- mclapply(seq(4, ncol(rrbs_data)), nnls_cell_prop, useful = F, mc.cores=threads)
 for(p in prop_list) proportions[rownames(p), colnames(p)] <- p
 prop.allCellTypes.allLoci <- proportions
 
@@ -190,13 +193,13 @@ meth_sign <- reduced_meth_sign
 
 # get cell type proportions using nnls using reduced cell types and only most useful loci
 proportions <- data.frame(sample_name=character(), group=character())
-prop_list <- mclapply(seq(4, ncol(rrbs)), nnls_cell_prop, useful = T, mc.cores=threads)
+prop_list <- mclapply(seq(4, ncol(rrbs_data)), nnls_cell_prop, useful = T, mc.cores=threads)
 for(p in prop_list) proportions[rownames(p), colnames(p)] <- p
 prop.reducedCellTypes.usefulLoci <- proportions
 
 # get cell type proportions using nnls using reduced cell types and all loci
 proportions <- data.frame(sample_name=character(), group=character())
-prop_list <- mclapply(seq(4, ncol(rrbs)), nnls_cell_prop, useful = F, mc.cores=threads)
+prop_list <- mclapply(seq(4, ncol(rrbs_data)), nnls_cell_prop, useful = F, mc.cores=threads)
 for(p in prop_list) proportions[rownames(p), colnames(p)] <- p
 prop.reducedCellTypes.allLoci <- proportions
 
@@ -264,10 +267,14 @@ svr_cell_prop <- function(i)
   sample_name <- colnames(rrbs_data)[i]
   sample_group <- strsplit(sample_name, '\\.')[[1]]
   sample_group <- paste(sample_group[1:grep('FCX|CER', sample_group, perl=T)], collapse='.')
-  sample_meth <- rrbs_data[most_useful,i] / 100
+	# isolate sample methylation
+  sample_meth <- rrbs_data[most_useful,i]
+	# isolate reference methylation signature
   sig_matrix <- as.matrix(meth_sign[most_useful,])[!is.na(sample_meth),]
+	# remove NAs
   sample_meth <- sample_meth[!is.na(sample_meth)]
   sample_meth <- as.matrix(sample_meth)
+	# perform svr and attach cell proportions
   ctp <- SVMDECON(sample_meth, sig_matrix)
   prop_holder[sample_name, c('sample_name', 'group')] <- c(sample_name, sample_group)
   prop_holder[sample_name,gsub('^B', '', colnames(ctp))] <- ctp
@@ -276,25 +283,135 @@ svr_cell_prop <- function(i)
   return(prop_holder)
 }
 
+# get cell type proportions using svr using reduced cell types and only most useful loci
+proportions <- data.frame(sample_name=character(), group=character())
+prop_list <- mclapply(seq(4, ncol(rrbs_data)), svr_cell_prop, mc.cores=max_threads)
+for(p in prop_list) proportions[rownames(p), colnames(p)] <- p
+svr.reducedCellTypes.usefulLoci <- proportions
 
+# add categorial factors to proportions for easier plotting
+prop.allCellTypes.usefulLoci[,'Other'] <- rowSums(prop.allCellTypes.usefulLoci[,5:ncol(prop.allCellTypes.usefulLoci)])
+prop.allCellTypes.usefulLoci[,'method'] <- 'nnls'
+prop.allCellTypes.usefulLoci[,'references'] <- 'all'
+prop.allCellTypes.usefulLoci[,'CpGsites'] <- 'useful'
 
+prop.allCellTypes.allLoci[,'Other'] <- rowSums(prop.allCellTypes.allLoci[,5:ncol(prop.allCellTypes.allLoci)])
+prop.allCellTypes.allLoci[,'method'] <- 'nnls'
+prop.allCellTypes.allLoci[,'references'] <- 'all'
+prop.allCellTypes.allLoci[,'CpGsites'] <- 'all'
 
-sample_name <- colnames(rrbs_data)[i]
-sample_group <- strsplit(sample_name, '\\.')[[1]]
-sample_group <- paste(sample_group[1:grep('FCX|CER', sample_group, perl=T)], collapse='.')
-# isolate sample methylation, removing NAs
-sample_meth <- if(useful) { rrbs_data[most_useful,i] / 100 } else { rrbs_data[,i] / 100 }
-sample_meth <- sample_meth[!is.na(sample_meth)]
-# isolate reference methylation signature
-sig_matrix <- if(useful) { meth_sign[most_useful,] } else { meth_sign }
-sig_matrix <- sig_matrix[!is.na(sample_meth),]
-# get intersection of sample methylation (sample_meth) and methylation signature matrix (sig_matrix)
-sample_meth <- sample_meth[rowSums(is.na(sig_matrix))==0]
-sig_matrix <- sig_matrix[rowSums(is.na(sig_matrix))==0,]
-# perform cell type deconvolution using nnls
+prop.reducedCellTypes.usefulLoci[,'method'] <- 'nnls'
+prop.reducedCellTypes.usefulLoci[,'references'] <- 'reduced'
+prop.reducedCellTypes.usefulLoci[,'CpGsites'] <- 'useful'
 
+prop.reducedCellTypes.allLoci[,'method'] <- 'nnls'
+prop.reducedCellTypes.allLoci[,'references'] <- 'reduced'
+prop.reducedCellTypes.allLoci[,'CpGsites'] <- 'all'
 
+svr.reducedCellTypes.usefulLoci[,'method'] <- 'svr'
+svr.reducedCellTypes.usefulLoci[,'references'] <- 'reduced'
+svr.reducedCellTypes.usefulLoci[,'CpGsites'] <- 'useful'
 
+# perform plotting using ggplot2
 
+# initialize input dataframe for ggplot functions
+df <- data.frame()
+cols <- c('sample_name', 'group', 'method', 'references', 'CpGsites')
 
-#
+# collapse cell type proportions
+prop_list <- list()
+prop_list[[1]] <- prop.allCellTypes.usefulLoci
+prop_list[[2]] <- prop.allCellTypes.allLoci
+prop_list[[3]] <- prop.reducedCellTypes.usefulLoci
+prop_list[[4]] <- prop.reducedCellTypes.allLoci
+prop_list[[5]] <- svr.reducedCellTypes.usefulLoci
+
+# build input dataframe for ggplot functions
+for(cell in c('Neuron', 'Oligodendrocyte', 'Other'))
+{
+  new_col <- c(cols, cell)
+  for(l in prop_list)
+  {
+    toadd <- l[,new_col]
+    colnames(toadd)[colnames(toadd) == cell] <- 'Cell'
+    toadd$Cell_type <- cell
+    df <- rbind(df, toadd)
+  }
+}
+# clean factors for underlying data groups
+df$Tissue <- sapply(df$group, function(g) { rev(strsplit(g, '\\.')[[1]])[1] })
+df$group <- gsub('\\.FCX|\\.CER', '', df$group, perl=T)
+df$Analysis <- paste('Method=', df$method, '. References=', df$references, '. CpGs=', df$CpGsites, sep='')
+
+# generate PDF of cell proportions divided by group and analysis
+out_pdf <- paste(paste(rev(rev(strsplit(output, '\\.')[[1]])[-c(1)]), collapse='.'), 'CellPropEstimate.pdf', sep='.')
+pdf(file=out_pdf, height=8, width=20)
+ggplot(df, aes(x = group, y = Cell, fill = group, alpha = Cell_type)) +
+  geom_boxplot() +
+  facet_wrap(Tissue ~ Analysis, ncol=length(prop_list)) +
+  xlab("Analysis Group") +
+  ylab("Value") +
+  ggtitle("Box plots by tissue, disease, and analysis groups") +
+  theme_bw() +
+  theme(axis.text.x = element_blank())
+dev.off()
+
+# perform statistical testing of the cell type proportions
+# identify statistical comparison groups
+stat_groups <- grep('Ctrl', unique(paste(df$Tissue, df$group, df$Analysis, sep='_')), invert=T, value=T)
+
+#' statistical testing
+#' @description Use cell type aggregated t-testing to find significance levels
+#' T Niranjan, tejasvi.niranjan@uantwerpen.vib.be
+#' Apr 13, 2023
+#'
+#' p_value <- do_test(s)
+#'
+#' @param s (string) disease and analysis groups to be tested
+#'
+#' @return (float) p-value reflecting statistical significance, without fdr correction
+do_test <- function(s)
+{
+  s <- strsplit(s, '_')[[1]]
+  tissue <- s[1]
+  test_group <- s[2]
+  analysis <- s[3]
+  tests <- subset(df, Tissue == tissue & Analysis == analysis & group == test_group)[,c('Cell', 'Cell_type')]
+  ctrls <- subset(df, Tissue == tissue & Analysis == analysis & group == 'Ctrl')[,c('Cell', 'Cell_type')]
+  ctrl_params <- sapply(unique(ctrls$Cell_type), function(u) { x <- subset(ctrls, Cell_type == u)[,1]; c(mean=mean(x), sd=sd(x)) })
+  ctrl_adjust <- sapply(seq(nrow(ctrls)), function(i) { (ctrls[i,1] - ctrl_params['mean',ctrls[i,2]]) / ctrl_params['sd',ctrls[i,2]] })
+  ctrl_adjust <- data.frame(Cell=ctrl_adjust, Cell_type=ctrls$Cell_type)
+  test_adjust <- sapply(seq(nrow(tests)), function(i) { (tests[i,1] - ctrl_params['mean',tests[i,2]]) / ctrl_params['sd',ctrls[i,2]] })
+  test_adjust <- data.frame(Cell=test_adjust, Cell_type=tests$Cell_type)
+  ctrl_dist <- sqrt(rowSums(sapply(unique(ctrl_adjust$Cell_type), function(u) { subset(ctrl_adjust, Cell_type == u)[,1] })^2))
+  test_dist <- sqrt(rowSums(sapply(unique(test_adjust$Cell_type), function(u) { subset(test_adjust, Cell_type == u)[,1] })^2))
+  return(t.test(test_dist, ctrl_dist)$p.value)
+}
+# run parallel testing
+sig_results <- setNames(unlist(mclapply(stat_groups, do_test, mc.cores=threads)), stat_groups)
+
+# organize statistical results
+stat_cols <- c('tissue', 'group', 'method', 'reference', 'CpGs', 'PVal')
+stat_results <- data.frame(row.names = names(sig_results))
+for(s in names(sig_results))
+{
+  spil <- strsplit(s, '_')[[1]]
+	tissue <- spil[1]
+	group <- spil[2]
+	spil <- strsplit(spil[3], ' ')[[1]]
+	method <- gsub('\\.', '', strsplit(spil[1], '=')[[1]][-c(1)])
+	reference <- gsub('\\.', '', strsplit(spil[2], '=')[[1]][-c(1)])
+	CpGs <- gsub('\\.', '', strsplit(spil[3], '=')[[1]][-c(1)])
+	stat_results[s,stat_cols[1:5]] <- c(tissue, group, method, reference, CpGs)
+	stat_results[s,stat_cols[6]] <- as.numeric(sig_results[s])
+}
+
+# save p-values to file
+out_sig <- paste(paste(rev(rev(strsplit(output, '\\.')[[1]])[-c(1)]), collapse='.'), 'significance.txt', sep='.')
+write.table(stat_results, file=out_sig, quote=F, sep='\t', row.names=F, col.names=T)
+
+# save cell type proportions to file
+save_table <- data.frame()
+for(l in prop_list) { save_table <- rbind(save_table, l[,save_cols]) }
+out_prop <- output
+write.table(save_table, file=out_prop, quote=F, sep='\t', row.names=F, col.names=T)
