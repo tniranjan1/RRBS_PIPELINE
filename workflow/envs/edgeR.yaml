@@ -8,3 +8,5 @@ dependencies:
   - bedtools=2.30.0
   - r-base=4.1.1
   - bioconductor-edger
+  - bioconductor-methylkit
+  - bioconductor-genomeinfodb

@@ -31,36 +31,7 @@ rule deconvolute:
   shell:
     """
     exec > {log}; exec 2> {log}
-    Rscript {threads} {input.merge1} {input.neuN} {output}
+    Rscript {params.script} {threads} {input.merge1} {input.neuN} {output}
     """
 
 #----------------------------------------------------------------------------------------------------------------------#
-
-# rule reduce methylation data to deconvolution site list for deconvulation
-rule reduce_methylation_for_deconvolution:
-  input:
-    sample="{path}/{file}.bedGraph.gz",
-    bed=deconvo_site_list
-  output: "{path}/{file}.deco.tmp"
-  threads: 1
-  conda: f"{workflow_dir}/envs/deconvolution.yaml"
-  log: "{path}/.{file}.deco.tmp.rule-get_methylation.reduce_methylation_for_deconvolution.log"
-  shell:
-    "zcat {input.sample} | bedtools intersect -wb -a {input.bed} -b - | cut -f4-6,8,9 > {output}"
-
-#----------------------------------------------------------------------------------------------------------------------#
-
-# rule to perform deconvolution using deconvSeq in R
-rule deconvSeq:
-  input:
-    rrbs=expand("{dir}/{analyte}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.deco.tmp",
-                dir = results_dir, analyte = "rrbs_samples", sample=rrbs_sample_names,
-                repeats = "without_repeats", context = "CpG"),
-    deco=expand("{dir}/{analyte}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.deco.tmp",
-                dir = results_dir, analyte = "deconvo_ref_samples", sample=deconvo_sample_names,
-                repeats = "without_repeats", context = "CpG")
-  output: f"{results_dir}/rrbs_samples/deconvolution/deconvolution.txt"
-  threads: 1
-  conda: f"{workflow_dir}/envs/deconvolution.yaml"
-  log: f"{results_dir}/rrbs_samples/deconvolution/.deconvolution.log"
-  shell: "echo 'done' > {output}"
