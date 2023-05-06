@@ -13,7 +13,7 @@ keep-going: false
 use-conda: true
 #cache: true
 dry-run: true
-debug-dag: true
+#debug-dag: true
 #verbose: true
 
 # Restrict disk over-usage: jobs will be queued to prevent a rule stage from using more than 500 GB of disk space at a
