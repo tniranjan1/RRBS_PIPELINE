@@ -83,7 +83,7 @@ def importLRSmethylSheet(sample_path, schema_path):
 #----------------------------------------------------------------------------------------------------------------------#
 
 def mergeSampleSheet(sheetA, sheetB):
-    mergedSheet = sheetA[['SampleID', 'Path']].append(sheetB[['SampleID', 'Path']])
+    mergedSheet = pd.concat([ sheetA[['SampleID', 'Path']], sheetB[['SampleID', 'Path']] ], axis=0)
 
     #get source type (SRR, BAM, fastq)
     patterns = {
