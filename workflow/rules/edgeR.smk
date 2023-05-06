@@ -13,7 +13,7 @@ rule run_methylKit:
 
 # Perform edgeR analysis of methylation
 rule run_edgeR:
-  input: expand("{path}/methylation_calls/samples/methylKit_{sample}.{repeats}_{context}.bedGraph.gz", sample=all_sample_names, repeats=repeats, context='CpG')
+  input: expand("{{path}}/methylation_calls/samples/methylKit_{sample}.{repeats}_{context}.bedGraph.gz", sample=all_sample_names, repeats=repeats, context='CpG')
   output: "{path}/methylation_calls/samples/edgeR.tmp"
   threads: 12
   conda: f"{workflow_dir}/envs/edgeR.yaml"
