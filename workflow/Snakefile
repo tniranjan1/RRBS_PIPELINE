@@ -97,6 +97,7 @@ genotypes = f"{genotype_dir}/all_samples.gt.vcf"
 
 # Globally constrain all wildcards matching {sample} to not have "/" in the string
 all_sample_names = rrbs_sample_names + deconvo_sample_names + lrs_sample_names
+repeats = [ 'with_repeats', 'without_repeats' ]
 wildcard_constraints:
   sample = '|'.join([x for x in all_sample_names ]),
   chr = '|'.join(chromosomes),
@@ -109,7 +110,6 @@ wildcard_constraints:
 # Subroutine to obtain the names of all final output files for a given sample sheet
 def get_final_output():
     meco = [ 'methylation', 'coverage' ]
-    repeats = [ 'with_repeats', 'without_repeats' ]
     context = context_to_use
     to_return = []
     ## build FTLD rrbs methylation files
