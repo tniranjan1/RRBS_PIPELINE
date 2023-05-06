@@ -11,6 +11,7 @@ local-cores: 1
 rerun-incomplete: true # recomended for cluster submissions
 keep-going: false
 use-conda: true
+rerun-triggers: mtime
 #cache: true
 dry-run: true
 #debug-dag: true
