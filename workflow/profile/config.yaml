@@ -12,7 +12,7 @@ rerun-incomplete: true # recomended for cluster submissions
 keep-going: false
 use-conda: true
 #cache: true
-#dry-run: true
+dry-run: true
 #debug-dag: true
 #verbose: true
 
