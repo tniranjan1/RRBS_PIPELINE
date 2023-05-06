@@ -4,9 +4,9 @@ channel:
 dependencies:
   - snakemake
   - mamba
-  - samtools=1.13
-  - bedtools=2.30.0
-  - r-base=4.1.3
+  - samtools
+  - bedtools
+  - r-base
   - bioconductor-edger
   - bioconductor-methylkit
   - bioconductor-genomeinfodb
