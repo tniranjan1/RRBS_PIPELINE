@@ -25,6 +25,7 @@ rule bwa_meth_align:
     bam=temp("{top_path}/results/{bot_path}/alignments/{sample}.bam")
   log: "{top_path}/results/{bot_path}/alignments/.{sample}.rule-align.bwa_meth_align.log"
   conda: f"{workflow_dir}/envs/align.yaml"
+  container: None
   threads: 4
   shell:
     """
