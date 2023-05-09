@@ -8,8 +8,8 @@ sample_name <- snakemake@wildcards[['sample']]
 context <- snakemake@wildcards[['context']]
 log_path <- snakemake@log[[1]]
 log <- file(log_path, open="w")
-sink(log)
-sink(log, type = "message")
+sink(log, type = "output")
+sink(log, type = "message", append=TRUE)
 
 # read methylation data from input_path file
 rawMethylObj <- methRead(location=input_path,
@@ -41,5 +41,6 @@ cat(header, file = gz_file, sep = "\n")
 write.table(out, gz_file, sep = "\t", row.names=F, col.names=F, quote=F, append=T)
 close(gz_file)
 
+sink(type = "output")
 sink(type = "message")
-sink()
+invisible()
