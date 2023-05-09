@@ -52,5 +52,6 @@ rule bam_index:
   output: "{path}/{prefix}.bam.bai"
   log: "{path}/.{prefix}.rule-align.bam_index.log"
   threads: 4
+  priority: 5
   conda: f"{workflow_dir}/envs/align.yaml"
   shell: "samtools index -@ {threads} {input} > {log} 2> {log}"
