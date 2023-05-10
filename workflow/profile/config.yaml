@@ -6,7 +6,7 @@
 restart-times: 0
 max-jobs-per-second: 1
 max-status-checks-per-second: 10
-cores: 32 # max cores used for all concurrent/parallel jobs
+cores: 16 # max cores used for all concurrent/parallel jobs
 local-cores: 1
 rerun-incomplete: true # recomended for cluster submissions
 keep-going: false
