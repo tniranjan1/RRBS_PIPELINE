@@ -120,3 +120,14 @@ rule remove_NA:
   shell: "zcat {input} | grep -vP '\tNA' > {output}"
 
 #----------------------------------------------------------------------------------------------------------------------#
+
+# Check bisulfite conversion rate using methylation values from telomere regions
+rule check_bisulfite_conversion:
+  input:
+    rrbs: telo_rrbs_meth
+    deconv: telo_decon
+  output: nabi_conversion
+  priority: 7
+  threads: 1
+  log: log_file(nabi_conversion)
+  shell: "exec > {log}; exec 2> {log}; echo 'complete' > {output}"

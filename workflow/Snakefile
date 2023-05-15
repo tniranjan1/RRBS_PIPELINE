@@ -99,6 +99,7 @@ genotypes = f"{genotype_dir}/all_samples.gt.vcf"
 telo_pattern = results_dir + "/{analyte}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_CHH.telomere.gz"
 telo_rrbs_meth = expand(telo_pattern, analyte='rrbs_samples', sample=rrbs_sample_names, repeats='without_repeats')
 telo_decon = expand(telo_pattern, analyte='deconvo_ref_samples', sample=deconvo_sample_names, repeats='without_repeats')
+nabi_conversion = results_dir + '/rrbs_samples/check_conversion_rate/conversion_rate.txt'
 
 # Globally constrain all wildcards matching {sample} to not have "/" in the string
 all_sample_names = rrbs_sample_names + deconvo_sample_names + lrs_sample_names
@@ -123,8 +124,7 @@ def get_final_output():
     ## build deconvolution (WG-BSSEQ) methylation files
     to_return.append(expand(pattern, analyte="deconvo_ref_samples", meco=meco, repeats=repeats, context=context))
     ## get telomre methylation
-    to_return.append(telo_rrbs_meth)
-    to_return.append(telo_decon)
+    to_return.append(nabi_conversion)
 #    if config['lrs']['activate']:
 #        to_return.append(results_dir + "/lrs_methyl/merged/merged.agePrediction.txt")
     to_return.append(genotypes)
