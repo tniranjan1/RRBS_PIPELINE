@@ -18,6 +18,7 @@ rule extract_methylation:
   wildcard_constraints:
     suffix="bedGraph|methylKit|telomere"
   threads: 4
+  priority: 6
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{path}/.MethylDackel_{sample}.{repeats}.{suffix}.rule-get_methylation.extract_methylation.log"
   script: f"{workflow_dir}/scripts/anl/run_MethylDackel.py"
