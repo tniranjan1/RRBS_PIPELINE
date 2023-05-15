@@ -124,8 +124,8 @@ rule remove_NA:
 # Check bisulfite conversion rate using methylation values from telomere regions
 rule check_bisulfite_conversion:
   input:
-    rrbs: telo_rrbs_meth,
-    deconv: telo_decon
+    rrbs=telo_rrbs_meth,
+    deconv=telo_decon
   output: nabi_conversion
   priority: 7
   threads: 1
