@@ -71,8 +71,7 @@ rule invert_repeat_regions:
       bedtools subtract -a {input.repeats}.ref.bed -b {input.repeats}.tmp > {output}
       rm {input.repeats}.tmp {input.repeats}.ref.bed
       """
-#
-----------------------------------------------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------#
 
 # Bed telomere setions
 rule telomere_bed:
