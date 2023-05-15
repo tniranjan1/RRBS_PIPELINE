@@ -26,7 +26,7 @@ sys.stderr = sys.stdout = f
 mKit = "--methylKit" if wildcards.suffix == "methylKit" else ""
 repeats = "-l " + input.ir if wildcards.repeats == "without_repeats" else ""
 prefix = wildcards.path + "/methylation_calls/samples/MethylDackel_" + wildcards.sample + "." + wildcards.repeats
-MDkl = "MethylDackel extract -q 20 -d 5 --CHG --CHH"
+MDkl = "MethylDackel extract -q " + str(params.mapq) + " -d " + str(params.min_cov) + " --CHG --CHH"
 print("Command submitted:")
 print(f"  {MDkl} -@ {threads} {repeats} {mKit} -o {prefix} {input.ref} {input.bam} > {log} 2> {log}")
 shell("{MDkl} -@ {threads} {repeats} {mKit} -o {prefix} {input.ref} {input.bam} > {log} 2> {log}")

@@ -4,7 +4,7 @@ rule extract_methylation:
     bam="{path}/alignments/{sample}.POSsort.bam",
     bai="{path}/alignments/{sample}.POSsort.bam.bai",
     ref=reference_genome_path,
-    ir=inverted_repeats
+    ir=lambda wc: inverted_repeats if wc.suffix != 'telomere' else reference_repeats.replace('.bed', '.telomere.bed')
   output:
     orig=temp(
          expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
@@ -12,8 +12,11 @@ rule extract_methylation:
              ),
     gzip=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
+  params:
+    mapq=lambda wc: 20 if wc.suffix != 'telomere' else 0,
+    min_cov=lambda wc: 5 if wc.suffix != 'telomere' else 0
   wildcard_constraints:
-    suffix="bedGraph|methylKit"
+    suffix="bedGraph|methylKit|telomere"
   threads: 4
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{path}/.MethylDackel_{sample}.{repeats}.{suffix}.rule-get_methylation.extract_methylation.log"

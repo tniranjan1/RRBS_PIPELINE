@@ -172,3 +172,11 @@ def get_disk_gb(source_type):
     elif source_type == 'fq':
         return 1
     return 1
+
+#----------------------------------------------------------------------------------------------------------------------#
+
+# Subroutine to build log destinations
+def log_file(unchanged_path):
+    """ Subroutine to build log destinations
+    """
+    return os.path.dirname(unchanged_path) + "/." + os.path.basename(unchanged_path)

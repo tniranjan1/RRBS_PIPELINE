@@ -71,3 +71,17 @@ rule invert_repeat_regions:
       bedtools subtract -a {input.repeats}.ref.bed -b {input.repeats}.tmp > {output}
       rm {input.repeats}.tmp {input.repeats}.ref.bed
       """
+#
+----------------------------------------------------------------------------------------------------------------------#
+
+# Bed telomere setions
+rule telomere_bed:
+  input: reference_repeats
+  output: reference_repeats.replace('.bed', '.telomere.bed')
+  conda: f"{workflow_dir}/envs/check_genotypes.yaml"
+  log: log_file(reference_repeats.replace('.bed', '.telomere.log'))
+  shell:
+    """
+    exec > {log}; exec 2> {log}
+    grep TAACCC {input} | bedtools sort -i stdin > {output}
+    """
