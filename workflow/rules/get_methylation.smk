@@ -4,9 +4,7 @@ rule extract_methylation:
     bam="{path}/alignments/{sample}.POSsort.bam",
     bai="{path}/alignments/{sample}.POSsort.bam.bai",
     ref=reference_genome_path,
-    ir=lambda wc: inverted_repeats if wc.suffix != 'telomere' else reference_repeats.replace('.bed', '.telomere.bed'),
-    prior=lambda wc: reference_genome_path if wc.suffix == 'telomere' else \
-                        "{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_CpG.telomere.gz"
+    ir=inverted_repeats
   output:
     orig=temp(
          expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
@@ -15,12 +13,39 @@ rule extract_methylation:
     gzip=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
   params:
-    mapq=lambda wc: 20 if wc.suffix != 'telomere' else 0,
-    min_cov=lambda wc: 5 if wc.suffix != 'telomere' else 0
+    mapq=20,
+    min_cov=5
   wildcard_constraints:
-    suffix="bedGraph|methylKit|telomere"
+    suffix="bedGraph|methylKit"
   threads: 4
   priority: 6
+  conda: f"{workflow_dir}/envs/get_methylation.yaml"
+  log: "{path}/.MethylDackel_{sample}.{repeats}.{suffix}.rule-get_methylation.extract_methylation.log"
+  script: f"{workflow_dir}/scripts/anl/run_MethylDackel.py"
+
+#----------------------------------------------------------------------------------------------------------------------#
+
+# Extract methylation using MethylDackel, but for the telomeres
+rule extract_methylationin_telomeres:
+  input:
+    bam="{path}/alignments/{sample}.POSsort.bam",
+    bai="{path}/alignments/{sample}.POSsort.bam.bai",
+    ref=reference_genome_path,
+    ir=reference_repeats.replace('.bed', '.telomere.bed')
+  output:
+    orig=temp(
+         expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
+                context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
+             ),
+    gzip=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
+                context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
+  params:
+    mapq=0,
+    min_cov=0
+  wildcard_constraints:
+    suffix="telomere"
+  threads: 4
+  priority: 7
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{path}/.MethylDackel_{sample}.{repeats}.{suffix}.rule-get_methylation.extract_methylation.log"
   script: f"{workflow_dir}/scripts/anl/run_MethylDackel.py"
