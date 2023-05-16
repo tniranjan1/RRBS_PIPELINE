@@ -45,7 +45,7 @@ rule extract_methylationin_telomeres:
   wildcard_constraints:
     suffix="telomere"
   threads: 4
-  priority: 7
+  priority: 11
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   log: "{path}/.MethylDackel_{sample}.{repeats}.{suffix}.rule-get_methylation.extract_methylation.log"
   script: f"{workflow_dir}/scripts/anl/run_MethylDackel.py"
