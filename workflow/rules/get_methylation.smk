@@ -4,7 +4,8 @@ rule extract_methylation:
     bam="{path}/alignments/{sample}.POSsort.bam",
     bai="{path}/alignments/{sample}.POSsort.bam.bai",
     ref=reference_genome_path,
-    ir=lambda wc: inverted_repeats if wc.suffix != 'telomere' else reference_repeats.replace('.bed', '.telomere.bed')
+    ir=lambda wc: inverted_repeats if wc.suffix != 'telomere' else reference_repeats.replace('.bed', '.telomere.bed'),
+    prior=lambda wc: None if wc.suffix == 'telomere' else "{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.telomere.gz"
   output:
     orig=temp(
          expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
