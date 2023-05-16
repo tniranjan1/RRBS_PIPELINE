@@ -6,7 +6,7 @@ rule extract_methylation:
     ref=reference_genome_path,
     ir=lambda wc: inverted_repeats if wc.suffix != 'telomere' else reference_repeats.replace('.bed', '.telomere.bed'),
     prior=lambda wc: reference_genome_path if wc.suffix == 'telomere' else \
-                        "{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.telomere.gz"
+                        "{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_CpG.telomere.gz"
   output:
     orig=temp(
          expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
