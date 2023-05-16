@@ -26,7 +26,7 @@ rule extract_methylation:
 #----------------------------------------------------------------------------------------------------------------------#
 
 # Extract methylation using MethylDackel, but for the telomeres
-rule extract_methylationin_telomeres:
+rule extract_methylation_telomeres:
   input:
     bam="{path}/alignments/{sample}.POSsort.bam",
     bai="{path}/alignments/{sample}.POSsort.bam.bai",
@@ -155,7 +155,7 @@ rule check_bisulfite_conversion:
     rrbs=telo_rrbs_meth,
     deconv=telo_decon
   output: nabi_conversion
-  priority: 7
+  priority: 12
   threads: 1
   log: log_file(nabi_conversion)
   shell: "exec > {log}; exec 2> {log}; echo 'complete' > {output}"
