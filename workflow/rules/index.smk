@@ -79,6 +79,7 @@ rule telomere_bed:
   output: reference_repeats.replace('.bed', '.telomere.bed')
   conda: f"{workflow_dir}/envs/check_genotypes.yaml"
   log: log_file(reference_repeats.replace('.bed', '.telomere.log'))
+  priority: 8
   shell:
     """
     exec > {log}; exec 2> {log}
