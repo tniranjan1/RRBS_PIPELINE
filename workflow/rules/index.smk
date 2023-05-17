@@ -83,5 +83,5 @@ rule telomere_bed:
   shell:
     """
     exec > {log}; exec 2> {log}
-    grep TAACCC {input} | bedtools sort -i stdin > {output}
+    grep TAACCC {input} | bedtools sort -i stdin | awk '($1 !~ "_")' > {output}
     """
