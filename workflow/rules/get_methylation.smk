@@ -15,7 +15,8 @@ rule extract_methylation:
                   )
   params:
     mapq=20,
-    min_cov=5
+    min_cov=5,
+    gzip=True
   wildcard_constraints:
     suffix="bedGraph|methylKit",
     repeats="with_repeats|without_repeats"
@@ -38,11 +39,11 @@ rule extract_methylation_telomeres:
     orig=protected(
          expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
-                  ),
-    gzip=None
+                  )
   params:
     mapq=0,
-    min_cov=1
+    min_cov=1,
+    gzip=False
   wildcard_constraints:
     suffix="bedGraph",
     repeats="telomere"

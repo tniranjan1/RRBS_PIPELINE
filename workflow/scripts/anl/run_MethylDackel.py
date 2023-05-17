@@ -30,7 +30,7 @@ MDkl = "MethylDackel extract -q " + str(params.mapq) + " -d " + str(params.min_c
 print("Command submitted:")
 print(f"  {MDkl} -@ {threads} {repeats} {mKit} -o {prefix} {input.ref} {input.bam} > {log} 2> {log}")
 shell("{MDkl} -@ {threads} {repeats} {mKit} -o {prefix} {input.ref} {input.bam} > {log} 2> {log}")
-if input.gzip != None:
+if params.gzip:
     shell("bgzip -@ {threads} -c {prefix}_CpG.{wildcards.suffix} > {prefix}_CpG.{wildcards.suffix}.gz >> {log} 2>> {log}")
     shell("bgzip -@ {threads} -c {prefix}_CHG.{wildcards.suffix} > {prefix}_CHG.{wildcards.suffix}.gz >> {log} 2>> {log}")
     shell("bgzip -@ {threads} -c {prefix}_CHH.{wildcards.suffix} > {prefix}_CHH.{wildcards.suffix}.gz >> {log} 2>> {log}")
