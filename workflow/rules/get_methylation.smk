@@ -37,7 +37,7 @@ rule extract_methylation_telomeres:
          expand("{path}/methylation_calls/samples/MethylDackel_{sample}.telomere_{context}.bedGraph",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
              ),
-    gzip=protected(expand("{path}/methylation_calls/samples/MethylDackel_{sample}.telomere__{context}.bedGraph.gz",
+    gzip=protected(expand("{path}/methylation_calls/samples/MethylDackel_{sample}.telomere_{context}.bedGraph.gz",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True))
   params:
     mapq=0,
