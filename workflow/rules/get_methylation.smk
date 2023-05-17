@@ -16,7 +16,8 @@ rule extract_methylation:
     mapq=20,
     min_cov=5
   wildcard_constraints:
-    suffix="bedGraph|methylKit"
+    suffix="bedGraph|methylKit",
+    repeats="with_repeats|without_repeats"
   threads: 4
   priority: 6
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
@@ -34,20 +35,21 @@ rule extract_methylation_telomeres:
     ir=reference_repeats.replace('.bed', '.telomere.bed')
   output:
     orig=temp(
-         expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{suffix}_{context}.bedGraph",
+         expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
              ),
-    gzip=protected(expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{suffix}_{context}.bedGraph.gz",
+    gzip=protected(expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True))
   params:
     mapq=0,
     min_cov=1
   wildcard_constraints:
-    suffix="telomere"
+    suffix="bedGraph",
+    repeats="telomere"
   threads: 4
   priority: 11
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
-  log: "{path}/.MethylDackel_{sample}.{suffix}.bedGraph.rule-get_methylation.extract_methylation.log"
+  log: "{path}/.MethylDackel_{sample}.{repeats}.{suffix}.rule-get_methylation.extract_methylation.log"
   script: f"{workflow_dir}/scripts/anl/run_MethylDackel.py"
 
 #----------------------------------------------------------------------------------------------------------------------#
