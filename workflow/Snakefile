@@ -96,7 +96,7 @@ if config['remove_samples']['genotype_discordant']['activate']:
 genotypes = f"{genotype_dir}/all_samples.gt.vcf"
 
 # Telomere methylation files
-telo_pattern = results_dir + "/{analyte}/methylation_calls/samples/MethylDackel_{sample}.telomere_CHH.bedGraph.gz"
+telo_pattern = results_dir + "/{analyte}/methylation_calls/samples/MethylDackel_{sample}.telomere_CHH.bedGraph"
 telo_rrbs_meth = expand(telo_pattern, analyte='rrbs_samples', sample=rrbs_sample_names)
 telo_decon = expand(telo_pattern, analyte='deconvo_ref_samples', sample=deconvo_sample_names)
 nabi_conversion = results_dir + '/rrbs_samples/check_conversion_rate/conversion_rate.txt'
@@ -107,7 +107,7 @@ repeats = [ 'with_repeats', 'without_repeats' ]
 wildcard_constraints:
   sample = '|'.join([x for x in all_sample_names ]),
   chr = '|'.join(chromosomes),
-  repeats = "with_repeats|without_repeats",
+  repeats = "with_repeats|without_repeats|telomere",
   meco = "methylation|coverage",
   context = 'CpG|CHG|CHH'
 

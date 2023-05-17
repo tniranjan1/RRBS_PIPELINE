@@ -11,7 +11,8 @@ rule extract_methylation:
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
              ),
     gzip=protected(expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
-                context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True))
+                context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
+                  )
   params:
     mapq=20,
     min_cov=5
@@ -34,12 +35,10 @@ rule extract_methylation_telomeres:
     ref=reference_genome_path,
     ir=reference_repeats.replace('.bed', '.telomere.bed')
   output:
-    orig=temp(
+    orig=protected(
          expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
-             ),
-    gzip=protected(expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
-                context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True))
+                  )
   params:
     mapq=0,
     min_cov=1
