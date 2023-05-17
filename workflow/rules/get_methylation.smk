@@ -41,7 +41,7 @@ rule extract_methylation_telomeres:
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True))
   params:
     mapq=0,
-    min_cov=0
+    min_cov=1
   wildcard_constraints:
     suffix="telomere"
   threads: 4
