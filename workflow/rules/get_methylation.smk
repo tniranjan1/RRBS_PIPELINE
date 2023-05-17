@@ -10,8 +10,8 @@ rule extract_methylation:
          expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
              ),
-    gzip=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
-                context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
+    gzip=protected(expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
+                context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True))
   params:
     mapq=20,
     min_cov=5
@@ -37,8 +37,8 @@ rule extract_methylation_telomeres:
          expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
              ),
-    gzip=expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
-                context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
+    gzip=protected(expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
+                context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True))
   params:
     mapq=0,
     min_cov=0

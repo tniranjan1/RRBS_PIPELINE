@@ -1,6 +1,3 @@
-# load libraries
-library(methylKit)
-
 # load arguments
 input_path <- snakemake@input[['path']]
 output_path <- snakemake@input[['path']]
@@ -10,6 +7,9 @@ log_path <- snakemake@log[[1]]
 log <- file(log_path, open="w")
 sink(log, type = "output")
 sink(log, type = "message", append=TRUE)
+
+# load libraries
+library(methylKit)
 
 # read methylation data from input_path file
 rawMethylObj <- methRead(location=input_path,
