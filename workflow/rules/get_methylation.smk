@@ -34,7 +34,7 @@ rule extract_methylation_telomeres:
     bam="{path}/alignments/{sample}.POSsort.bam",
     bai="{path}/alignments/{sample}.POSsort.bam.bai",
     ref=reference_genome_path,
-    ir=reference_repeats.replace('.bed', '.telomere.bed')
+    ir=reference_repeats.replace('repeats.bed', 'invert_repeats.telomere.bed')
   output:
     orig=protected(
          expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",

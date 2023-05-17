@@ -144,6 +144,9 @@ include: 'rules/check_genotypes.smk'
 include: 'rules/deconvolution.smk'
 include: 'rules/edgeR.smk'
 
+# Rule order
+ruleorder: telomere_bed > invert_repeat_regions
+
 # Target rule
 rule all:
     input:

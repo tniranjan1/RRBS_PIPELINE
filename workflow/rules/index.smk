@@ -44,9 +44,9 @@ rule link_repeats:
 # Invert repeats (isolate regions exclusive of repeat regions)
 rule invert_repeat_regions:
   input:
-    repeats=reference_repeats,
+    repeats="{path}/{prefix}.repeats{extra}bed"#,reference_repeats,
     fai=reference_genome_path + ".fai"
-  output: inverted_repeats
+  output: "{path}/{prefix}.invert_repeats{extra}bed"#inverted_repeats
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
   shell:
       """
