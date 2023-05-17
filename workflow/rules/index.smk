@@ -48,6 +48,7 @@ rule invert_repeat_regions:
     fai=reference_genome_path + ".fai"
   output: "{path}/{prefix}.invert_repeats{extra}bed"#inverted_repeats
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
+  priority: 8
   shell:
       """
       cat {input.repeats} | \
