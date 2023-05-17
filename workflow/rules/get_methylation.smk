@@ -38,7 +38,8 @@ rule extract_methylation_telomeres:
     orig=protected(
          expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
-                  )
+                  ),
+    gzip=None
   params:
     mapq=0,
     min_cov=1
