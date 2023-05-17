@@ -24,7 +24,7 @@ sys.stderr = sys.stdout = f
 #----------------------------------------------------------------------------------------------------------------------#
 
 mKit = "--methylKit" if wildcards.suffix == "methylKit" else ""
-repeats = "-l " + input.ir if wildcards.repeats == "without_repeats" else ""
+repeats = "" if wildcards.repeats == "with_repeats" else "-l " + input.ir
 prefix = wildcards.path + "/methylation_calls/samples/MethylDackel_" + wildcards.sample + "." + wildcards.repeats
 MDkl = "MethylDackel extract -q " + str(params.mapq) + " -d " + str(params.min_cov) + " --CHG --CHH"
 print("Command submitted:")
