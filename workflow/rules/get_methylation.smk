@@ -34,16 +34,16 @@ rule extract_methylation_telomeres:
     ir=reference_repeats.replace('.bed', '.telomere.bed')
   output:
     orig=temp(
-         expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}",
+         expand("{path}/methylation_calls/samples/MethylDackel_{sample}.telomere_{context}.{suffix}",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True)
              ),
-    gzip=protected(expand("{path}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.{suffix}.gz",
+    gzip=protected(expand("{path}/methylation_calls/samples/MethylDackel_{sample}.telomere__{context}.{suffix}.gz",
                 context=[ 'CpG', 'CHG', 'CHH' ], allow_missing=True))
   params:
     mapq=0,
     min_cov=1
   wildcard_constraints:
-    suffix="telomere"
+    suffix="bedGraph"
   threads: 4
   priority: 11
   conda: f"{workflow_dir}/envs/get_methylation.yaml"
