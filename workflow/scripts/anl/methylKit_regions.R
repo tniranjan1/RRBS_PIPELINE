@@ -1,6 +1,6 @@
 # load arguments
 input_path <- snakemake@input[['path']]
-output_path <- snakemake@input[['path']]
+output_path <- snakemake@output[['path']]
 sample_name <- snakemake@wildcards[['sample']]
 context <- snakemake@wildcards[['context']]
 log_path <- snakemake@log[[1]]
