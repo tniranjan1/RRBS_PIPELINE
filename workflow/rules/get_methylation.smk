@@ -74,7 +74,7 @@ rule merge_methylation_by_chr:
       chr_input=""
       for i in {input.orig}
       do
-        grep '^{wildcards.chr}' $i | cut -f1-4 > $i.{wildcards.chr}.methy_tmp
+        zcat $i | grep '^{wildcards.chr}' | cut -f1-4 > $i.{wildcards.chr}.methy_tmp
         chr_input="$chr_input $i.{wildcards.chr}.methy_tmp"
       done
       bedtools unionbedg -filler NA -i $chr_input > {output}
@@ -102,7 +102,7 @@ rule merge_coverage_by_chr:
       chr_input=""
       for i in {input.orig}
       do
-        grep '^{wildcards.chr}' $i | awk '{{print $1 "\t" $2 "\t" $3 "\t" $5+$6}}' > $i.{wildcards.chr}.cov_tmp
+        zcat $i | grep '^{wildcards.chr}' | awk '{{print $1 "\t" $2 "\t" $3 "\t" $5+$6}}' > $i.{wildcards.chr}.cov_tmp
         chr_input="$chr_input $i.{wildcards.chr}.cov_tmp"
       done
       bedtools unionbedg -filler NA -i $chr_input > {output}
