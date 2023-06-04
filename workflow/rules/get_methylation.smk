@@ -59,7 +59,7 @@ rule extract_methylation_telomeres:
 rule merge_methylation_by_chr:
   input:
     orig=lambda wc:
-            expand(results_dir+"/{set}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph",
+            expand(results_dir+"/{set}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
                    sample=set_options[wc.set], allow_missing=True),
     gzip=lambda wc:
             expand(results_dir+"/{set}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
@@ -87,7 +87,7 @@ rule merge_methylation_by_chr:
 rule merge_coverage_by_chr:
   input:
     orig=lambda wc:
-            expand(results_dir+"/{set}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph",
+            expand(results_dir+"/{set}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
                 sample=set_options[wc.set], allow_missing=True),
     gzip=lambda wc:
             expand(results_dir+"/{set}/methylation_calls/samples/MethylDackel_{sample}.{repeats}_{context}.bedGraph.gz",
