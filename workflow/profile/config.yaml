@@ -19,8 +19,8 @@ rerun-triggers: mtime
 
 # Restrict disk over-usage: jobs will be queued to prevent a rule stage from using more than 500 GB of disk space at a
 #   time. Unless specified in the rule, each job will use 1 GB fo disk space as default.
-resources: [disk_gb=500]
-default-resources: [disk_gb=1]
+resources: [disk_gb=500, mem_gb=100]
+default-resources: [disk_gb=1, mem_gb=10]
 
 # We ran our snakemake flow on a local server without cluster control.
 # If you wish to use cluster control in Snakemake, the following cluster profile parameters can be set. For more

@@ -27,6 +27,8 @@ rule deconvolute:
     script=f"{workflow_dir}/scripts/anl/deconvolute.R"
   threads: 12
   conda: f"{workflow_dir}/envs/deconvolution.yaml"
+  resources:
+    mem_gb=100
   log: "{path1}/deconvo_ref_samples/deconvolution/.deconvo_values.log"
   shell:
     """
