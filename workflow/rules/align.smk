@@ -39,7 +39,7 @@ rule bwa_meth_align:
 # Position sort a bam file
 rule bam_position_sort:
   input: "{path}/{sample}.bam"
-  output: "{path}/{sample}.POSsort.bam"
+  output: temp("{path}/{sample}.POSsort.bam")
   log: "{path}/.{sample}.POSsort.rule-align.bam_position_sort.log"
   threads: 4
   conda: f"{workflow_dir}/envs/align.yaml"

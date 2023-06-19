@@ -128,7 +128,7 @@ def get_final_output():
 #    if config['lrs']['activate']:
 #        to_return.append(results_dir + "/lrs_methyl/merged/merged.agePrediction.txt")
     to_return.append(genotypes)
-    to_return.append(deconvolution_result)
+    #to_return.append(deconvolution_result)
     to_return.append(results_dir + "/rrbs_samples/methylation_calls/samples/edgeR.tmp") # get methylKit regions
     # TBD: if vcf add back is activated, also include compression of input vcf as target
     return to_return
