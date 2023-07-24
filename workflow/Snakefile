@@ -45,6 +45,7 @@ deconvo_ref_samples = importSampleSheet(sample_path=deconvo_ref_sheet_path, sche
 deconvo_sample_names = deconvo_ref_samples.index.tolist()
 set_options = {"rrbs_samples": rrbs_sample_names, "deconvo_ref_samples": deconvo_sample_names}
 deconvolution_result = results_dir + "/deconvo_ref_samples/deconvolution/deconvo_values.{repeats}.significance.txt"
+deconvolution_result = expand(deconvolution_result, repeats=[ 'with_repeats', 'without_repeats' ])
 
 # Merge sample sheets for easy access to input files in the rules
 merged_sample_sheet = mergeSampleSheet(sheetA=rrbs_samples, sheetB=deconvo_ref_samples)
@@ -128,7 +129,6 @@ def get_final_output():
 #    if config['lrs']['activate']:
 #        to_return.append(results_dir + "/lrs_methyl/merged/merged.agePrediction.txt")
     to_return.append(genotypes)
-    deconvolution_result = expand(deconvolution_result, repeats=repeats)
     #_to_return.append(deconvolution_result)
     to_return.append(results_dir + "/rrbs_samples/methylation_calls/samples/edgeR.tmp") # get methylKit regions
     # TBD: if vcf add back is activated, also include compression of input vcf as target
