@@ -29,7 +29,7 @@ rule deconvolute:
   conda: f"{workflow_dir}/envs/deconvolution.yaml"
   resources:
     mem_gb=100
-  log: "{path1}/deconvo_ref_samples/deconvolution/.deconvo_values.log"
+  log: "{path1}/deconvo_ref_samples/deconvolution/.deconvo_values.{repeats}.log"
   shell:
     """
     exec > {log}; exec 2> {log}
