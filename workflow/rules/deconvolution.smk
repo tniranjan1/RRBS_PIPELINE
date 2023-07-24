@@ -21,8 +21,8 @@ rule get_GSE186458:
 rule deconvolute:
   input:
     merge1="{path1}/deconvo_ref_samples/GSE186458/merge.intersect.bed.gz",
-    neuN="{path1}/deconvo_ref_samples/methylation_calls/merged/merged_methylation.with_repeats.CpG.bedGraph.gz"
-  output: "{path1}/deconvo_ref_samples/deconvolution/deconvo_values.txt"
+    neuN="{path1}/deconvo_ref_samples/methylation_calls/merged/merged_methylation.{repeats}.CpG.bedGraph.gz"
+  output: "{path1}/deconvo_ref_samples/deconvolution/deconvo_values.{repeats}.significance.txt"
   params:
     script=f"{workflow_dir}/scripts/anl/deconvolute.R"
   threads: 12
