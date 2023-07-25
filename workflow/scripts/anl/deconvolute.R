@@ -109,7 +109,7 @@ reduced_meth_sign[,'Other'] <- apply(data[,setdiff(non_neuron_cols, oligo_cols)]
 #'
 #' @return  (numeric) vector of mean methylations at each locus for a given cell type "o"
 other_mean <- function(o) { apply(as.matrix(data[,names(other_groups)[other_groups==o]]), 1, mean, na.rm=T) }
-max_threads <- if(threads > 4) { 4 } else { threads}
+max_threads <- if(threads > 1) { 1 } else { threads}
 add_to_meth <- mclapply(unique(other_groups), other_mean, mc.cores=max_threads)
 names(add_to_meth) <- unique(other_groups)
 for(o in unique(other_groups)) meth_sign[,o] <- add_to_meth[[o]]
