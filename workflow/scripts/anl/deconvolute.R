@@ -344,7 +344,8 @@ df$group <- gsub('\\.FCX|\\.CER', '', df$group, perl=T)
 df$Analysis <- paste('Method=', df$method, '. References=', df$references, '. CpGs=', df$CpGsites, sep='')
 
 # generate PDF of cell proportions divided by group and analysis
-out_pdf <- paste(paste(rev(rev(strsplit(output, '\\.')[[1]])[-c(1)]), collapse='.'), 'CellPropEstimate.pdf', sep='.')
+output <- output_path
+out_pdf <- gsub('significance.txt', 'CellPropEstimate.pdf', output)
 pdf(file=out_pdf, height=8, width=20)
 ggplot(df, aes(x = group, y = Cell, fill = group, alpha = Cell_type)) +
   geom_boxplot() +
@@ -407,11 +408,12 @@ for(s in names(sig_results))
 }
 
 # save p-values to file
-out_sig <- paste(paste(rev(rev(strsplit(output, '\\.')[[1]])[-c(1)]), collapse='.'), 'significance.txt', sep='.')
+out_sig <- gsub('significance', 'sigs', output_path)
 write.table(stat_results, file=out_sig, quote=F, sep='\t', row.names=F, col.names=T)
 
 # save cell type proportions to file
 save_table <- data.frame()
+save_cols <- c('sample_name', 'group', 'Neuron', 'Oligodendrocyte', 'Other', 'method', 'references', 'CpGsites')
 for(l in prop_list) { save_table <- rbind(save_table, l[,save_cols]) }
-out_prop <- output
+out_prop <- gsub('significance', 'CellPropEstimate', output)
 write.table(save_table, file=out_prop, quote=F, sep='\t', row.names=F, col.names=T)

@@ -5,7 +5,7 @@ rule get_GSE186458:
     url="https://ftp.ncbi.nlm.nih.gov/geo/series/GSE186nnn/GSE186458/suppl/GSE186458_RAW.tar",
     dir=lambda wc: wc.path1 + "/deconvo_ref_samples/GSE186458",
     script=f"{workflow_dir}/scripts/anl/bigwig_to_bed.R"
-  threads: 12
+  threads: 1
   conda: f"{workflow_dir}/envs/deconvolution.yaml"
   log: "{path1}/deconvo_ref_samples/GSE186458/.get_GSE186458.log"
   shell:
@@ -25,7 +25,7 @@ rule deconvolute:
   output: "{path1}/deconvo_ref_samples/deconvolution/deconvo_values.{repeats}.significance.txt"
   params:
     script=f"{workflow_dir}/scripts/anl/deconvolute.R"
-  threads: 12
+  threads: 1
   conda: f"{workflow_dir}/envs/deconvolution.yaml"
   resources:
     mem_gb=100
