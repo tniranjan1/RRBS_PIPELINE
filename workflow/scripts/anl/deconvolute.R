@@ -70,20 +70,20 @@ rm(gse_data, neuN_ref)
 gc(verbose=F)
 
 # identify categorical columns
-  ## neuron columns
-  neuron_cols <- grep('neu', colnames(data), ignore.case=T)
-  non_neuron_cols <- grep('neu', colnames(data), ignore.case=T, invert=T)
-  non_neuron_cols <- non_neuron_cols[4:length(non_neuron_cols)]
+## neuron columns
+neuron_cols <- grep('neu', colnames(data), ignore.case=T)
+non_neuron_cols <- grep('neu', colnames(data), ignore.case=T, invert=T)
+non_neuron_cols <- non_neuron_cols[4:length(non_neuron_cols)]
 
-	## oligodendrocyte columns
-	oligo_cols <- grep('oligo', colnames(data), ignore.case=T)
-	non_oligo_cols <- grep('oligo', colnames(data), ignore.case=T, invert=T)
-	non_oligo_cols <- non_oligo_cols[4:length(non_oligo_cols)]
+## oligodendrocyte columns
+oligo_cols <- grep('oligo', colnames(data), ignore.case=T)
+non_oligo_cols <- grep('oligo', colnames(data), ignore.case=T, invert=T)
+non_oligo_cols <- non_oligo_cols[4:length(non_oligo_cols)]
 
-	## non-neuron, non-oligodendrocyte columns
-	other_groups <- colnames(data)[setdiff(non_neuron_cols, oligo_cols)]
-	other_groups <- sapply(other_groups, function(o) { paste(strsplit(o, '_')[[1]][-c(1)], collapse='_') })
-	other_groups <- sapply(other_groups, function(o) { paste(rev(rev(strsplit(o, '\\.')[[1]])[-c(1)]), collapse='.') })
+## non-neuron, non-oligodendrocyte columns
+other_groups <- colnames(data)[setdiff(non_neuron_cols, oligo_cols)]
+other_groups <- sapply(other_groups, function(o) { paste(strsplit(o, '_')[[1]][-c(1)], collapse='_') })
+other_groups <- sapply(other_groups, function(o) { paste(rev(rev(strsplit(o, '\\.')[[1]])[-c(1)]), collapse='.') })
 
 # build signature methylation (meth_sign) table per cell type
 neuron_mean <- apply(data[,neuron_cols], 1, mean, na.rm=T)
@@ -126,7 +126,8 @@ for(l in list(neuron_cols, oligo_cols, setdiff(non_neuron_cols, oligo_cols)))
   most_useful <- most_useful | top
   most_useful <- most_useful | bot
 }
-rm(maximum, minimum, top, bot)
+rm(maximum, minimum, top, bot, data)
+gc(verbose=F)
 
 #' NNLS Deconvolution
 #' @description Use nnls to estimate the cell count percentage
@@ -180,28 +181,34 @@ proportions <- data.frame(sample_name=character(), group=character())
 prop_list <- mclapply(seq(4, ncol(rrbs_data)), nnls_cell_prop, useful = T, mc.cores=threads)
 for(p in prop_list) proportions[rownames(p), colnames(p)] <- p
 prop.allCellTypes.usefulLoci <- proportions
+gc()
 
 # get cell type proportions using nnls using all cell types and all loci
 proportions <- data.frame(sample_name=character(), group=character())
 prop_list <- mclapply(seq(4, ncol(rrbs_data)), nnls_cell_prop, useful = F, mc.cores=threads)
 for(p in prop_list) proportions[rownames(p), colnames(p)] <- p
 prop.allCellTypes.allLoci <- proportions
+gc()
 
 # switch meth_sign table from full to reduced; store main meth_sign in large_meth_sign variable
-large_meth_sign <- meth_sign
+#large_meth_sign <- meth_sign
 meth_sign <- reduced_meth_sign
+rm(reduced_meth_sign)
+gc()
 
 # get cell type proportions using nnls using reduced cell types and only most useful loci
 proportions <- data.frame(sample_name=character(), group=character())
 prop_list <- mclapply(seq(4, ncol(rrbs_data)), nnls_cell_prop, useful = T, mc.cores=threads)
 for(p in prop_list) proportions[rownames(p), colnames(p)] <- p
 prop.reducedCellTypes.usefulLoci <- proportions
+gc()
 
 # get cell type proportions using nnls using reduced cell types and all loci
 proportions <- data.frame(sample_name=character(), group=character())
 prop_list <- mclapply(seq(4, ncol(rrbs_data)), nnls_cell_prop, useful = F, mc.cores=threads)
 for(p in prop_list) proportions[rownames(p), colnames(p)] <- p
 prop.reducedCellTypes.allLoci <- proportions
+gc()
 
 #' Support vector machine deconvolution
 #' @description Use SVMDECONV to estimate the cell count percentage
