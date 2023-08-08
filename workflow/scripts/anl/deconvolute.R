@@ -295,6 +295,10 @@ proportions <- data.frame(sample_name=character(), group=character())
 prop_list <- mclapply(seq(4, ncol(rrbs_data)), svr_cell_prop, mc.cores=max_threads)
 for(p in prop_list) proportions[rownames(p), colnames(p)] <- p
 svr.reducedCellTypes.usefulLoci <- proportions
+gc()
+
+rm(rrbs_data)
+gc()
 
 # add categorial factors to proportions for easier plotting
 prop.allCellTypes.usefulLoci[,'Other'] <- rowSums(prop.allCellTypes.usefulLoci[,5:ncol(prop.allCellTypes.usefulLoci)])
