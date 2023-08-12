@@ -419,8 +419,8 @@ for(s in names(sig_results))
 }
 
 # save p-values to file
-out_sig <- gsub('significance', 'sigs', output_path)
-write.table(stat_results, file=out_sig, quote=F, sep='\t', row.names=F, col.names=T)
+#out_sig <- gsub('significance', 'sigs', output_path)
+write.table(stat_results, file=output_path, quote=F, sep='\t', row.names=F, col.names=T)
 
 # save cell type proportions to file
 save_table <- data.frame()
