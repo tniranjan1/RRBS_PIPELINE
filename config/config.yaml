@@ -129,13 +129,7 @@ remove_samples:
     #   removed due to tisue discordance
     override_tissue: True
 
-# parameters for finding differentially methylated regions (DMRs)
-DMRfinder:
-  # Run DMRFinder
-  activate: True
-  # git URL to download DMRFinder. Must provide even if activate is False.
-  DMRFinder_git_URL: "https://github.com/jsh58/DMRfinder.git"
-
+# parameters for finding differentially methylated regions (DMRs) using MethylKit
 MethylKit:
   # Run MethylKit; identify DMRs with set window_size stepped every step_size
   activate: True
@@ -153,3 +147,12 @@ edgeR:
   check_MethylKit: True
   # Re-run edgeR with deconvolution as covariate if deconvolution is available (deconvolution sample sheet)
   with_deconvolution: True
+
+# parameters for annotating DMRs
+annotate:
+  # local paths to enhancer locations
+  enhancers:
+    # human-specific
+    HS_enhancer: "bin/EnhancerAtlas2.0/HS_gene-enhancer.RData"
+    # cross-species derived
+    sp_enhancer: "bin/EnhancerAtlas2.0/Species_enhancer.RData"    
