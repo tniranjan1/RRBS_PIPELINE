@@ -1,0 +1,29 @@
+s_A_NA06-199_CER	## genotypic discordance; high similarity to s_F_EMC13-65_CER & s_F_EMC13-65_FCX
+## s_A_NA06-199_FCX	## genotypic discordance
+s_B_NA04-145_CER	## groups with FCX
+s_B_NA10-407_CER	## groups with FCX
+s_B_NA10-421_CER	## groups with FCX
+s_B_NA11-033_CER	## gender discordant; partial genotypic discordance; inappropriate similarity to s_C_NA10-049_CER & s_C_NA10-049_FCX
+s_B_NA11-033_FCX	## partial genotypic discordance
+s_C_3970_CER	## groups with FCX
+s_C_NA00-179_CER	## groups with FCX
+s_Ctrl_5138_CER	## genotypic outlier restricted to Ctrl group -> risk of population stratification
+s_Ctrl_5138_FCX	## genotypic outlier restricted	to Ctrl	group -> risk of population stratification
+s_Ctrl_NA03-248_CER	## genotypic outlier restricted to Ctrl group -> risk of population stratification
+s_Ctrl_NA03-248_FCX	## genotypic outlier restricted to Ctrl group -> risk of population stratification
+s_Ctrl_NA05-198_CER	## groups with FCX
+s_Ctrl_NA12-134_CER	## genotypic outlier restricted to Ctrl group -> risk of population stratification
+s_Ctrl_NA12-134_FCX	## genotypic outlier restricted to Ctrl group -> risk of population stratification
+s_F_KULA-22549_CER	## extreme on PC2
+s_F_UCL2783_CER	## genotypic discordance with FCX, and not the real sample based on sequencing
+## s_F_UCL2783_FCX	## genotypic discordance with CER, but real sample based on sequencing
+s_G_NA09-218_CER	## extreme on PC3, and high similarity to Granulin group members: s_G_NA11-437_CER, s_G_NA11-437_FCX
+s_G_NA09-218_FCX	## high similarity to Granulin group members: s_G_NA11-437_CER, s_G_NA11-437_FCX
+s_G_NA06-180_CER	## high similarity to Granulin group members: s_G_NA98-348_CER, s_G_NA98-348_FCX, s_G_NA99-155_CER, s_G_NA99-155_FCX
+s_G_NA06-180_FCX	## high	similarity to Granulin group members: s_G_NA98-348_CER,	s_G_NA98-348_FCX, s_G_NA99-155_CER, s_G_NA99-155_FCX
+s_G_NA09-073_CER	## high similarity to Granulin group members: s_G_NA98-348_CER, s_G_NA98-348_FCX
+s_G_NA09-073_FCX	## high similarity to Granulin group members: s_G_NA98-348_CER, s_G_NA98-348_FCX
+s_G_NA98-348_CER	## high similarity to Granulin group members: s_G_NA99-155_CER, s_G_NA99-155_FCX, s_G_NA06-180_CER, s_G_NA06-180_FCX
+s_G_NA98-348_FCX	## high	similarity to Granulin group members: s_G_NA99-155_CER, s_G_NA99-155_FCX, s_G_NA06-180_CER, s_G_NA06-180_FCX
+s_G_NA99-155_CER	## gender discordant; high similarity to Granulin group members: s_G_NA98-348_CER, s_G_NA98-348_FCX, s_G_NA06-180_CER, s_G_NA06-180_FCX
+s_G_NA99-155_FCX	## gender discordant; high similarity to Granulin group members: s_G_NA98-348_CER, s_G_NA98-348_FCX, s_G_NA06-180_CER, s_G_NA06-180_FCX

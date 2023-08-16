@@ -33,6 +33,13 @@ reference_genome_path = abspath(config['ref']['path'])
 reference_repeats = f"{resource_dir}/references/repeats/{config['ref']['hg_build']}.repeats.bed"
 inverted_repeats = f"{resource_dir}/references/repeats/{config['ref']['hg_build']}.invert_repeats.bed"
 
+# get reference enhancer dataset paths
+enhancer_gene = abspath(config['annotate']['enhancers']['HS_enhancer'])
+enhancer_all = abspath(config['annotate']['enhancers']['sp_enhancer'])
+
+# outlier samples
+remove_samples = abspath(config['remove_samples'])
+
 # Load RRBS sample sheet and validate structure
 rrbs_sample_sheet_path = abspath(config['RRBS_samples'])
 schema_path = abspath('schemas/samples.schema.yaml')

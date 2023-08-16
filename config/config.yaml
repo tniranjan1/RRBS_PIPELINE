@@ -155,4 +155,7 @@ annotate:
     # human-specific
     HS_enhancer: "bin/EnhancerAtlas2.0/HS_gene-enhancer.RData"
     # cross-species derived
-    sp_enhancer: "bin/EnhancerAtlas2.0/Species_enhancer.RData"    
+    sp_enhancer: "bin/EnhancerAtlas2.0/Species_enhancer.RData"
+
+# path to file with outlier samples to remove
+remove_samples: "bin/remove_samples.txt"

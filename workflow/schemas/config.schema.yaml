@@ -170,6 +170,20 @@ properties:
       - check_MethylKit
       - with_deconvolution
 
+  annotate:
+    type: object
+    properties:
+      enhancers:
+        type: object
+        properties:
+          HS_enhancer:
+            type: string
+          sp_enhancer:
+            type: string
+
+  remove_samples:
+    type: string
+
 required:
   - RRBS_samples
   - deconvo_bsseq_ref
@@ -181,3 +195,5 @@ required:
   - DMRfinder
   - MethylKit
   - edgeR
+  - annotate
+  - remove_samples
