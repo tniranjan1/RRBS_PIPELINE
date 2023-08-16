@@ -23,8 +23,7 @@ rule trackless:
 
 # Perform edgeR analysis of methylation
 rule run_edgeR:
-  input: expand(results_dir+"/rrbs_samples/methylation_calls/samples/methylKit_{sample}.{repeats}_{context}.detrack.gz",
-                sample=set_options['rrbs_samples'], repeats=repeats, context='CpG')
+  input: expand(results_dir+"/rrbs_samples/methylation_calls/samples/methylKit_{sample}.{repeats}_{context}.detrack.gz", sample=set_options['rrbs_samples'], repeats=repeats, context='CpG')
   output: results_dir + "/rrbs_samples/methylation_calls/samples/edgeR.tmp"
   threads: 12
   conda: f"{workflow_dir}/envs/edgeR.yaml"
