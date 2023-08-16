@@ -117,10 +117,13 @@ properties:
           - vcf
           - activate
           - override_tissue
+      removal_path:
+        type: string
     required:
       - pca
       - tissue_discordant
       - genotype_discordant
+      - removal_path
 
   MethylKit:
     type: object
@@ -167,9 +170,6 @@ properties:
           sp_enhancer:
             type: string
 
-  remove_samples:
-    type: string
-
 required:
   - RRBS_samples
   - deconvo_bsseq_ref
@@ -181,4 +181,3 @@ required:
   - MethylKit
   - edgeR
   - annotate
-  - remove_samples

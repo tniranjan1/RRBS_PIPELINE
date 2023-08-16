@@ -38,7 +38,7 @@ enhancer_gene = abspath(config['annotate']['enhancers']['HS_enhancer'])
 enhancer_all = abspath(config['annotate']['enhancers']['sp_enhancer'])
 
 # outlier samples
-remove_samples = abspath(config['remove_samples'])
+remove_samples = abspath(config['remove_samples']['removal_path'])
 
 # Load RRBS sample sheet and validate structure
 rrbs_sample_sheet_path = abspath(config['RRBS_samples'])

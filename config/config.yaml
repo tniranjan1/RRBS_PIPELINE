@@ -127,7 +127,10 @@ remove_samples:
     activate: True
     # If override_tissue is True, genotypic concordance results in sample re-inclusion if the sample was previously
     #   removed due to tisue discordance
-    override_tissue: True
+    override_tissue: False
+  # path to file with outlier samples to remove
+  removal_path: "bin/remove_samples.txt"
+
 
 # parameters for finding differentially methylated regions (DMRs) using MethylKit
 MethylKit:
@@ -155,6 +158,3 @@ annotate:
     HS_enhancer: "bin/EnhancerAtlas2.0/HS_gene-enhancer.RData"
     # cross-species derived
     sp_enhancer: "bin/EnhancerAtlas2.0/Species_enhancer.RData"
-
-# path to file with outlier samples to remove
-remove_samples: "bin/remove_samples.txt"
