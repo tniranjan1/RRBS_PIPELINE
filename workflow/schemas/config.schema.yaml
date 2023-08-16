@@ -122,17 +122,6 @@ properties:
       - tissue_discordant
       - genotype_discordant
 
-  DMRfinder:
-    type: object
-    properties:
-      activate:
-        type: boolean
-      DMRFinder_git_URL:
-        type: string
-    required:
-      - activate
-      - DMRFinder_git_URL
-
   MethylKit:
     type: object
     properties:
@@ -156,8 +145,6 @@ properties:
         type: boolean
       check_promoters:
         type: boolean
-      check_DMRFinder:
-        type: boolean
       check_MethylKit:
         type: boolean
       with_deconvolution:
@@ -166,7 +153,6 @@ properties:
       - FDR
       - check_CpGs
       - check_promoters
-      - check_DMRFinder
       - check_MethylKit
       - with_deconvolution
 
@@ -192,7 +178,6 @@ required:
   - qc_params
   - cytosine_sites
   - remove_samples
-  - DMRfinder
   - MethylKit
   - edgeR
   - annotate

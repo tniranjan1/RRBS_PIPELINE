@@ -140,10 +140,9 @@ MethylKit:
 edgeR:
   # set maximal false discovery rate per comparison (numeric value 0 to 1)
   FDR: 0.05
-  # Differential methylation should be run on CpGs, promoters, DMRs (DMRFinder, MethylKit).
+  # Differential methylation should be run on CpGs, promoters, DMRs (MethylKit).
   check_CpGs: True
   check_promoters: True
-  check_DMRFinder: True
   check_MethylKit: True
   # Re-run edgeR with deconvolution as covariate if deconvolution is available (deconvolution sample sheet)
   with_deconvolution: True
