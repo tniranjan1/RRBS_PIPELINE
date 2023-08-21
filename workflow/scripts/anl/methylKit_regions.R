@@ -24,7 +24,7 @@ rawMethylObj <- methRead(location=input_path,
                          sample.id=sample_name,
                          assembly="hg38",
                          context=context,
-                         mincov=1,
+                         mincov=5, # set minimum coverage to ≥ 5, as per doi:10.1186/s13148-021-01127-0
                          pipeline='bismarkCoverage')
 
 # tile the methylation data
