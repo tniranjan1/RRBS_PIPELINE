@@ -29,7 +29,7 @@ rule bwa_meth_index:
     pac="{reference}.fa.bwameth.c2t.pac"
   conda: f"{workflow_dir}/envs/index.yaml"
   priority: 10
-  shell: "bwameth.py index {input}"
+  shell: "bwameth.py index-mem2 {input}"
 
 #----------------------------------------------------------------------------------------------------------------------#
 
